@@ -1,7 +1,7 @@
 'use strict'
 const path = require('path')
 
-const { OT_APP_DEPLOY_BUCKET, OT_APP_DEPLOY_FOLDER } = process.env
+const { OT_OT2_APP_DEPLOY_BUCKET, OT_OT2_APP_DEPLOY_FOLDER } = process.env
 const DEV_MODE = process.env.NODE_ENV !== 'production'
 const USE_PYTHON = process.env.NO_PYTHON !== 'true'
 const WINDOWS_SIGN = process.env.WINDOWS_SIGN === 'true'
@@ -11,16 +11,18 @@ const project = process.env.OPENTRONS_PROJECT ?? 'robot-stack'
 // https://builds.opentrons.com/app/ or https://ot3-development.builds.opentrons.com/app/
 // because these environment variables are provided by ci
 const publishConfig =
-  OT_APP_DEPLOY_BUCKET && OT_APP_DEPLOY_FOLDER
+  OT_OT2_APP_DEPLOY_BUCKET && OT_OT2_APP_DEPLOY_FOLDER
     ? {
         provider: 'generic',
-        url: `https://${OT_APP_DEPLOY_BUCKET}/${OT_APP_DEPLOY_FOLDER}/`,
+        url: `https://${OT_OT2_APP_DEPLOY_BUCKET}/${OT_OT2_APP_DEPLOY_FOLDER}/`,
       }
     : null
 
 module.exports = async () => ({
   appId:
-    project === 'robot-stack' ? 'com.opentrons.appot2' : 'com.opentrons.appinternalot2',
+    project === 'robot-stack'
+      ? 'com.opentrons.appot2'
+      : 'com.opentrons.appinternalot2',
   electronVersion: '39.1.2',
   npmRebuild: false,
   releaseInfo: {
@@ -45,7 +47,8 @@ module.exports = async () => ({
     version: await (
       await import('../scripts/git-version.mjs')
     ).versionForProject(project),
-    productName: project === 'robot-stack' ? 'Opentrons-OT2' : 'Opentrons-Internal-OT2',
+    productName:
+      project === 'robot-stack' ? 'Opentrons-OT2' : 'Opentrons-Internal-OT2',
   },
   /* eslint-disable no-template-curly-in-string */
   artifactName: '${productName}-v${version}-${os}-${env.BUILD_ID}.${ext}',
