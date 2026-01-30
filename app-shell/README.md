@@ -2,7 +2,7 @@
 
 [![JavaScript Style Guide][style-guide-badge]][style-guide]
 
-> Desktop application wrapper for the [Opentrons App](../app) using Electron
+> Desktop application wrapper for the [Opentrons OT-2 App](../app) using Electron
 
 ## overview
 
@@ -12,9 +12,9 @@ This directory contains the code for the [Electron main process][electron-main] 
 
 The app uses [`electron-store`][electron-store] to store its configuration in a JSON file located at:
 
-- `%APPDATA%\Opentrons\config.json` on Windows
-- `~/.config/Opentrons/config.json` on Linux
-- `~/Library/Application Support/Opentrons/config.json` on macOS
+- `%APPDATA%\Opentrons-OT2\config.json` on Windows
+- `~/.config/Opentrons-OT2/config.json` on Linux
+- `~/Library/Application Support/Opentrons-OT2/config.json` on macOS
 
 Configuration values will be determined by:
 

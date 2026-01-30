@@ -20,7 +20,7 @@ const publishConfig =
 
 module.exports = async () => ({
   appId:
-    project === 'robot-stack' ? 'com.opentrons.app' : 'com.opentrons.appot3',
+    project === 'robot-stack' ? 'com.opentrons.appot2' : 'com.opentrons.appinternalot2',
   electronVersion: '39.1.2',
   npmRebuild: false,
   releaseInfo: {
@@ -32,6 +32,7 @@ module.exports = async () => ({
   files: [
     '**/*',
     'build/br-premigration-wheels',
+    '!**/.venv',
     '!Makefile',
     '!python',
     {
@@ -44,7 +45,7 @@ module.exports = async () => ({
     version: await (
       await import('../scripts/git-version.mjs')
     ).versionForProject(project),
-    productName: project === 'robot-stack' ? 'Opentrons' : 'Opentrons-OT3',
+    productName: project === 'robot-stack' ? 'Opentrons-OT2' : 'Opentrons-Internal-OT2',
   },
   /* eslint-disable no-template-curly-in-string */
   artifactName: '${productName}-v${version}-${os}-${env.BUILD_ID}.${ext}',
@@ -81,7 +82,7 @@ module.exports = async () => ({
   },
   linux: {
     target: ['AppImage'],
-    executableName: 'opentrons',
+    executableName: 'opentrons-ot2',
     category: 'Science',
     icon: project === 'robot-stack' ? 'build/icon.icns' : 'build/three.icns',
   },
