@@ -7,9 +7,9 @@ on:
   # Most of the time, we run on pull requests, which lets us handle external PRs
   pull_request:
     paths:
-      - 'api/**'
+      - 'api/**/*.py'
       - 'Makefile'
-      - 'shared-data/**'
+      - 'shared-data/**/*.py'
       - '!shared-data/js/**'
       - 'hardware/**'
       - 'scripts/**.mk'
@@ -20,9 +20,9 @@ on:
       - 'package-testing/**'
   push:
     paths:
-      - 'api/**'
+      - 'api/**/*.py'
       - 'Makefile'
-      - 'shared-data/**'
+      - 'shared-data/**/*.py'
       - '!shared-data/js/**'
       - 'hardware/**'
       - 'scripts/**.mk'
