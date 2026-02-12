@@ -308,23 +308,25 @@ jobs:
               cp ${variant_pattern}/* ./to_upload_${variant}/
               echo "Moved $(ls ./to_upload_${variant})"
           done
-      - name: 'configure s3 deploy creds'
-        run: |
-          aws configure set aws_access_key_id ${{ secrets.S3_OT3_APP_DEPLOY_KEY_ID }} --profile identity
-          aws configure set aws_secret_access_key ${{ secrets.S3_OT3_APP_DEPLOY_SECRET }} --profile identity
-          aws configure set region us-east-2 --profile identity
-          aws configure set output json --profile identity
-          aws configure set region us-east-2 --profile deploy
-          aws configure set role_arn ${{ secrets.OT_OT2_APP_OT3_DEPLOY_ROLE }} --profile deploy
-          aws configure set source_profile identity --profile deploy
-        shell: bash
+      - name: 'configure s3 deploy creds for release'
+        if: contains(fromJSON(needs.determine-build-type.outputs.variants), 'release')
+        uses: aws-actions/configure-aws-credentials@v6
+        with:
+          role-to-assume: ${{ secrets.deploy_role_arn_release }}
+          aws-region: us-east-1
       - name: 'deploy release builds to s3'
+        if: contains(fromJSON(needs.determine-build-type.outputs.variants), 'release')
         run: |
           aws --profile=deploy s3 sync --acl=public-read to_upload_release/ s3://${{ env._APP_DEPLOY_BUCKET_ROBOTSTACK }}/${{ env._APP_DEPLOY_FOLDER_ROBOTSTACK }}
+      - name: 'configure s3 deploy creds for internal-release'
+        if: contains(fromJSON(needs.determine-build-type.outputs.variants), 'internal-release')
+        uses: aws-actions/configure-aws-credentials@v6
+        with:
+          role-to-assume: ${{ secrets.deploy_role_arn_internal_release }}
+          aws-region: us-east-1
       - name: 'deploy internal-release release builds to s3'
         run: |
           aws s3 --profile=deploy sync --acl=public-read to_upload_internal-release/ s3://${{ env._APP_DEPLOY_BUCKET_OT3 }}/${{ env._APP_DEPLOY_FOLDER_OT3 }}
-
       - name: 'upload windows artifacts to GH release'
         uses: 'ncipollo/release-action@v1.12.0'
         if: needs.determine-build-type.outputs.type == 'release'
