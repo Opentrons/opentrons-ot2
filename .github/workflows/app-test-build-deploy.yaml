@@ -51,6 +51,10 @@ env:
   _APP_DEPLOY_BUCKET_OT3: ot3-development.builds.opentrons.com
   _APP_DEPLOY_FOLDER_OT3: app
 
+permissions:
+  id-token: write
+  contents: read
+
 jobs:
   js-unit-test-shards:
     # unit tests for the app's view layer (not the node layer)
