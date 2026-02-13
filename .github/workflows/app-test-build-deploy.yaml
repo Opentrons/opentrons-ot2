@@ -46,9 +46,9 @@ concurrency:
 
 env:
   CI: 'true'
-  _APP_DEPLOY_BUCKET_ROBOTSTACK: builds.opentrons.com
+  _APP_DEPLOY_BUCKET_ROBOTSTACK: ot2-dev.builds.opentrons.com
   _APP_DEPLOY_FOLDER_ROBOTSTACK: app
-  _APP_DEPLOY_BUCKET_OT3: ot3-development.builds.opentrons.com
+  _APP_DEPLOY_BUCKET_OT3: ot2-development-dev.builds.opentrons.com
   _APP_DEPLOY_FOLDER_OT3: app
 
 permissions:
