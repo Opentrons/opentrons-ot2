@@ -333,6 +333,7 @@ jobs:
           role-to-assume: ${{ secrets.DEPLOY_ROLE_ARN_INTERNAL_RELEASE }}
           aws-region: us-east-1
       - name: 'deploy internal-release release builds to s3'
+        if: contains(fromJSON(needs.determine-build-type.outputs.variants), 'internal-release')
         run: |
           aws s3 sync --acl=public-read to_upload_internal-release/ s3://${{ env._APP_DEPLOY_BUCKET_OT3 }}/${{ env._APP_DEPLOY_FOLDER_OT3 }}
       - name: 'upload windows artifacts to GH release'
