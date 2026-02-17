@@ -413,7 +413,9 @@ jobs:
         run: |
           # Restore upload folders from temp location
           mv ${{ runner.temp }}/upload_backup/to_upload_* ./ 2>/dev/null || true
-      - uses: ./.github/actions/js/setup
+      - uses: actions/setup-node@v6
+        with:
+          node-version: '22.22.0'
       - name: 'print upload folders contents'
         run: |
           echo "Test Outputs"
