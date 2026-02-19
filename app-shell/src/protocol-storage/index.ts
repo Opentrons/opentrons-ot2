@@ -110,12 +110,67 @@ export function preParityMigrateProtocolsFrom(
   }
 }
 
+const migrateProtocolsFromOldAppDirectory = migrateOT2ProtocolsFrom(
+  FileSystem.OLD_PROTOCOLS_DIRECTORY_PATH,
+  FileSystem.PROTOCOLS_DIRECTORY_PATH
+)
+export function migrateOT2ProtocolsFrom(
+  src: string,
+  dest: string
+): () => Promise<void> {
+  let hasCheckedForMigration = false
+
+  return function (): Promise<void> {
+    return new Promise((resolve, reject) => {
+      if (hasCheckedForMigration) { resolve() }
+      hasCheckedForMigration = true
+
+      fse
+        .stat(src)
+        .then(doesSrcExist => {
+          if (!doesSrcExist.isDirectory()) {
+            console.log('Old Opentrons app directory does not exist, skipping migration...')
+            resolve()
+          }
+
+          console.log('Migrating OT-2 protocols from old Opentrons app...')
+
+          return fse
+            .readdir(src)
+            .then(items => {
+              const migrationTasks = items.map(item => {
+                const srcItem = path.join(src, item)
+                const destItem = path.join(dest, item)
+
+                return FileSystem.isOT2Protocol(srcItem).then(isOT2 => {
+                  if (isOT2) {
+                    return fse.copy(srcItem, destItem, { overwrite: false })
+                  }
+                })
+              })
+
+              return Promise.all(migrationTasks)
+            })
+            .then(() => {
+              console.log('OT-2 protocol migration complete.')
+              resolve()
+            })
+        })
+        .catch(e => {
+          console.log(`Error migrating OT-2 protocols: ${e}`)
+          resolve()
+        })
+    })
+  }
+}
+
 export const fetchProtocols = (
   dispatch: Dispatch,
   source: ListSource
 ): Promise<void> => {
   return ensureDir(FileSystem.PROTOCOLS_DIRECTORY_PATH)
     .then(() => migrateProtocolsFromTempDirectory())
+    .then(() => migrateProtocolsFromOldAppDirectory())
     .then(() =>
       FileSystem.readDirectoriesWithinDirectory(
         FileSystem.PROTOCOLS_DIRECTORY_PATH

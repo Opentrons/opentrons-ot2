@@ -12,8 +12,19 @@ import {
 } from '../'
 import { PROTOCOLS_DIRECTORY_NAME } from '../file-system'
 
+import type { Config } from '../../config'
+
 vi.mock('electron-store')
 vi.mock('../../log')
+vi.mock('../../config')
+
+const mockGetConfig = vi.hoisted(() => vi.fn())
+const mockSetConfigValue = vi.hoisted(() => vi.fn())
+
+vi.mock('../../config', () => ({
+  getConfig: mockGetConfig,
+  setConfigValue: mockSetConfigValue,
+}))
 
 describe('protocol storage directory utilities', () => {
   let protocolsDir: string
@@ -26,6 +37,11 @@ describe('protocol storage directory utilities', () => {
     protocolsDir = path.join('__mock-app-path__', PROTOCOLS_DIRECTORY_NAME)
     mockDispatch = vi.fn()
     requiredRmdir = true
+    mockGetConfig.mockReturnValue({
+      protocols: {
+        migratedOT2ProtocolsFromOldApp: true,
+      },
+    } as unknown as Config)
   })
 
   afterEach(() => {
