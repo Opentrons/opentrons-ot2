@@ -2,6 +2,7 @@ import path from 'path'
 import { app, shell } from 'electron'
 import fs from 'fs-extra'
 import { v4 as uuidv4 } from 'uuid'
+
 import { OT2_ROBOT_TYPE } from '@opentrons/shared-data'
 
 import { analyzeProtocolSource } from '../protocol-analysis'
@@ -59,7 +60,9 @@ export function isOT2Protocol(protocolDirPath: string): Promise<boolean> {
     .readdir(analysisDir)
     .then(files => {
       const jsonFiles = files.filter(f => f.endsWith('.json'))
-      if (jsonFiles.length === 0) { return false }
+      if (jsonFiles.length === 0) {
+        return false
+      }
 
       const mostRecent = jsonFiles.sort().pop() ?? ''
       const analysisPath = path.join(analysisDir, mostRecent)

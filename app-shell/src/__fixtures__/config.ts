@@ -345,5 +345,5 @@ export const MOCK_CONFIG_V29: ConfigV29 = {
   protocols: {
     ...MOCK_CONFIG_V28.protocols,
     migratedOT2ProtocolsFromOldApp: false,
-  }
+  },
 }

@@ -130,8 +130,15 @@ export function migrateOT2ProtocolsFrom(
         .stat(src)
         .then(doesSrcExist => {
           if (!doesSrcExist.isDirectory()) {
-            console.log('Old Opentrons app directory does not exist, skipping migration...')
-            dispatch(updateConfigValue('protocols.migratedOT2ProtocolsFromOldApp', true))
+            console.log(
+              'Old Opentrons app directory does not exist, skipping migration...'
+            )
+            dispatch(
+              updateConfigValue(
+                'protocols.migratedOT2ProtocolsFromOldApp',
+                true
+              )
+            )
             resolve()
             return
           }
@@ -155,14 +162,21 @@ export function migrateOT2ProtocolsFrom(
               return Promise.all(migrationTasks)
             })
             .then(() => {
-              dispatch(updateConfigValue('protocols.migratedOT2ProtocolsFromOldApp', true))
+              dispatch(
+                updateConfigValue(
+                  'protocols.migratedOT2ProtocolsFromOldApp',
+                  true
+                )
+              )
               console.log('OT-2 protocol migration complete.')
               resolve()
             })
         })
         .catch(e => {
           console.log(`Error migrating OT-2 protocols: ${e}`)
-          dispatch(updateConfigValue('protocols.migratedOT2ProtocolsFromOldApp', true))
+          dispatch(
+            updateConfigValue('protocols.migratedOT2ProtocolsFromOldApp', true)
+          )
           resolve()
         })
     })
