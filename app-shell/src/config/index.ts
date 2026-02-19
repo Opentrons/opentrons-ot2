@@ -93,6 +93,12 @@ export function getStore(): Config {
   return store().store
 }
 
+// We cannot depend on Redux dispatches for updating the config when config updates may occur before Redux intializes.
+// In such circumstances, we need to use the store directly.
+export function setConfigValue(path: string, value: unknown): void {
+  store().set(path, value)
+}
+
 export function getOverrides(path?: string): unknown {
   return path != null ? get(overrides(), path) : overrides()
 }

@@ -2,6 +2,7 @@ import path from 'path'
 import { shell } from 'electron'
 import fse from 'fs-extra'
 
+import { getConfig, setConfigValue } from '../config'
 import {
   analyzeProtocol,
   analyzeProtocolFailure,
@@ -118,19 +119,22 @@ export function migrateOT2ProtocolsFrom(
   src: string,
   dest: string
 ): () => Promise<void> {
-  let hasCheckedForMigration = false
-
   return function (): Promise<void> {
     return new Promise((resolve, reject) => {
-      if (hasCheckedForMigration) { resolve() }
-      hasCheckedForMigration = true
+      const config = getConfig()
+      if (config.protocols.migratedOT2ProtocolsFromOldApp) {
+        resolve()
+        return
+      }
 
       fse
         .stat(src)
         .then(doesSrcExist => {
           if (!doesSrcExist.isDirectory()) {
             console.log('Old Opentrons app directory does not exist, skipping migration...')
+            setConfigValue('protocols.migratedOT2ProtocolsFromOldApp', true)
             resolve()
+            return
           }
 
           console.log('Migrating OT-2 protocols from old Opentrons app...')
@@ -152,12 +156,14 @@ export function migrateOT2ProtocolsFrom(
               return Promise.all(migrationTasks)
             })
             .then(() => {
+              setConfigValue('protocols.migratedOT2ProtocolsFromOldApp', true)
               console.log('OT-2 protocol migration complete.')
               resolve()
             })
         })
         .catch(e => {
           console.log(`Error migrating OT-2 protocols: ${e}`)
+          setConfigValue('protocols.migratedOT2ProtocolsFromOldApp', true)
           resolve()
         })
     })
