@@ -185,14 +185,12 @@ export function ProtocolDetailsHeader({
                 {protocolDisplayName}
               </StyledText>
               <Flex gridGap={SPACING.spacing8}>
-                {robotType === OT2_ROBOT_TYPE ? null : (
-                  <SecondaryButton
-                    onClick={handleClickTimeline}
-                    cursor={CURSOR_POINTER}
-                  >
-                    {t('visualize')}
-                  </SecondaryButton>
-                )}
+                <SecondaryButton
+                  onClick={handleClickTimeline}
+                  cursor={CURSOR_POINTER}
+                >
+                  {t('visualize')}
+                </SecondaryButton>
                 <PrimaryButton
                   onClick={() => {
                     handleRunProtocolButtonClick()
