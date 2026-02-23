@@ -22,7 +22,6 @@ import {
   Tag,
   WRAP,
 } from '@opentrons/components'
-import { OT2_ROBOT_TYPE } from '@opentrons/shared-data'
 
 import {
   ANALYTICS_LAUNCH_PROTOCOL_VISUALIZATION,
