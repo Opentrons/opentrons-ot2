@@ -282,30 +282,28 @@ describe('discovery selectors', () => {
       expected: false,
     },
     {
-      name: 'getDiscoveredRobots assigns status based on healthStatus and serverHealthStatus',
+      name: 'getDiscoveredRobots assigns status based on healthStatus and serverHealthStatus and filters out OT-3 robots',
       selector: discovery.getDiscoveredRobots,
       state: MOCK_STATE,
       expected: [
         EXPECTED_FOO,
         EXPECTED_BAR,
         EXPECTED_BAZ,
-        EXPECTED_QUX,
         EXPECTED_FIZZ,
         EXPECTED_BUZZ,
-        EXPECTED_FIZZBUZZ,
       ],
     },
     {
       name: 'getConnectableRobots grabs robots with connectable status',
       selector: discovery.getConnectableRobots,
       state: MOCK_STATE,
-      expected: [EXPECTED_BAR, EXPECTED_FIZZBUZZ, EXPECTED_FOO],
+      expected: [EXPECTED_BAR, EXPECTED_FOO],
     },
     {
       name: 'getReachableRobots grabs robots with reachable status',
       selector: discovery.getReachableRobots,
       state: MOCK_STATE,
-      expected: [EXPECTED_BAZ, EXPECTED_QUX],
+      expected: [EXPECTED_BAZ],
     },
     {
       name: 'getUnreachableRobots grabs robots with unreachable status',
@@ -410,9 +408,7 @@ describe('discovery selectors', () => {
       expected: [
         EXPECTED_BAR,
         EXPECTED_BAZ,
-        EXPECTED_FIZZBUZZ,
         EXPECTED_FOO,
-        EXPECTED_QUX,
       ],
     },
     {
@@ -583,13 +579,6 @@ describe('discovery selectors', () => {
       expected: EXPECTED_BAZ.health.api_version,
     },
     {
-      name: 'getRobotType returns type of a connectable OT-3',
-      selector: discovery.getRobotModelByName,
-      state: MOCK_STATE,
-      args: ['fizzbuzz'],
-      expected: 'Opentrons Flex',
-    },
-    {
       name: 'getRobotType returns type of a connectable OT-2',
       selector: discovery.getRobotModelByName,
       state: MOCK_STATE,
@@ -602,13 +591,6 @@ describe('discovery selectors', () => {
       state: MOCK_STATE,
       args: ['baz'],
       expected: 'OT-2',
-    },
-    {
-      name: 'getRobotType returns OT-2 by default for an unreachable robot',
-      selector: discovery.getRobotModelByName,
-      state: MOCK_STATE,
-      args: ['qux'],
-      expected: 'Opentrons Flex',
     },
     {
       name: 'getRobotAddressesByName returns addresses by name',
