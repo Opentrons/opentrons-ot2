@@ -192,24 +192,6 @@ const EXPECTED_BAZ = {
   robotModel: ROBOT_MODEL_OT2,
 }
 
-// qux is reachable because it was recently seen, even though primary IP is
-// not currently responding in any way. Cached health responses have no model
-// data, but the MDNS data says it's an OT-3.
-const EXPECTED_QUX = {
-  name: 'qux',
-  displayName: 'qux',
-  status: REACHABLE,
-  local: false,
-  seen: true,
-  health: mockOT3HealthResponse,
-  serverHealth: mockOT3ServerHealthResponse,
-  healthStatus: HEALTH_STATUS_UNREACHABLE,
-  serverHealthStatus: HEALTH_STATUS_UNREACHABLE,
-  ip: '10.0.0.4',
-  port: 31950,
-  robotModel: ROBOT_MODEL_OT3,
-}
-
 // fizz is unreachable because IP is unreachable and we haven't seen any of
 // this robot's IP addresses recently. Cached health responses indicate it's
 // an OT-2.
@@ -243,22 +225,6 @@ const EXPECTED_BUZZ = {
   port: null,
   advertisedModel: ROBOT_MODEL_OT2,
   robotModel: ROBOT_MODEL_OT2,
-}
-
-// fizzbuzz is as foo and therefore connectable, but is an OT-3
-const EXPECTED_FIZZBUZZ = {
-  name: 'fizzbuzz',
-  displayName: 'fizzbuzz',
-  status: CONNECTABLE,
-  local: false,
-  seen: true,
-  health: mockOT3HealthResponse,
-  serverHealth: mockOT3ServerHealthResponse,
-  healthStatus: HEALTH_STATUS_OK,
-  serverHealthStatus: HEALTH_STATUS_OK,
-  ip: '10.0.0.2',
-  port: 31950,
-  robotModel: ROBOT_MODEL_OT3,
 }
 
 describe('discovery selectors', () => {
@@ -405,11 +371,7 @@ describe('discovery selectors', () => {
       name: 'getViewableRobots returns connectable and reachable robots',
       selector: discovery.getViewableRobots,
       state: MOCK_STATE,
-      expected: [
-        EXPECTED_BAR,
-        EXPECTED_BAZ,
-        EXPECTED_FOO,
-      ],
+      expected: [EXPECTED_BAR, EXPECTED_BAZ, EXPECTED_FOO],
     },
     {
       name: 'getRobotApiVersion returns health.apiServerVersion',
