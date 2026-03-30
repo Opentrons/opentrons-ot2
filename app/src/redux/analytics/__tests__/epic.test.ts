@@ -41,12 +41,9 @@ describe('analytics epics', () => {
 
         expectObservable(output$).toBe('--')
         flush()
-        expect(initializeMixpanel).toHaveBeenCalledWith(
-          {
-            optedIn: true,
-          },
-          false
-        )
+        expect(initializeMixpanel).toHaveBeenCalledWith({
+          optedIn: true,
+        })
       })
     })
   })

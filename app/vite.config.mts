@@ -76,6 +76,9 @@ export default defineConfig(async (): Promise<UserConfig> => {
       _OPENTRONS_PROJECT_: JSON.stringify(project),
       _OT_SENTRY_DSN_: JSON.stringify(process.env.OT_SENTRY_DSN),
       _NODE_ENV_: JSON.stringify(process.env.NODE_ENV),
+      _OT_OT2_APP_MIXPANEL_DEV_ID_: JSON.stringify(
+        process.env.OT_OT2_APP_MIXPANEL_DEV_ID
+      ),
       _OT_OT2_APP_MIXPANEL_ID_: JSON.stringify(
         process.env.OT_OT2_APP_MIXPANEL_ID
       ),

@@ -10,7 +10,10 @@ import type { AnalyticsConfig, AnalyticsEvent } from './types'
 const log = createLogger(new URL('', import.meta.url).pathname)
 
 // pulled in from environment at build time
-const MIXPANEL_ID = _OT_OT2_APP_MIXPANEL_ID_
+const MIXPANEL_ID =
+  _NODE_ENV_ === 'production'
+    ? _OT_OT2_APP_MIXPANEL_ID_
+    : (_OT_OT2_APP_MIXPANEL_DEV_ID_ ?? _OT_OT2_APP_MIXPANEL_ID_)
 
 const MIXPANEL_OPTS: Partial<MixpanelConfig> = {
   // opt out by default
@@ -23,14 +26,11 @@ const MIXPANEL_OPTS: Partial<MixpanelConfig> = {
 
 const initMixpanelInstanceOnce = initializeMixpanelInstanceOnce(MIXPANEL_ID)
 
-export function initializeMixpanel(
-  config: AnalyticsConfig,
-  isOnDevice: boolean | null
-): void {
+export function initializeMixpanel(config: AnalyticsConfig): void {
   if (MIXPANEL_ID != null) {
     try {
       initMixpanelInstanceOnce(config)
-      setMixpanelTracking(config, isOnDevice)
+      setMixpanelTracking(config)
       trackEvent({ name: 'appOpen', properties: {} }, config)
     } catch (error) {
       console.error('Failed to initialize Mixpanel:', error)
@@ -61,10 +61,7 @@ export function trackEvent(
   }
 }
 
-export function setMixpanelTracking(
-  config: AnalyticsConfig,
-  isOnDevice: boolean | null
-): void {
+export function setMixpanelTracking(config: AnalyticsConfig): void {
   if (MIXPANEL_ID != null) {
     initMixpanelInstanceOnce(config)
     try {
@@ -75,7 +72,7 @@ export function setMixpanelTracking(
         mixpanel.register({
           appVersion: CURRENT_VERSION,
           appId: config.appId,
-          appMode: Boolean(isOnDevice) ? 'ODD' : 'Desktop',
+          appMode: 'DesktopOT2',
         })
       } else {
         log.debug('User has opted out of analytics; stopping tracking')
