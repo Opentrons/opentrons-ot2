@@ -32,8 +32,8 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: var(--spacing-8);
   padding-bottom: var(--spacing-24);
+  gap: var(--spacing-8);
 }
 
 .navbar_link {
