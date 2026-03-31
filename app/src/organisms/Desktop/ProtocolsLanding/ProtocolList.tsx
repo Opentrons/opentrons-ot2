@@ -109,12 +109,6 @@ export function ProtocolList(props: ProtocolListProps): JSX.Element | null {
     oldest: {
       label: t('oldest_updates'),
     },
-    flex: {
-      label: t('robot_type_first', { robotType: FLEX }),
-    },
-    ot2: {
-      label: t('robot_type_first', { robotType: OT2 }),
-    },
   }
 
   const handleRunProtocol = (storedProtocol: StoredProtocolData): void => {
@@ -235,20 +229,6 @@ export function ProtocolList(props: ProtocolListProps): JSX.Element | null {
                 }}
               >
                 {t('oldest_updates')}
-              </MenuItem>
-              <MenuItem
-                onClick={() => {
-                  handleProtocolsSortKey('flex')
-                }}
-              >
-                {t('robot_type_first', { robotType: FLEX })}
-              </MenuItem>
-              <MenuItem
-                onClick={() => {
-                  handleProtocolsSortKey('ot2')
-                }}
-              >
-                {t('robot_type_first', { robotType: OT2 })}
               </MenuItem>
             </Flex>
           )}

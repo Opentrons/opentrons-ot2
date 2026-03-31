@@ -36,34 +36,6 @@ export function useSortedProtocols(
       return b.modified - a.modified
     } else if (sortBy === 'oldest') {
       return a.modified - b.modified
-    } else if (sortBy === 'flex') {
-      if (
-        protocolRobotTypeA === FLEX_ROBOT_TYPE &&
-        protocolRobotTypeB !== FLEX_ROBOT_TYPE
-      ) {
-        return -1
-      }
-      if (
-        protocolRobotTypeA !== FLEX_ROBOT_TYPE &&
-        protocolRobotTypeB === FLEX_ROBOT_TYPE
-      ) {
-        return 1
-      }
-      return b.modified - a.modified
-    } else if (sortBy === 'ot2') {
-      if (
-        protocolRobotTypeA !== FLEX_ROBOT_TYPE &&
-        protocolRobotTypeB === FLEX_ROBOT_TYPE
-      ) {
-        return -1
-      }
-      if (
-        protocolRobotTypeA === FLEX_ROBOT_TYPE &&
-        protocolRobotTypeB !== FLEX_ROBOT_TYPE
-      ) {
-        return 1
-      }
-      return b.modified - a.modified
     }
     return 0
   })
