@@ -34,7 +34,6 @@ At this point, the Electron app will be running with various Chrome devtools ena
 | `NODE_ENV`                   | `production` | Environment: `production`, `development`, or `test` |
 | `PORT`                       | `8090`       | Development server port                             |
 | `OT_OT2_APP_INTERCOM_ID`     | unset        | Sets the Intercom application ID                    |
-| `OT_OT2_APP_MIXPANEL_DEV_ID` | unset        | Sets the Mixpanel application ID for development    |
 | `OT_OT2_APP_MIXPANEL_ID`     | unset        | Sets the Mixpanel application ID                    |
 
 **Note:** You may want to be running the Opentrons API in a different terminal while developing the app. Please see [the contributing guide][contributing-guide-running-the-api] for API-specific instructions.

@@ -114,10 +114,7 @@ describe('analytics epics', () => {
 
         expectObservable(output$).toBe('----')
         flush()
-        expect(setMixpanelTracking).toHaveBeenCalledWith(
-          { optedIn: true },
-          false
-        )
+        expect(setMixpanelTracking).toHaveBeenCalledWith({ optedIn: true })
       })
     })
 
@@ -129,10 +126,7 @@ describe('analytics epics', () => {
 
         expectObservable(output$).toBe('----')
         flush()
-        expect(setMixpanelTracking).toHaveBeenCalledWith(
-          { optedIn: false },
-          false
-        )
+        expect(setMixpanelTracking).toHaveBeenCalledWith({ optedIn: false })
       })
     })
 
