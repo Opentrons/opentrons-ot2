@@ -18,11 +18,22 @@
   flex-direction: column;
   align-items: flex-start;
   align-self: stretch;
+  padding-top: var(--spacing-24);
 }
 
 .logo_img {
   align-self: center;
-  padding: var(--spacing-24) 0;
+  padding: 5px;
+}
+
+.nav_header_container {
+  display: flex;
+  width: 100%;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--spacing-8);
+  padding-bottom: var(--spacing-24);
 }
 
 .navbar_link {
