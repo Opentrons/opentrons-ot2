@@ -24,7 +24,6 @@ describe('FeatureFlag', () => {
       flags: {
         PRERELEASE_MODE: true,
         OT_PD_ENABLE_COMMENT: true,
-        OT_PD_ENABLE_REACT_SCAN: true,
       },
     }
   })
@@ -55,8 +54,5 @@ describe('FeatureFlag', () => {
     })
 
     fireEvent.click(toggleButtons[2])
-    expect(vi.mocked(featureFlagActions.setFeatureFlags)).toHaveBeenCalledWith({
-      OT_PD_ENABLE_REACT_SCAN: false,
-    })
   })
 })

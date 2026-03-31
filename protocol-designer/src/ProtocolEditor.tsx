@@ -11,26 +11,9 @@ import {
 } from '@opentrons/components'
 
 import { PortalRoot } from './components/organisms'
-import { getEnableReactScan } from './feature-flags/selectors'
 import { ProtocolRoutes } from './ProtocolRoutes'
 
 export function ProtocolEditor(): JSX.Element {
-  // note for react-scan
-  const enableReactScan = useSelector(getEnableReactScan)
-  // Dynamically import `react-scan` to avoid build errors
-  if (typeof window !== 'undefined' && enableReactScan) {
-    import('react-scan')
-      .then(({ scan }) => {
-        scan({
-          enabled: enableReactScan,
-          log: true,
-        })
-      })
-      .catch(error => {
-        console.error('Failed to load react-scan:', error)
-      })
-  }
-
   return (
     <DndProvider backend={HTML5Backend}>
       <Box
