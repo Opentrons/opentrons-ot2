@@ -35,9 +35,7 @@ describe('FeatureFlag', () => {
     screen.getByText('Show in-progress features for testing & internal use')
     screen.getByText('Enable comment step')
     screen.getByText('You can add comments anywhere between timeline steps.')
-    screen.getByText('Enable React Scan')
-    screen.getByText('Enable React Scan support for components rendering check')
-    expect(screen.getAllByRole('switch').length).toBe(3)
+    expect(screen.getAllByRole('switch').length).toBe(2)
   })
   it('should call function when clicking toggle switches', () => {
     render(props)
