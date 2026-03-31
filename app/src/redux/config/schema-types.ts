@@ -313,4 +313,4 @@ export type ConfigV30 = Omit<ConfigV29, 'version' | 'labware'> & {
   }
 }
 
-export type Config = ConfigV29
+export type Config = ConfigV30
