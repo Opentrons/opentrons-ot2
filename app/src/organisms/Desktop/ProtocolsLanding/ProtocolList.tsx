@@ -54,8 +54,7 @@ const SORT_BY_BUTTON_STYLE = css`
     background-color: ${COLORS.grey40};
   }
 `
-const FLEX = 'Flex'
-const OT2 = 'OT-2'
+
 interface ProtocolListProps {
   storedProtocols: StoredProtocolData[]
 }

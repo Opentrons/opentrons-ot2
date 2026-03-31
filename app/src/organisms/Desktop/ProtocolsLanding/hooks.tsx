@@ -1,5 +1,3 @@
-import { FLEX_ROBOT_TYPE } from '@opentrons/shared-data'
-
 import { getProtocolDisplayName } from '/app/transformations/protocols'
 
 import type {
@@ -22,8 +20,6 @@ export function useSortedProtocols(
       b.srcFileNames,
       b?.mostRecentAnalysis
     )
-    const protocolRobotTypeA = a?.mostRecentAnalysis?.robotType
-    const protocolRobotTypeB = b?.mostRecentAnalysis?.robotType
 
     if (sortBy === 'alphabetical') {
       if (protocolNameA.toLowerCase() === protocolNameB.toLowerCase()) {
