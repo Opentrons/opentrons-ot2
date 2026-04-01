@@ -73,12 +73,12 @@ export function mergeImportedConfig(
       candidates: importedConfig.discovery.candidates,
       disableCache: importedConfig.discovery.disableCache,
     },
-    migratedConfgsFromOldApp: true,
+    migratedConfigsFromOldApp: true,
   }
 }
 
 export function importConfigFromOldApp(currentConfig: Config): Config {
-  if (currentConfig.migratedConfgsFromOldApp) {
+  if (currentConfig.migratedConfigsFromOldApp) {
     return currentConfig
   }
 
@@ -86,7 +86,7 @@ export function importConfigFromOldApp(currentConfig: Config): Config {
     log().info('Old Opentrons config does not exist, skipping import.')
     return {
       ...currentConfig,
-      migratedConfgsFromOldApp: true,
+      migratedConfigsFromOldApp: true,
     }
   }
 
@@ -100,7 +100,7 @@ export function importConfigFromOldApp(currentConfig: Config): Config {
     log().warn('Failed to import old Opentrons config, skipping.', { error })
     return {
       ...currentConfig,
-      migratedConfgsFromOldApp: true,
+      migratedConfigsFromOldApp: true,
     }
   }
 }
