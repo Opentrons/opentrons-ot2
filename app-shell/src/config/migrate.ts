@@ -509,7 +509,7 @@ const toVersion31 = (prevConfig: ConfigV30): ConfigV31 => {
   const nextConfig = {
     ...prevConfig,
     version: 31 as const,
-    migratedConfgsFromOldApp: false,
+    migratedConfigsFromOldApp: false,
   }
   return nextConfig
 }

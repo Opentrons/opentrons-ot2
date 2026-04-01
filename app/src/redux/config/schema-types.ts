@@ -315,7 +315,7 @@ export type ConfigV30 = Omit<ConfigV29, 'version' | 'labware'> & {
 
 export type ConfigV31 = Omit<ConfigV30, 'version'> & {
   version: 31
-  migratedConfgsFromOldApp: boolean
+  migratedConfigsFromOldApp: boolean
 }
 
 export type Config = ConfigV31

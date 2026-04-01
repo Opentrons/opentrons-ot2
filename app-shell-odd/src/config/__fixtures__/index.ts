@@ -232,5 +232,5 @@ export const MOCK_CONFIG_V30: ConfigV30 = {
 export const MOCK_CONFIG_V31: ConfigV31 = {
   ...MOCK_CONFIG_V30,
   version: 31,
-  migratedConfgsFromOldApp: false,
+  migratedConfigsFromOldApp: false,
 }
