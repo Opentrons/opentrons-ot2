@@ -25,8 +25,6 @@ import { useAttachedModules } from '/app/resources/modules'
 import {
   mockOT2HealthResponse,
   mockOT2ServerHealthResponse,
-  mockOT3HealthResponse,
-  mockOT3ServerHealthResponse,
 } from '../../../../../../discovery-client/src/fixtures'
 import { UpdateRobotBanner } from '../../UpdateRobotBanner'
 import {
