@@ -8,7 +8,6 @@ import {
   AdditionalCustomLabwareSourceFolder,
   ClearUnavailableRobots,
   EnableDevTools,
-  OT2AdvancedSettings,
   OverridePathToPython,
   PreventRobotCaching,
   ShowHeaterShakerAttachmentModal,
@@ -45,9 +44,6 @@ describe('AdvancedSettings', () => {
     vi.mocked(PreventRobotCaching).mockReturnValue(
       <div>mock PreventRobotCaching</div>
     )
-    vi.mocked(OT2AdvancedSettings).mockReturnValue(
-      <div>mock OT2AdvancedSettings</div>
-    )
     vi.mocked(EnableDevTools).mockReturnValue(<div>mock EnableDevTools</div>)
     vi.mocked(U2EInformation).mockReturnValue(<div>mock U2EInformation</div>)
     vi.mocked(ShowLabwareOffsetSnippets).mockReturnValue(
@@ -80,11 +76,6 @@ describe('AdvancedSettings', () => {
   it('should render mock OT-2 Advanced Settings Tip Length Calibration Method section', () => {
     render()
     screen.getByText('mock AdditionalCustomLabwareSourceFolder')
-  })
-
-  it('should render mock OT-2 Advanced Settings Tip Length Calibration Method section', () => {
-    render()
-    screen.getByText('mock OT2AdvancedSettings')
   })
 
   it('should render mock robot caching section', () => {

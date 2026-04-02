@@ -5,7 +5,6 @@ import {
   AdditionalCustomLabwareSourceFolder,
   ClearUnavailableRobots,
   EnableDevTools,
-  OT2AdvancedSettings,
   OverridePathToPython,
   PreventRobotCaching,
   ShowHeaterShakerAttachmentModal,
@@ -33,8 +32,6 @@ export function AdvancedSettings(): JSX.Element {
         <OverridePathToPython />
         <Divider marginY={SPACING.spacing24} />
         <EnableDevTools />
-        <Divider marginY={SPACING.spacing24} />
-        <OT2AdvancedSettings />
         <Divider marginY={SPACING.spacing24} />
         <U2EInformation />
       </Box>
