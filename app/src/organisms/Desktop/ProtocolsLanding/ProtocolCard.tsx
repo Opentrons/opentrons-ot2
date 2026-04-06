@@ -12,19 +12,20 @@ import {
   DIRECTION_COLUMN,
   Flex,
   Icon,
+  InlineNotification,
   JUSTIFY_FLEX_END,
   LegacyStyledText,
   ModuleIcon,
   OVERFLOW_WRAP_ANYWHERE,
   POSITION_ABSOLUTE,
   ProtocolDeck,
-  SIZE_3,
   SPACING,
   StyledText,
   TYPOGRAPHY,
   WRAP,
 } from '@opentrons/components'
 import {
+  FLEX_ROBOT_TYPE,
   getGripperDisplayName,
   getModuleType,
   getPipetteNameSpecs,
@@ -140,6 +141,8 @@ function AnalysisInfo(props: AnalysisInfoProps): JSX.Element {
     mostRecentAnalysis != null ? mostRecentAnalysis.commands : []
   )
 
+  const isFlex = mostRecentAnalysis?.robotType === FLEX_ROBOT_TYPE
+
   const requiredModuleTypes = requiredModuleModels.map(getModuleType)
 
   const hasPeripherals =
@@ -159,20 +162,10 @@ function AnalysisInfo(props: AnalysisInfoProps): JSX.Element {
         {
           {
             missing: (
-              <Icon
-                name="ot-spinner"
-                color={COLORS.grey60}
-                spin
-                size={SIZE_3}
-              />
+              <Icon name="ot-spinner" color={COLORS.grey60} spin size="4rem" />
             ),
             loading: (
-              <Icon
-                name="ot-spinner"
-                color={COLORS.grey60}
-                spin
-                size={SIZE_3}
-              />
+              <Icon name="ot-spinner" color={COLORS.grey60} spin size="4rem" />
             ),
             error: (
               <Box
@@ -196,7 +189,7 @@ function AnalysisInfo(props: AnalysisInfoProps): JSX.Element {
               />
             ),
             complete:
-              mostRecentAnalysis != null ? (
+              mostRecentAnalysis != null && !isFlex ? (
                 <ProtocolDeck protocolAnalysis={mostRecentAnalysis} />
               ) : (
                 <Box size="6rem" backgroundColor={COLORS.grey30} />
@@ -222,6 +215,14 @@ function AnalysisInfo(props: AnalysisInfoProps): JSX.Element {
           ) : null}
           {analysisStatus === 'stale' ? (
             <ProtocolAnalysisStale protocolKey={protocolKey} />
+          ) : null}
+          {isFlex === true ? (
+            <InlineNotification
+              type="alert"
+              heading="Flex protocol detected"
+              message="Use the Opentrons app to run Flex protocols."
+              linkText="Get the app"
+            />
           ) : null}
           <Flex paddingRight={SPACING.spacing24}>
             <LegacyStyledText
