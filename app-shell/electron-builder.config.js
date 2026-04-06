@@ -59,6 +59,7 @@ module.exports = async () => ({
     target: process.platform === 'darwin' ? ['dmg', 'zip'] : ['zip'],
     category: 'public.app-category.productivity',
     type: DEV_MODE ? 'development' : 'distribution',
+    darkModeSupport: true,
     icon: project === 'robot-stack' ? 'build/icon.icns' : 'build/three.icns',
     forceCodeSigning: !DEV_MODE,
     gatekeeperAssess: true,
