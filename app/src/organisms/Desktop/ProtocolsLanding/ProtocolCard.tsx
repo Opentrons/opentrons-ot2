@@ -224,9 +224,9 @@ function AnalysisInfo(props: AnalysisInfoProps): JSX.Element {
             <Box paddingRight={SPACING.spacing24}>
               <InlineNotification
                 type="alert"
-                heading="Flex protocol detected"
-                message="Use the Opentrons app to run Flex protocols."
-                linkText="Get the app"
+                heading={t('flex_protocol_detected')}
+                message={t('flex_protocol_detected_description')}
+                linkText={t('get_the_app')}
               />
             </Box>
           ) : null}
