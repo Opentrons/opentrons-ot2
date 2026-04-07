@@ -217,12 +217,14 @@ function AnalysisInfo(props: AnalysisInfoProps): JSX.Element {
             <ProtocolAnalysisStale protocolKey={protocolKey} />
           ) : null}
           {isFlex === true ? (
-            <InlineNotification
-              type="alert"
-              heading="Flex protocol detected"
-              message="Use the Opentrons app to run Flex protocols."
-              linkText="Get the app"
-            />
+            <Box paddingRight={SPACING.spacing24}>
+              <InlineNotification
+                type="alert"
+                heading="Flex protocol detected"
+                message="Use the Opentrons app to run Flex protocols."
+                linkText="Get the app"
+              />
+            </Box>
           ) : null}
           <Flex paddingRight={SPACING.spacing24}>
             <LegacyStyledText
