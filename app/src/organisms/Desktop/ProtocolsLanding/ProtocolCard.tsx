@@ -192,7 +192,11 @@ function AnalysisInfo(props: AnalysisInfoProps): JSX.Element {
               mostRecentAnalysis != null && !isFlex ? (
                 <ProtocolDeck protocolAnalysis={mostRecentAnalysis} />
               ) : (
-                <Box size="6rem" backgroundColor={COLORS.grey30} />
+                <Box
+                  size="6rem"
+                  backgroundColor={COLORS.grey30}
+                  borderRadius={BORDERS.borderRadius8}
+                />
               ),
           }[analysisStatus]
         }
