@@ -224,8 +224,8 @@ function AnalysisInfo(props: AnalysisInfoProps): JSX.Element {
             <Box paddingRight={SPACING.spacing24}>
               <InlineNotification
                 type="alert"
-                heading={t('flex_protocol_detected')}
-                message={t('flex_protocol_detected_description')}
+                heading={t('branded:flex_protocol_detected')}
+                message={t('branded:flex_protocol_detected_description')}
                 linkText={t('get_the_app')}
               />
             </Box>
