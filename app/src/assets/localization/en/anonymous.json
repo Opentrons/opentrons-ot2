@@ -65,6 +65,7 @@
   "opentrons_app_will_use_interpreter": "If specified, the app will use the Python interpreter at this path instead of the default bundled Python interpreter.",
   "opentrons_cares_about_privacy": "We care about your privacy. We anonymize all data and only use it to improve our products.",
   "opentrons_def": "Verified Definition",
+  "opentrons_ot2_quickstart_guide": "Quickstart Guide",
   "opentrons_flex_quickstart_guide": "Quickstart Guide",
   "opentrons_labware_def": "Verified labware definition",
   "opentrons_tip_rack_name": "opentrons",
