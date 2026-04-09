@@ -226,7 +226,7 @@ function AnalysisInfo(props: AnalysisInfoProps): JSX.Element {
                 type="alert"
                 heading={t('branded:flex_protocol_detected')}
                 message={t('branded:flex_protocol_detected_description')}
-                linkText={t('get_the_app')}
+                linkText={t('branded:get_the_app')}
               />
             </Box>
           ) : null}
