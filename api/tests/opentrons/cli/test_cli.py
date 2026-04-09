@@ -10,6 +10,8 @@ from typing import Any, Dict, Iterator, List, Optional
 import pytest
 from click.testing import CliRunner
 
+from opentrons_shared_data.robot.types import RobotTypeEnum
+
 from opentrons.cli.analyze import AnalysisResult, analyze
 
 
@@ -122,12 +124,6 @@ def _get_deck_definition_test_source(api_level: str, robot_type: str) -> str:
         # accuracy here. They just need to be clearly different between the OT-2 and OT-3.
         ("2.13", "OT-2", "(196.38, 42.785, 44.04)"),
         ("2.15", "OT-2", "(196.38, 42.785, 44.04)"),
-        pytest.param(
-            "2.15",
-            "OT-3",
-            "(227.88, 42.785, 44.04)",
-            marks=pytest.mark.ot3_only,  # Analyzing an OT-3 protocol requires an OT-3 hardware API.
-        ),
     ],
 )
 def test_analysis_deck_definition(
@@ -194,6 +190,42 @@ def test_strict_metatada_requirements_validation(tmp_path: Path, output: str) ->
 
     expected_message = (
         "You may only put apiLevel in the metadata dict or the requirements dict"
+    )
+    assert expected_message in result.stdout_stderr
+
+
+@pytest.mark.parametrize("output", ["--json-output", "--human-json-output"])
+def test_non_ot2_protocol_rejected(tmp_path: Path, output: str) -> None:
+    """It should reject protocols not designed for an OT-2 robot."""
+    protocol_source = textwrap.dedent(
+        """\
+        requirements = {
+            "apiLevel": "2.15",
+            "robotType": "OT-3",
+        }
+
+        def run(protocol):
+            pass
+        """
+    )
+
+    assert (
+        RobotTypeEnum.robot_literal_to_enum("OT-3 Standard") != RobotTypeEnum.OT2
+    ), "Precondition: OT-3 Standard is not OT-2"
+
+    protocol_source_file = tmp_path / "protocol.py"
+    protocol_source_file.write_text(protocol_source, encoding="utf-8")
+
+    result = _get_analysis_result([protocol_source_file], output)
+
+    assert result.exit_code != 0
+
+    expected_message = (
+        "This protocol is not designed for an OT-2 robot. "
+        "If this is an OT-2 protocol, check that the protocol's robotType "
+        'is set to "OT-2". Otherwise, to utilize this '
+        "protocol, please download the most recent version of the "
+        "Opentrons app from https://github.com/Opentrons/opentrons/releases"
     )
     assert expected_message in result.stdout_stderr
 
