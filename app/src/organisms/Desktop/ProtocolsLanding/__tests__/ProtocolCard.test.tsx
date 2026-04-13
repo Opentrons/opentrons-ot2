@@ -31,8 +31,7 @@ vi.mock('react-router-dom', async importOriginal => {
 })
 
 vi.mock('/app/redux/protocol-storage', async importOriginal => {
-  const actual =
-    await importOriginal<typeof import('/app/redux/protocol-storage')>()
+  const actual = await importOriginal<typeof getIsProtocolAnalysisInProgress>()
   return {
     ...actual,
     getIsProtocolAnalysisInProgress: vi.fn(),
