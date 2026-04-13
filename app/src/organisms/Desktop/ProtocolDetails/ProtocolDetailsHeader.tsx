@@ -22,6 +22,7 @@ import {
   Tag,
   WRAP,
 } from '@opentrons/components'
+import { FLEX_ROBOT_TYPE } from '@opentrons/shared-data'
 
 import {
   ANALYTICS_LAUNCH_PROTOCOL_VISUALIZATION,
@@ -195,7 +196,11 @@ export function ProtocolDetailsHeader({
                     handleRunProtocolButtonClick()
                   }}
                   data-testid="ProtocolDetails_runProtocol"
-                  disabled={analysisStatus === 'loading'}
+                  disabled={
+                    analysisStatus === 'loading' ||
+                    robotType === FLEX_ROBOT_TYPE ||
+                    robotType === null
+                  }
                   whiteSpace="nowrap"
                 >
                   {t('start_setup')}
