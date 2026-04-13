@@ -29,7 +29,6 @@ import {
   getGripperDisplayName,
   getModuleType,
   getPipetteNameSpecs,
-  OT2_ROBOT_TYPE,
   parseAllRequiredModuleModels,
   parseInitialPipetteNamesByMount,
 } from '@opentrons/shared-data'
@@ -81,7 +80,10 @@ export function ProtocolCard(props: ProtocolCardProps): JSX.Element | null {
   )
 
   const handleClickCard = (): void => {
-    if (mostRecentAnalysis?.robotType === OT2_ROBOT_TYPE) {
+    if (
+      mostRecentAnalysis?.robotType !== FLEX_ROBOT_TYPE &&
+      mostRecentAnalysis?.robotType !== null
+    ) {
       navigate(`/protocols/${protocolKey}`)
     }
   }
