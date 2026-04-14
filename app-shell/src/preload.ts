@@ -48,10 +48,6 @@ contextBridge.exposeInMainWorld('electron', {
       ipcRenderer.once(channel, listener)
     },
   },
-  flexApp: {
-    open: (payload?: { filePath?: string }) =>
-      ipcRenderer.invoke('flex-app:open', payload),
-  },
   secondaryWindow: {
     closeSelf: () => {
       ipcRenderer.send('secondary-window: close-self')
