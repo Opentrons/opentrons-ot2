@@ -1,4 +1,4 @@
-import { shell } from 'electron'
+import { app, shell } from 'electron'
 
 import { createLogger } from './log'
 
@@ -21,10 +21,11 @@ export async function openFlexAppExternal(payload?: {
       ? `${PROTOCOL_NAME}://open?${params.toString()}`
       : `${PROTOCOL_NAME}://open`
 
-  try {
-    await shell.openExternal(url)
-  } catch {
+  if (app.getApplicationNameForProtocol(url) === '') {
     log.debug('Flex App is not installed and open the download page')
     await shell.openExternal(FLEX_APP_DOWNLOAD_PAGE)
+    return
   }
+
+  await shell.openExternal(url)
 }
