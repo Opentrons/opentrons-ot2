@@ -5,6 +5,7 @@ const eblib = require('builder-util')
 const installPython = require('./python-install')
 const path = require('path')
 const fs = require('fs-extra')
+const { execFileSync } = require('child_process')
 
 // copy Assets.car
 async function copyAssetCar(appOutDir, productFilename) {
@@ -22,6 +23,28 @@ async function copyAssetCar(appOutDir, productFilename) {
   await fs.copy(source, target)
 }
 
+async function logPackagedAppSizes(appBase) {
+  const inspectPaths = [
+    appBase,
+    path.join(appBase, 'Contents', 'Resources', 'app.asar'),
+    path.join(appBase, 'Contents', 'Resources', 'Assets.car'),
+    path.join(appBase, 'Contents', 'Frameworks'),
+  ]
+
+  for (const inspectPath of inspectPaths) {
+    if (!(await fs.pathExists(inspectPath))) continue
+
+    try {
+      const size = execFileSync('du', ['-sh', inspectPath], {
+        encoding: 'utf8',
+      }).trim()
+      console.log(`after-pack: size ${size}`)
+    } catch (error) {
+      console.warn(`after-pack: failed to inspect size for ${inspectPath}`, error)
+    }
+  }
+}
+
 module.exports = async function afterPack(context) {
   const { platform, arch, electronPlatformName, outDir, appOutDir, packager } =
     context
@@ -34,8 +57,10 @@ module.exports = async function afterPack(context) {
   // arch 4 is universal. sorry. it's not in the arch enum of the builder-util we have for some reason.
   if (platformName === 'darwin') {
     const productFilename = packager.appInfo.productFilename
+    const appBase = path.join(appOutDir, `${productFilename}.app`)
 
     await copyAssetCar(appOutDir, productFilename)
+    await logPackagedAppSizes(appBase)
 
     if (arch !== 4) {
       console.log(
@@ -43,14 +68,12 @@ module.exports = async function afterPack(context) {
       )
       return true
     } else {
-      const appBase = path.join(
-        appOutDir,
-        `${packager.appInfo.productFilename}.app`
-      )
       console.log(
         `After-pack: Packing python for darwin/universal as darwin/x64 to ${appBase}`
       )
-      return installPython(platformName, ['x64'], appBase)
+      const result = await installPython(platformName, ['x64'], appBase)
+      await logPackagedAppSizes(appBase)
+      return result
     }
   } else {
     console.log(

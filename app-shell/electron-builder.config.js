@@ -43,6 +43,10 @@ module.exports = async () => ({
   files: [
     '**/*',
     'build/br-premigration-wheels',
+    '!node_modules/app-builder-bin{,/**/*}',
+    '!node_modules/aws-sdk{,/**/*}',
+    '!node_modules/builder-util{,/**/*}',
+    '!node_modules/electron-publisher-s3{,/**/*}',
     '!**/.venv',
     '!Makefile',
     '!python',
