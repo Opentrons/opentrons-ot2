@@ -40,7 +40,10 @@ async function logPackagedAppSizes(appBase) {
       }).trim()
       console.log(`after-pack: size ${size}`)
     } catch (error) {
-      console.warn(`after-pack: failed to inspect size for ${inspectPath}`, error)
+      console.warn(
+        `after-pack: failed to inspect size for ${inspectPath}`,
+        error
+      )
     }
   }
 }

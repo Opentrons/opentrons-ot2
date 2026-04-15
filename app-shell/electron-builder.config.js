@@ -21,8 +21,9 @@ const publishConfig =
       }
     : null
 
-module.exports = async () => ({
-  appId:
+module.exports = async () => {
+  const config = {
+    appId:
     project === 'robot-stack'
       ? 'com.opentrons.appot2'
       : 'com.opentrons.appinternalot2',
@@ -82,6 +83,11 @@ module.exports = async () => ({
   },
   dmg: {
     icon: project === 'robot-stack' ? 'build/icon.icns' : 'build/three.icns',
+    // The final universal OT-2 app exceeds 1 GiB once the bundled Python
+    // runtime is copied in. Use a fixed DMG image size with extra headroom
+    // instead of relying on auto-sizing, which has been too small in CI.
+    size: '3g',
+    shrink: false,
   },
   win: {
     target: ['nsis'],
@@ -110,4 +116,9 @@ module.exports = async () => ({
   publish: publishConfig,
   generateUpdatesFilesForAllChannels: true,
   afterPack: path.join(__dirname, './scripts/after-pack.js'),
-})
+  }
+
+  console.log('electron-builder config: dmg', config.dmg)
+
+  return config
+}
