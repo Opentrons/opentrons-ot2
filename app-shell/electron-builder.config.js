@@ -82,7 +82,7 @@ module.exports = async () => ({
     // runtime is copied in. Use a fixed DMG image size with extra headroom
     // instead of relying on auto-sizing, which has been too small in CI.
     size: '3g',
-    shrink: false,
+    shrink: true,
   },
   win: {
     target: ['nsis'],
