@@ -22,10 +22,23 @@ export async function openFlexAppExternal(payload?: {
       : `${PROTOCOL_NAME}://open`
 
   if (app.getApplicationNameForProtocol(url) === '') {
-    log.debug('Flex App is not installed and open the download page')
-    await shell.openExternal(FLEX_APP_DOWNLOAD_PAGE)
+    try {
+      await shell.openExternal(FLEX_APP_DOWNLOAD_PAGE)
+    } catch (error) {
+      log.error(
+        'Flex App is not installed and open the download page',
+        error instanceof Error ? error.message : String(error)
+      )
+    }
     return
   }
 
-  await shell.openExternal(url)
+  try {
+    await shell.openExternal(url)
+  } catch (error) {
+    log.error(
+      'Failed to open OT-2 App external URL',
+      error instanceof Error ? error.message : String(error)
+    )
+  }
 }
