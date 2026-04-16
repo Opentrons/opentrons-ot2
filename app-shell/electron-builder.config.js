@@ -24,98 +24,98 @@ const publishConfig =
 module.exports = async () => {
   const config = {
     appId:
-    project === 'robot-stack'
-      ? 'com.opentrons.appot2'
-      : 'com.opentrons.appinternalot2',
-  electronVersion: '39.1.2',
-  npmRebuild: false,
-  protocols: [
-    {
-      name: 'OT-2 App',
-      schemes: ['com-opentrons-ot2-app'],
-    },
-  ],
-  releaseInfo: {
-    releaseNotesFile:
       project === 'robot-stack'
-        ? 'release-notes.md'
-        : 'release-notes-internal.md',
-  },
-  files: [
-    '**/*',
-    'build/br-premigration-wheels',
-    '!node_modules/app-builder-bin{,/**/*}',
-    '!node_modules/aws-sdk{,/**/*}',
-    '!node_modules/builder-util{,/**/*}',
-    '!node_modules/electron-publisher-s3{,/**/*}',
-    '!**/.venv',
-    '!Makefile',
-    '!python',
-    '!**/.venv/**',
-    {
-      from: '../app/dist',
-      to: './ui',
-      filter: ['**/*'],
+        ? 'com.opentrons.appot2'
+        : 'com.opentrons.appinternalot2',
+    electronVersion: '39.1.2',
+    npmRebuild: false,
+    protocols: [
+      {
+        name: 'OT-2 App',
+        schemes: ['com-opentrons-ot2-app'],
+      },
+    ],
+    releaseInfo: {
+      releaseNotesFile:
+        project === 'robot-stack'
+          ? 'release-notes.md'
+          : 'release-notes-internal.md',
     },
-  ],
-  extraMetadata: {
-    version: await (
-      await import('../scripts/git-version.mjs')
-    ).versionForProject(project),
-    productName:
-      project === 'robot-stack' ? 'Opentrons-OT2' : 'Opentrons-Internal-OT2',
-  },
-  /* eslint-disable no-template-curly-in-string */
-  artifactName: '${productName}-v${version}-${os}-${env.BUILD_ID}.${ext}',
-  /* eslint-enable no-template-curly-in-string */
-  asar: true,
-  mac: {
-    target: process.platform === 'darwin' ? ['dmg', 'zip'] : ['zip'],
-    category: 'public.app-category.productivity',
-    type: DEV_MODE ? 'development' : 'distribution',
-    icon: project === 'robot-stack' ? 'build/icon.icns' : 'build/three.icns',
-    extendInfo: HAS_MAC_ASSET_CATALOG
-      ? { CFBundleIconName: 'AppIcon' }
-      : undefined,
-    forceCodeSigning: !DEV_MODE,
-    gatekeeperAssess: true,
-    // note: notarize.teamId is passed by implicitly sending through the APPLE_TEAM_ID env var
-  },
-  dmg: {
-    icon: project === 'robot-stack' ? 'build/icon.icns' : 'build/three.icns',
-    // The final universal OT-2 app exceeds 1 GiB once the bundled Python
-    // runtime is copied in. Use a fixed DMG image size with extra headroom
-    // instead of relying on auto-sizing, which has been too small in CI.
-    size: '3g',
-    shrink: false,
-  },
-  win: {
-    target: ['nsis'],
-    icon: project === 'robot-stack' ? 'build/icon.ico' : 'build/three.ico',
-    forceCodeSigning: WINDOWS_SIGN,
-    azureSignOptions: {
-      publisherName: 'OPENTRONS LABWORKS INC.',
-      codeSigningAccountName: 'desktop-app-signing',
-      certificateProfileName: 'OpentronsDesktopApp',
-      endpoint: 'https://eus.codesigning.azure.net',
+    files: [
+      '**/*',
+      'build/br-premigration-wheels',
+      '!node_modules/app-builder-bin{,/**/*}',
+      '!node_modules/aws-sdk{,/**/*}',
+      '!node_modules/builder-util{,/**/*}',
+      '!node_modules/electron-publisher-s3{,/**/*}',
+      '!**/.venv',
+      '!Makefile',
+      '!python',
+      '!**/.venv/**',
+      {
+        from: '../app/dist',
+        to: './ui',
+        filter: ['**/*'],
+      },
+    ],
+    extraMetadata: {
+      version: await (
+        await import('../scripts/git-version.mjs')
+      ).versionForProject(project),
+      productName:
+        project === 'robot-stack' ? 'Opentrons-OT2' : 'Opentrons-Internal-OT2',
     },
-  },
-  nsis: {
-    oneClick: false,
-    license: 'build/license_en.txt',
-  },
-  linux: {
-    target: ['AppImage'],
-    executableName: 'opentrons-ot2',
-    category: 'Science',
-    icon: project === 'robot-stack' ? 'build/icon.icns' : 'build/three.icns',
-  },
-  appImage: {
-    license: 'build/license_en.txt',
-  },
-  publish: publishConfig,
-  generateUpdatesFilesForAllChannels: true,
-  afterPack: path.join(__dirname, './scripts/after-pack.js'),
+    /* eslint-disable no-template-curly-in-string */
+    artifactName: '${productName}-v${version}-${os}-${env.BUILD_ID}.${ext}',
+    /* eslint-enable no-template-curly-in-string */
+    asar: true,
+    mac: {
+      target: process.platform === 'darwin' ? ['dmg', 'zip'] : ['zip'],
+      category: 'public.app-category.productivity',
+      type: DEV_MODE ? 'development' : 'distribution',
+      icon: project === 'robot-stack' ? 'build/icon.icns' : 'build/three.icns',
+      extendInfo: HAS_MAC_ASSET_CATALOG
+        ? { CFBundleIconName: 'AppIcon' }
+        : undefined,
+      forceCodeSigning: !DEV_MODE,
+      gatekeeperAssess: true,
+      // note: notarize.teamId is passed by implicitly sending through the APPLE_TEAM_ID env var
+    },
+    dmg: {
+      icon: project === 'robot-stack' ? 'build/icon.icns' : 'build/three.icns',
+      // The final universal OT-2 app exceeds 1 GiB once the bundled Python
+      // runtime is copied in. Use a fixed DMG image size with extra headroom
+      // instead of relying on auto-sizing, which has been too small in CI.
+      size: '3g',
+      shrink: false,
+    },
+    win: {
+      target: ['nsis'],
+      icon: project === 'robot-stack' ? 'build/icon.ico' : 'build/three.ico',
+      forceCodeSigning: WINDOWS_SIGN,
+      azureSignOptions: {
+        publisherName: 'OPENTRONS LABWORKS INC.',
+        codeSigningAccountName: 'desktop-app-signing',
+        certificateProfileName: 'OpentronsDesktopApp',
+        endpoint: 'https://eus.codesigning.azure.net',
+      },
+    },
+    nsis: {
+      oneClick: false,
+      license: 'build/license_en.txt',
+    },
+    linux: {
+      target: ['AppImage'],
+      executableName: 'opentrons-ot2',
+      category: 'Science',
+      icon: project === 'robot-stack' ? 'build/icon.icns' : 'build/three.icns',
+    },
+    appImage: {
+      license: 'build/license_en.txt',
+    },
+    publish: publishConfig,
+    generateUpdatesFilesForAllChannels: true,
+    afterPack: path.join(__dirname, './scripts/after-pack.js'),
   }
 
   console.log('electron-builder config: dmg', config.dmg)
