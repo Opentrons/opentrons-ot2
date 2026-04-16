@@ -328,7 +328,7 @@ function AnalysisInfo(props: AnalysisInfoProps): JSX.Element {
                           />
                         ) : null}
                         {mostRecentAnalysis != null &&
-                        getProtocolUsesGripper(mostRecentAnalysis) ? (
+                          getProtocolUsesGripper(mostRecentAnalysis) ? (
                           <InstrumentContainer
                             displayName={getGripperDisplayName('gripperV1')}
                           />
