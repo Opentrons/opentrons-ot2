@@ -55,14 +55,12 @@ const INVALID_ROBOT_TYPE_ERROR =
 
 interface ProtocolCardProps {
   handleRunProtocol: (storedProtocolData: StoredProtocolData) => void
-  handleSendProtocolToFlex: (storedProtocolData: StoredProtocolData) => void
   storedProtocolData: StoredProtocolData
 }
 
 export function ProtocolCard(props: ProtocolCardProps): JSX.Element | null {
   const navigate = useNavigate()
-  const { handleRunProtocol, handleSendProtocolToFlex, storedProtocolData } =
-    props
+  const { handleRunProtocol, storedProtocolData } = props
   const { protocolKey, srcFileNames, mostRecentAnalysis, modified } =
     storedProtocolData
   const isAnalyzing = useSelector((state: State) =>
