@@ -39,15 +39,13 @@ import type { Dispatch } from '/app/redux/types'
 
 interface ProtocolOverflowMenuProps extends StyleProps {
   handleRunProtocol: (storedProtocolData: StoredProtocolData) => void
-  handleSendProtocolToFlex: (storedProtocolData: StoredProtocolData) => void
   storedProtocolData: StoredProtocolData
 }
 
 export function ProtocolOverflowMenu(
   props: ProtocolOverflowMenuProps
 ): JSX.Element {
-  const { storedProtocolData, handleRunProtocol, handleSendProtocolToFlex } =
-    props
+  const { storedProtocolData, handleRunProtocol } = props
   const { protocolKey } = storedProtocolData
   const { t } = useTranslation(['protocol_list', 'shared'])
   const {
