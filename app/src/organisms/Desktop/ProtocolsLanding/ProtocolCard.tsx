@@ -28,6 +28,7 @@ import {
   getGripperDisplayName,
   getModuleType,
   getPipetteNameSpecs,
+  OT2_ROBOT_TYPE,
   parseAllRequiredModuleModels,
   parseInitialPipetteNamesByMount,
 } from '@opentrons/shared-data'
@@ -84,6 +85,12 @@ export function ProtocolCard(props: ProtocolCardProps): JSX.Element | null {
     />
   )
 
+  const handleClickCard = (): void => {
+    if (mostRecentAnalysis?.robotType === OT2_ROBOT_TYPE) {
+      navigate(`/protocols/${protocolKey}`)
+    }
+  }
+
   return (
     <Box
       backgroundColor={COLORS.white}
@@ -92,9 +99,7 @@ export function ProtocolCard(props: ProtocolCardProps): JSX.Element | null {
       minWidth="36rem"
       padding={SPACING.spacing16}
       position="relative"
-      onClick={() => {
-        navigate(`/protocols/${protocolKey}`)
-      }}
+      onClick={handleClickCard}
     >
       <ErrorBoundary fallback={UnknownAttachmentError}>
         <AnalysisInfo
