@@ -83,12 +83,6 @@ export function ProtocolOverflowMenu(
     handleRunProtocol(storedProtocolData)
     setShowOverflowMenu(currentShowOverflowMenu => !currentShowOverflowMenu)
   }
-  const handleClickSendToOT3: MouseEventHandler<HTMLButtonElement> = e => {
-    e.preventDefault()
-    e.stopPropagation()
-    handleSendProtocolToFlex(storedProtocolData)
-    setShowOverflowMenu(currentShowOverflowMenu => !currentShowOverflowMenu)
-  }
   const handleClickDelete: MouseEventHandler<HTMLButtonElement> = e => {
     e.preventDefault()
     e.stopPropagation()
