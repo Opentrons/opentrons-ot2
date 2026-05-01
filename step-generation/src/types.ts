@@ -35,6 +35,10 @@ import type {
   TEMPERATURE_APPROACHING_TARGET,
   TEMPERATURE_AT_TARGET,
   TEMPERATURE_DEACTIVATED,
+  VACUUM_MODE_POWER,
+  VACUUM_MODE_PRESSURE,
+  VACUUM_VENT_CLOSED,
+  VACUUM_VENT_OPEN,
 } from './constants'
 
 // Copied from PD
@@ -86,6 +90,12 @@ export interface TemperatureModuleState {
   type: typeof TEMPERATURE_MODULE_TYPE
   status: TemperatureStatus
   targetTemperature: number | null
+}
+
+export interface Point {
+  x: number
+  y: number
+  z?: number
 }
 
 export interface ThermocyclerModuleState {
@@ -169,9 +179,23 @@ export interface FlexStackerModuleState {
   fillCount?: number
 }
 
-// TODO (nd: 02/04/2026): configure this type for vacuum module
+interface VacuumModulePressureState {
+  modeType: typeof VACUUM_MODE_PRESSURE
+  currentPressure: number | null
+  targetPressure: number | null
+}
+
+interface VacuumModulePowerState {
+  modeType: typeof VACUUM_MODE_POWER
+  currentPower: number | null
+  targetPower: number | null
+}
+
+export type VentStatus = typeof VACUUM_VENT_OPEN | typeof VACUUM_VENT_CLOSED
 export interface VacuumModuleState {
   type: typeof VACUUM_MODULE_TYPE
+  vacuumState: VacuumModulePressureState | VacuumModulePowerState | null
+  ventStatus: VentStatus | null
 }
 
 export type ModuleState =
@@ -354,7 +378,7 @@ interface CommonArgs {
 export type SharedTransferLikeArgs = CommonArgs & {
   tipRack: string // tipRackDefUri
   pipette: string // PipetteId
-  nozzles: NozzleConfigurationStyle | null // setting for 96-channel
+  nozzles: NozzleConfigurationStyle // setting for 96-channel
   primaryNozzle: PrimaryNozzleConfigurationStyle // setting for partial tip pick up
 
   sourceLabware: string
@@ -417,6 +441,11 @@ export type SharedTransferLikeArgs = CommonArgs & {
   blowoutLocation: string | null | undefined
   blowoutFlowRateUlSec: number
 
+  /** additional blowout params if the position needs to be more refined */
+  blowoutOffsetFromTopMm: number | null
+  blowoutXPosition: number | null
+  blowoutYPosition: number | null
+  blowoutPositionReference: string | null
   // ===== SETTINGS INTRODUCED WITH LIQUID CLASSES =====
   liquidClass: string | null // a liquid class name like "water" or null; "none" is not allowed
   aspiratePositionReference: PositionReference
@@ -496,7 +525,7 @@ export type MixArgs = CommonArgs & {
   tipRack: string // tipRackDefUri
   labware: string
   pipette: string
-  nozzles: NozzleConfigurationStyle | null // setting for 96-channel
+  nozzles: NozzleConfigurationStyle // setting for 96-channel
   wells: string[]
   /** Mix volume (should not exceed pipette max) */
   volume: number
@@ -880,6 +909,7 @@ export type ErrorType =
   | 'MISSING_PROFILE_STEP'
   | 'MISSING_STACKER_LABWARE_TYPE'
   | 'MISSING_TEMPERATURE_STEP'
+  | 'MOVE_LOCATION_NOT_SPECIFIED'
   | 'MODULE_PIPETTE_COLLISION_DANGER'
   | 'MULTI_ASPIRATE_VOLUME_TOO_HIGH'
   | 'MULTI_DISPENSE_VOLUME_TOO_HIGH'
