@@ -40,10 +40,12 @@ describe('FeatureFlag', () => {
   it('should call function when clicking toggle switches', () => {
     render(props)
     const toggleButtons = screen.getAllByRole('switch')
+
     fireEvent.click(toggleButtons[0])
     expect(vi.mocked(featureFlagActions.setFeatureFlags)).toHaveBeenCalledWith({
       PRERELEASE_MODE: false,
     })
+
     fireEvent.click(toggleButtons[1])
     expect(vi.mocked(featureFlagActions.setFeatureFlags)).toHaveBeenCalledWith({
       OT_PD_ENABLE_COMMENT: false,
