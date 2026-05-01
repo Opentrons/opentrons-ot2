@@ -60,7 +60,7 @@ describe('VacuumModuleSlideout', () => {
     render(props)
 
     expect(
-      screen.getByText('Set Vacuum for Millipore MultiScreen® Vacuum Manifold')
+      screen.getByText('Set Vacuum for Vacuum Module GEN1')
     ).toBeInTheDocument()
   })
 

@@ -590,7 +590,7 @@ describe('ModuleCard', () => {
       module: mockVacuumModule,
     })
 
-    screen.getByText('Millipore MultiScreen® Vacuum Manifold')
+    screen.getByText('Vacuum Module GEN1')
     screen.getByText('Mock Vacuum Module Data')
     screen.getByAltText('vacuumModuleV1')
   })
