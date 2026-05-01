@@ -4,7 +4,9 @@
 SHELL := bash
 
 # add node_modules/.bin to PATH
-PATH := $(shell cd .. && pnpm bin):$(PATH)
+PATH := $(shell cd .. && yarn bin):$(PATH)
+
+benchmark_output := $(shell node -e 'console.log(new Date());')
 
 # These variables can be overridden when make is invoked to customize the
 # behavior of jest
@@ -16,28 +18,35 @@ test_opts ?=
 #####################################################################
 
 .PHONY: all
-all: clean dist
+all: clean build
 
 .PHONY: setup
 setup:
-	pnpm install
+	yarn
 
 .PHONY: clean
 clean:
-	pnpm exec shx rm -rf dist
+	shx rm -rf dist
 
 # artifacts
 #####################################################################
 
-.PHONY: dist
-dist: export NODE_ENV := production
-dist: export NODE_OPTIONS := --max-old-space-size=5120
-dist:
+.PHONY: build
+build: export NODE_ENV := production
+build: export NODE_OPTIONS := --max-old-space-size=8192
+build:
 	vite build
 	git rev-parse HEAD > dist/.commit
 
 # development
 #####################################################################
+
+.PHONY: benchmarks
+benchmarks: export NODE_ENV := test
+benchmarks:
+	shx mkdir -p benchmarks/output
+	node ../scripts/runBenchmarks "./benchmarks/*.js" | \
+	ntee "./benchmarks/output/$(benchmark_output)"
 
 .PHONY: dev
 dev: export NODE_ENV := development
@@ -62,4 +71,4 @@ test-cov:
 # analyze bundle
 .PHONY: bundle-analyzer
 bundle-analyzer:
-	ANALYZE_DEBUG=true make dist
+	ANALYZE_DEBUG=true make build
