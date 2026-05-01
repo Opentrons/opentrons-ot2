@@ -2,19 +2,18 @@
   "allowedRoles": ["labware", "lid"],
   "ordering": [],
   "brand": {
-    "brand": "greiner",
-    "brandId": []
+    "brand": "generic"
   },
   "metadata": {
-    "displayName": "Black 96-well Microtiter Plate Lid",
+    "displayName": "Lid Fixture",
     "displayCategory": "lid",
-    "displayVolumeUnits": "\u00b5L",
+    "displayVolumeUnits": "µL",
     "tags": []
   },
   "dimensions": {
-    "xDimension": 127.5,
-    "yDimension": 85,
-    "zDimension": 10
+    "xDimension": 127.76,
+    "yDimension": 85.48,
+    "zDimension": 9.2
   },
   "wells": {},
   "groups": [
@@ -30,21 +29,32 @@
   },
   "parameters": {
     "format": "irregular",
-    "quirks": ["stackingMaxFive"],
+    "quirks": [],
     "isTiprack": false,
     "isMagneticModuleCompatible": false,
-    "loadName": "black_96_well_microtiter_plate_lid"
+    "isDeckSlotCompatible": false,
+    "loadName": "fixture_lid"
   },
-  "namespace": "opentrons",
+  "namespace": "fixture",
   "version": 2,
   "schemaVersion": 2,
   "stackingOffsetWithLabware": {
-    "milliplex_r_96_well_microtiter_plate": {
+    "default": {
       "x": 0,
       "y": 0,
-      "z": 7.4
+      "z": 7.1
     },
-    "black_96_well_microtiter_plate_lid": {
+    "opentrons_96_wellplate_200ul_pcr_full_skirt": {
+      "x": 0,
+      "y": 0,
+      "z": 6.1
+    },
+    "protocol_engine_lid_stack_object": {
+      "x": 0,
+      "y": 0,
+      "z": 0
+    },
+    "opentrons_tough_universal_lid": {
       "x": 0,
       "y": 0,
       "z": 1
@@ -53,23 +63,24 @@
       "x": 0,
       "y": 0,
       "z": 34
-    },
-    "protocol_engine_lid_stack_object": {
-      "x": 0,
-      "y": 0,
-      "z": 0
     }
   },
   "stackLimit": 5,
-  "compatibleParentLabware": [
-    "protocol_engine_lid_stack_object",
-    "opentrons_flex_deck_riser",
-    "milliplex_r_96_well_microtiter_plate",
-    "black_96_well_microtiter_plate_lid"
-  ],
   "gripForce": 10,
-  "gripHeightFromLabwareBottom": 7,
+  "gripHeightFromLabwareBottom": 5.5,
   "gripperOffsets": {
+    "default": {
+      "pickUpOffset": {
+        "x": 0,
+        "y": 0,
+        "z": 0
+      },
+      "dropOffset": {
+        "x": 0,
+        "y": 0,
+        "z": 3
+      }
+    },
     "lidDisposalOffsets": {
       "pickUpOffset": {
         "x": 0,
