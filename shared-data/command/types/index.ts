@@ -67,7 +67,6 @@ export interface CommonCommandRunTimeInfo<
   intent?: CommandIntent
   notes?: CommandNote[] | null
   failedCommandId?: string // only present if intent === 'fixit'
-  commandAnnotationIds?: string[]
 }
 export interface CommonCommandCreateInfo {
   intent?: CommandIntent
