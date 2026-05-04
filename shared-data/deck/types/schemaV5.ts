@@ -68,8 +68,7 @@ export type FlexAddressableAreaName =
   | 'flexStackerModuleV1B4'
   | 'flexStackerModuleV1C4'
   | 'flexStackerModuleV1D4'
-  | 'vacuumModuleV1A3'
-  | 'vacuumModuleV1DockA4'
+  | 'vacuumModuleMilliporeV1A3'
 
 export type OT2AddressableAreaName =
   | '1'
@@ -145,7 +144,7 @@ export type FlexModuleCutoutFixtureId =
   | 'absorbanceReaderV1'
   | 'flexStackerModuleV1'
   | 'flexStackerModuleV1WithMagneticBlockV1'
-  | 'vacuumModuleV1'
+  | 'vacuumModuleMilliporeV1'
 
 export type OT2SingleStandardSlot = 'singleStandardSlot'
 
