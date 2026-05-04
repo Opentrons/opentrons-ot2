@@ -24,7 +24,8 @@ const semver = require('semver')
 const { Octokit } = require('@octokit/rest')
 
 const USAGE =
-  '\nUsage:\n node ./scripts/deploy/create-release <token> <tag> [--deploy] [--allow-old]'
+  '\nUsage:\n' +
+  ' node ./scripts/deploy/create-release <token> <tag> [--deploy] [--allow-old]'
 
 // The allowed types of release. The order matters here - order in this array determines the
 // "release kind greater than or equal to" logic for generating changelogs. A version matching
@@ -48,7 +49,10 @@ const releaseKind = version => {
   if (typeof version === 'string' && /@alpha\./.test(version)) {
     return 'alpha'
   }
-  if (typeof version === 'string' && /^\d{2}\.\d{2}\.\d{2}(\.\d+)?$/.test(version)) {
+  if (
+    typeof version === 'string' &&
+    /^\d{2}\.\d{2}\.\d{2}(\.\d+)?$/.test(version)
+  ) {
     return 'alpha'
   }
   if (typeof version === 'string' && /-(dev|prod|stage)/.test(version)) {
@@ -61,24 +65,32 @@ const releaseKind = version => {
 function toComparableSemver(version) {
   const calAlpha = /^(\d+)\.(\d+)@alpha\.(\d+)$/.exec(version)
   if (calAlpha) {
-    return `${parseInt(calAlpha[1], 10)}.${parseInt(calAlpha[2], 10)}.0-alpha.${calAlpha[3]}`
+    return `${parseInt(calAlpha[1], 10)}.${parseInt(calAlpha[2], 10)}.0-alpha.${
+      calAlpha[3]
+    }`
   }
   const cal = /^(\d+)\.(\d+)$/.exec(version)
   if (cal) {
     return `${parseInt(cal[1], 10)}.${parseInt(cal[2], 10)}.0`
   }
-  const calYyMmDd = /^(\d{2})\.(\d{2})\.(\d{2})(?:\.(\d+))?$/.exec(version)
+  const calYyMmDd =
+    /^(\d{2})\.(\d{2})\.(\d{2})(?:\.(\d+))?$/.exec(version)
   if (calYyMmDd) {
-    return `${parseInt(calYyMmDd[1], 10)}.${parseInt(calYyMmDd[2], 10)}.${parseInt(calYyMmDd[3], 10)}${
+    return `${parseInt(calYyMmDd[1], 10)}.${parseInt(
+      calYyMmDd[2],
+      10
+    )}.${parseInt(calYyMmDd[3], 10)}${
       calYyMmDd[4] !== undefined ? `-alpha.${calYyMmDd[4]}` : ''
     }`
   }
-  const internalLegacy = /^(\d{2})\.(\d{2})\.(\d{2})-(dev|prod|stage)(?:\.(\d+))?$/.exec(
-    version
-  )
+  const internalLegacy =
+    /^(\d{2})\.(\d{2})\.(\d{2})-(dev|prod|stage)(?:\.(\d+))?$/.exec(version)
   if (internalLegacy) {
     const n = internalLegacy[5] != null ? `.${internalLegacy[5]}` : ''
-    return `${parseInt(internalLegacy[1], 10)}.${parseInt(internalLegacy[2], 10)}.${parseInt(internalLegacy[3], 10)}-${internalLegacy[4]}${n}`
+    return `${parseInt(internalLegacy[1], 10)}.${parseInt(
+      internalLegacy[2],
+      10
+    )}.${parseInt(internalLegacy[3], 10)}-${internalLegacy[4]}${n}`
   }
   return version
 }
@@ -112,9 +124,8 @@ function versionPrevious(currentVersion, previousVersions) {
   const currentReleaseKind = releaseKind(currentVersion)
   if (!ALLOWED_VERSION_TYPES.includes(currentReleaseKind)) {
     throw new Error(
-      `Prerelease tag ${currentReleaseKind} is not one of ${ALLOWED_VERSION_TYPES.join(
-        ', '
-      )}`
+      `Prerelease tag ${currentReleaseKind} is not one of ` +
+        `${ALLOWED_VERSION_TYPES.join(', ')}`
     )
   }
   const from = previousVersions.indexOf(currentVersion)
@@ -156,8 +167,9 @@ async function versionDetailsFromGit(tag, allowOld) {
 
     if (!last100.all.some(commit => commit.refs.includes('tag: ' + tag))) {
       throw new Error(
-        `Cannot find tag ${tag} in last 100 commits. You must run this script from a ref with ` +
-          `the tag in its history to correctly generate a changelog. If your tag is very old but ` +
+        `Cannot find tag ${tag} in last 100 commits. ` +
+          `You must run this script from a ref with the tag in its history ` +
+          `to correctly generate a changelog. If your tag is very old but ` +
           `is definitely in whatever branch is checked out, use --allow-old.`
       )
     }
@@ -255,12 +267,17 @@ async function createRelease(token, tag, project, version, changelog, deploy) {
     return data.html_url
   } else {
     console.log(`${tag} ${title}\n${changelog}\n${isPre ? '\nprerelease' : ''}`)
-    return `http://github.com/${REPO_DETAILS.owner}/${REPO_DETAILS.repo}/releases/${tag}`
+    return (
+      `http://github.com/${REPO_DETAILS.owner}/` +
+      `${REPO_DETAILS.repo}/releases/${tag}`
+    )
   }
 }
 
 function truncateAndAnnotate(changelog, limit, prevtag, thistag) {
-  const linkmessage = `\n...and more! Log link: https://github.com/${REPO_DETAILS.owner}/${REPO_DETAILS.repo}/compare/${prevtag}...${thistag}`
+  const linkmessage =
+    `\n...and more! Log link: https://github.com/${REPO_DETAILS.owner}/` +
+    `${REPO_DETAILS.repo}/compare/${prevtag}...${thistag}`
   const limitWithMessage = limit - linkmessage.length
   if (changelog.length < limitWithMessage) {
     return changelog
