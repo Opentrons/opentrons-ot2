@@ -96,6 +96,10 @@ function toComparableSemver(version) {
 
 function semverKey(v) {
   const c = toComparableSemver(v)
+  const parsed = semver.parse(c)
+  if (parsed) {
+    return parsed.version
+  }
   const co = semver.coerce(c)
   return co ? co.version : c
 }
@@ -320,7 +324,11 @@ async function main() {
   )
 }
 
-module.exports = { versionPrevious: versionPrevious }
+module.exports = {
+  versionPrevious,
+  compareVersions,
+  releaseKind,
+}
 
 if (require.main === module) {
   main()
