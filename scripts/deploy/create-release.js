@@ -36,12 +36,62 @@ const REPO_DETAILS = {
   repo: 'opentrons-ot2',
 }
 
+// internal@YY.MM.DD[.N] and legacy internal@YY.MM.DD-(dev|prod|stage)[.N]
+const OT3_CALENDAR_TAG_RE =
+  /^internal@\d{2}\.\d{2}\.\d{2}(?:(\.(\d+))|(-(dev|prod|stage)(?:\.(\d+))?))?$/
+
 // The release kind is normally just the semver preproduction stage, but we need to account
 // for PD using candidate-a, candidate-b etc - semver preproduction stage is separated from
 // sequence by a . normally (i.e. alpha.0, beta.32), so semver.prerelease('candidate-a') gives
 // you 'candidate-a' and we want 'candidate'
-const releaseKind = version =>
-  (semver.prerelease(version)?.at(0) ?? 'production').split('-')[0]
+const releaseKind = version => {
+  if (typeof version === 'string' && /@alpha\./.test(version)) {
+    return 'alpha'
+  }
+  if (typeof version === 'string' && /^\d{2}\.\d{2}\.\d{2}(\.\d+)?$/.test(version)) {
+    return 'alpha'
+  }
+  if (typeof version === 'string' && /-(dev|prod|stage)/.test(version)) {
+    return 'alpha'
+  }
+  return (semver.prerelease(version)?.at(0) ?? 'production').split('-')[0]
+}
+
+/** Map monorepo calendar / internal version strings to semver for sorting. */
+function toComparableSemver(version) {
+  const calAlpha = /^(\d+)\.(\d+)@alpha\.(\d+)$/.exec(version)
+  if (calAlpha) {
+    return `${parseInt(calAlpha[1], 10)}.${parseInt(calAlpha[2], 10)}.0-alpha.${calAlpha[3]}`
+  }
+  const cal = /^(\d+)\.(\d+)$/.exec(version)
+  if (cal) {
+    return `${parseInt(cal[1], 10)}.${parseInt(cal[2], 10)}.0`
+  }
+  const calYyMmDd = /^(\d{2})\.(\d{2})\.(\d{2})(?:\.(\d+))?$/.exec(version)
+  if (calYyMmDd) {
+    return `${parseInt(calYyMmDd[1], 10)}.${parseInt(calYyMmDd[2], 10)}.${parseInt(calYyMmDd[3], 10)}${
+      calYyMmDd[4] !== undefined ? `-alpha.${calYyMmDd[4]}` : ''
+    }`
+  }
+  const internalLegacy = /^(\d{2})\.(\d{2})\.(\d{2})-(dev|prod|stage)(?:\.(\d+))?$/.exec(
+    version
+  )
+  if (internalLegacy) {
+    const n = internalLegacy[5] != null ? `.${internalLegacy[5]}` : ''
+    return `${parseInt(internalLegacy[1], 10)}.${parseInt(internalLegacy[2], 10)}.${parseInt(internalLegacy[3], 10)}-${internalLegacy[4]}${n}`
+  }
+  return version
+}
+
+function semverKey(v) {
+  const c = toComparableSemver(v)
+  const co = semver.coerce(c)
+  return co ? co.version : c
+}
+
+function compareVersions(a, b) {
+  return semver.compare(semverKey(a), semverKey(b))
+}
 
 const releasePriorityGreaterThanOrEqual = (kindA, kindB) =>
   ALLOWED_VERSION_TYPES.indexOf(kindA) >= ALLOWED_VERSION_TYPES.indexOf(kindB)
@@ -115,16 +165,24 @@ async function versionDetailsFromGit(tag, allowOld) {
 
   const [project, currentVersion] = await detailsFromTag(tag)
   const prefix = await prefixForProject(project)
-  const allTags = (await (await monorepoGit()).tags([prefix + '*'])).all
+  const allTagsRaw =
+    project === 'ot3'
+      ? await (await monorepoGit()).raw(['tag', '-l', 'internal@*'])
+      : await (await monorepoGit()).raw(['tag', '-l', `${prefix}*`])
+  const allTagsListed = allTagsRaw.split('\n').filter(Boolean)
+  const allTags =
+    project === 'ot3'
+      ? allTagsListed.filter(t => OT3_CALENDAR_TAG_RE.test(t))
+      : allTagsListed
   if (!allTags.includes(tag)) {
     throw new Error(
       `Tag ${tag} does not exist - create it before running this script`
     )
   }
-  const allVersions = await Promise.all(allTags.map(tag => detailsFromTag(tag)))
+  const allVersions = await Promise.all(allTags.map(t => detailsFromTag(t)))
   const sortedVersions = allVersions
     .map(details => details[1])
-    .sort(semver.compare)
+    .sort(compareVersions)
     .reverse()
   const previousVersion = versionPrevious(currentVersion, sortedVersions)
   return [project, currentVersion, previousVersion]
@@ -175,7 +233,11 @@ async function buildChangelog(project, currentVersion, previousVersion) {
 
 async function createRelease(token, tag, project, version, changelog, deploy) {
   const title = titleForRelease(project, version)
-  const isPre = !!semver.prerelease(version)
+  const isPre =
+    !!semver.prerelease(semverKey(version)) ||
+    /@alpha\./.test(version) ||
+    /-(dev|prod|stage)/.test(version) ||
+    /^\d{2}\.\d{2}\.\d{2}(\.\d+)?$/.test(version)
   if (deploy) {
     const octokit = new Octokit({
       auth: token,
