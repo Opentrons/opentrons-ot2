@@ -214,7 +214,7 @@ const mockVacuumModule = {
   id: 'vacuum_module_id',
   serialNumber: 'vm123',
   hardwareRevision: 'vacuum_module_v1.0',
-  moduleModel: 'vacuumModuleV1',
+  moduleModel: 'vacuumModuleMilliporeV1',
   moduleType: 'vacuumModuleType',
   firmwareVersion: 'v1.0.0',
   hasAvailableUpdate: false,
@@ -590,8 +590,8 @@ describe('ModuleCard', () => {
       module: mockVacuumModule,
     })
 
-    screen.getByText('Vacuum Module GEN1')
+    screen.getByText('Millipore MultiScreen® Vacuum Manifold')
     screen.getByText('Mock Vacuum Module Data')
-    screen.getByAltText('vacuumModuleV1')
+    screen.getByAltText('vacuumModuleMilliporeV1')
   })
 })
