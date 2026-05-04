@@ -9,6 +9,7 @@ import {
   REDUX_DEVTOOLS,
 } from 'electron-devtools-installer'
 
+import { registerCertIPC } from './certs'
 import { getConfig, getOverrides, getStore, registerConfig } from './config'
 import {
   initializeDiscovery,
@@ -64,7 +65,6 @@ log.debug('App config', {
 initializeSentry(getStore().analytics.optedIn)
 
 if (config.devtools) {
-  // eslint-disable-next-line @typescript-eslint/no-var-requires
   electronDebug({ isEnabled: true, showDevTools: true })
 }
 
@@ -169,7 +169,7 @@ function getOrCreateHandlerSet(window: BrowserWindow): HandlerSet | null {
   return handlerSet ?? null
 }
 
-function startUp(): void {
+async function startUp(): Promise<void> {
   log.info('Starting App')
   process.on('uncaughtException', error => log.error('Uncaught: ', { error }))
   process.on('unhandledRejection', reason =>
@@ -232,6 +232,7 @@ function startUp(): void {
       )
     }
   })
+  await registerCertIPC()
 
   log.silly('Global references', { mainWindow, rendererLogger })
 }

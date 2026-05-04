@@ -15,10 +15,17 @@ from opentrons_shared_data.robot.types import RobotTypeEnum
 from opentrons.cli.analyze import AnalysisResult, analyze
 
 
-def _list_fixtures(version: int) -> Iterator[Path]:
-    return Path(__file__).parent.glob(
+def _list_fixtures(version: int, robot_type: Optional[str] = None) -> Iterator[Path]:
+    paths = Path(__file__).parent.glob(
         f"../../../../shared-data/protocol/fixtures/{version}/*.json"
     )
+    if robot_type is None:
+        yield from paths
+    else:
+        for path in paths:
+            data = json.loads(path.read_text())
+            if data.get("robot", {}).get("model") == robot_type:
+                yield path
 
 
 @dataclass
@@ -72,7 +79,7 @@ def _get_analysis_result(
 
 
 @pytest.mark.parametrize("output", ["--json-output", "--human-json-output"])
-@pytest.mark.parametrize("fixture_path", _list_fixtures(6))
+@pytest.mark.parametrize("fixture_path", _list_fixtures(8, robot_type="OT-3 Standard"))
 def test_analyze(
     fixture_path: Path,
     output: str,
@@ -240,8 +247,8 @@ def test_non_ot2_protocol_rejected(tmp_path: Path, output: str) -> None:
                 # Raises an exception from outside of Opentrons code,
                 # in between two PAPI functions.
                 """\
-                requirements = {"apiLevel": "2.14"}  # line 1
-                                                     # line 2
+                requirements = {"apiLevel": "2.15", "robotType": "OT-3"}  # line 1
+                                                                     # line 2
                 def run(protocol):                   # line 3
                     protocol.comment(":^)")          # line 4
                     raise RuntimeError(">:(")        # line 5
@@ -255,14 +262,14 @@ def test_non_ot2_protocol_rejected(tmp_path: Path, output: str) -> None:
                 # Raises an exception from inside a Protocol Engine command.
                 # https://opentrons.atlassian.net/browse/RSS-317
                 """\
-                requirements = {"apiLevel": "2.14"}      # line 1
-                                                         # line 2
+                requirements = {"apiLevel": "2.15", "robotType": "OT-3"}      # line 1
+                                                                     # line 2
                 def run(protocol):                       # line 3
                     tip_rack = protocol.load_labware(    # line 4
-                        "opentrons_96_tiprack_300ul", 1  # line 5
+                        "opentrons_flex_96_tiprack_1000ul", 1  # line 5
                     )                                    # line 6
                     pipette = protocol.load_instrument(  # line 7
-                        "p300_single", "left"            # line 8
+                        "flex_1channel_1000", "left"     # line 8
                     )                                    # line 9
                     pipette.pick_up_tip(tip_rack["A1"])  # line 10
                     pipette.pick_up_tip(tip_rack["A2"])  # line 11
@@ -313,7 +320,7 @@ def test_run_time_parameter_setting(
     """
     python_protocol_source = textwrap.dedent(
         """\
-            requirements = {"robotType": "OT-2", "apiLevel": "2.18"}
+            requirements = {"robotType": "OT-3", "apiLevel": "2.18"}
 
             def add_parameters(parameters):
                 parameters.add_bool(
@@ -334,7 +341,7 @@ def test_run_time_parameter_setting(
     assert result.exit_code == 0
 
     assert result.json_output is not None
-    assert result.json_output["robotType"] == "OT-2 Standard"
+    assert result.json_output["robotType"] == "OT-3 Standard"
     assert result.json_output["result"] == AnalysisResult.OK
     assert result.json_output["pipettes"] == []
     assert result.json_output["commands"]  # There should be a home command
@@ -355,6 +362,38 @@ def test_run_time_parameter_setting(
             "default": False,
         }
     ]
+    assert result.json_output["labwareOffsets"] == []
+
+
+@pytest.mark.parametrize("output", ["--json-output", "--human-json-output"])
+def test_ot2_protocol_rejected(tmp_path: Path, output: str) -> None:
+    """It should reject OT-2 protocols."""
+    protocol_source = textwrap.dedent(
+        """\
+        requirements = {
+            "apiLevel": "2.15",
+            "robotType": "OT-2",
+        }
+
+        def run(protocol):
+            pass
+        """
+    )
+
+    protocol_source_file = tmp_path / "protocol.py"
+    protocol_source_file.write_text(protocol_source, encoding="utf-8")
+
+    result = _get_analysis_result([protocol_source_file], output)
+
+    assert result.exit_code != 0
+
+    expected_message = (
+        "This protocol is designed for an OT-2 robot. "
+        "To utilize this protocol, please download the "
+        "most recent version of the Opentrons-OT2 app from "
+        "https://github.com/Opentrons/opentrons-ot2/releases"
+    )
+    assert expected_message in result.stdout_stderr
 
 
 @pytest.mark.parametrize("output", ["--json-output", "--human-json-output"])
@@ -369,7 +408,7 @@ def test_run_time_parameter_error(
     python_protocol_source = textwrap.dedent(
         # Raises an exception during runner load.
         """\
-            requirements = {"robotType": "OT-2", "apiLevel": "2.18"}  # line 1
+            requirements = {"robotType": "OT-3", "apiLevel": "2.18"}  # line 1
                                                                       # line 2
             def add_parameters(parameters):                           # line 3
                 # No default value specified                          # line 4
@@ -388,7 +427,7 @@ def test_run_time_parameter_error(
     assert result.exit_code == 0
 
     assert result.json_output is not None
-    assert result.json_output["robotType"] == "OT-2 Standard"
+    assert result.json_output["robotType"] == "OT-3 Standard"
     assert result.json_output["result"] == AnalysisResult.NOT_OK.value
     assert result.json_output["pipettes"] == []
     assert result.json_output["commands"] == []
@@ -405,6 +444,7 @@ def test_run_time_parameter_error(
         "TypeError [line 5]: ParameterContext.add_bool() missing 1"
         " required positional argument: 'default'"
     )
+    assert result.json_output["labwareOffsets"] == []
 
 
 @pytest.mark.parametrize("output", ["--json-output", "--human-json-output"])
@@ -418,7 +458,7 @@ def test_rtp_csv_file_setting(
     """
     python_protocol_source = textwrap.dedent(
         """\
-            requirements = {"robotType": "OT-2", "apiLevel": "2.20"}
+            requirements = {"robotType": "OT-3", "apiLevel": "2.20"}
 
             def add_parameters(parameters):
                 parameters.add_csv_file(
@@ -443,7 +483,7 @@ def test_rtp_csv_file_setting(
     assert result.exit_code == 0
 
     assert result.json_output is not None
-    assert result.json_output["robotType"] == "OT-2 Standard"
+    assert result.json_output["robotType"] == "OT-3 Standard"
     assert result.json_output["result"] == AnalysisResult.OK
     assert result.json_output["pipettes"] == []
     assert result.json_output["commands"]  # There should be a home command
@@ -463,6 +503,7 @@ def test_rtp_csv_file_setting(
             "file": {"id": "", "name": "csv_file.csv"},
         }
     ]
+    assert result.json_output["labwareOffsets"] == []
 
 
 @pytest.mark.parametrize("output", ["--json-output", "--human-json-output"])
@@ -477,7 +518,7 @@ def test_file_required_error(
     python_protocol_source = textwrap.dedent(
         # Raises an exception during runner load.
         """\
-            requirements = {"robotType": "OT-2", "apiLevel": "2.20"}
+            requirements = {"robotType": "OT-3", "apiLevel": "2.20"}
 
             def add_parameters(parameters):
                 parameters.add_csv_file(
@@ -495,7 +536,7 @@ def test_file_required_error(
     assert result.exit_code == 0
 
     assert result.json_output is not None
-    assert result.json_output["robotType"] == "OT-2 Standard"
+    assert result.json_output["robotType"] == "OT-3 Standard"
     assert result.json_output["result"] == AnalysisResult.PARAMETER_VALUE_REQUIRED.value
     assert result.json_output["pipettes"] == []
     assert result.json_output["commands"]  # There should be a home command
@@ -508,6 +549,7 @@ def test_file_required_error(
     }
     assert result.json_output["files"] == [{"name": "protocol.py", "role": "main"}]
     assert result.json_output["errors"]
+    assert result.json_output["labwareOffsets"] == []
 
 
 @pytest.mark.parametrize("output", ["--json-output", "--human-json-output"])
@@ -519,7 +561,7 @@ def test_unexpected_error(
     python_protocol_source = textwrap.dedent(
         # Raises an exception before runner load.
         """\
-            requirements = {"robotType": "OT-2", "apiLevel": "2.18"}  # line 1
+            requirements = {"robotType": "OT-3", "apiLevel": "2.18"}  # line 1
             x + 1 = 0                                                 # line 2
             def add_parameters(parameters):
                 parameters.add_bool()
@@ -550,7 +592,7 @@ def test_unexpected_runner_load_error(
     python_protocol_source = textwrap.dedent(
         # Raises an exception during runner load.
         """\
-            requirements = {"apiLevel": "2.18"}     # line 1
+            requirements = {"apiLevel": "2.18", "robotType": "OT-3"}     # line 1
             call_a_non_existent_func()              # line 2
 
             def add_parameters(parameters):         # line 4
@@ -566,7 +608,7 @@ def test_unexpected_runner_load_error(
     assert result.exit_code == 0
 
     assert result.json_output is not None
-    assert result.json_output["robotType"] == "OT-2 Standard"
+    assert result.json_output["robotType"] == "OT-3 Standard"
     assert result.json_output["pipettes"] == []
     assert result.json_output["commands"] == []
     assert result.json_output["config"] == {
@@ -592,7 +634,7 @@ def test_analyze_json_protocol(
         / "protocol"
         / "fixtures"
         / "8"
-        / "simpleV8.json"
+        / "simpleFlexV8.json"
     )
     result = _get_analysis_result([json_file], output)
 
@@ -601,3 +643,43 @@ def test_analyze_json_protocol(
     assert op is not None
     assert len(op["commands"]) == 27
     assert op["result"] == AnalysisResult.OK.value
+
+
+@pytest.mark.parametrize("output", ["--json-output", "--human-json-output"])
+def test_analyze_protocol_with_offsets(
+    tmp_path: Path,
+    output: str,
+) -> None:
+    """Test that a protocol that sets a custom offset sees the offset in results."""
+    protocol = textwrap.dedent("""\
+                requirements = {"apiLevel": "2.18", "robotType": "Flex"}
+
+                def run(protocol):
+                    tip_rack = protocol.load_labware(
+                        "opentrons_flex_96_tiprack_1000ul", "A2"
+                    )
+                    tip_rack.set_offset(x=1, y=2, z=3)
+                    pipette = protocol.load_instrument(
+                        "flex_1channel_1000", "left"
+                    )
+                    pipette.pick_up_tip(tip_rack["A1"])
+                """)
+
+    protocol_source_file = tmp_path / "protocol.py"
+    protocol_source_file.write_text(protocol, encoding="utf-8")
+    result = _get_analysis_result([protocol_source_file], output)
+
+    assert result.exit_code == 0
+
+    assert result.json_output is not None
+    assert result.json_output["robotType"] == "OT-3 Standard"
+    assert result.json_output["result"] == AnalysisResult.OK
+    assert len(result.json_output["labwareOffsets"])
+    offset = result.json_output["labwareOffsets"][0]
+    assert offset["id"]
+    assert offset["definitionUri"] == "opentrons/opentrons_flex_96_tiprack_1000ul/1"
+    assert offset["location"]["slotName"] == "A2"
+    assert offset["locationSequence"] == [
+        {"kind": "onAddressableArea", "addressableAreaName": "A2"}
+    ]
+    assert offset["vector"] == {"x": 1.0, "y": 2.0, "z": 3.0}

@@ -5,9 +5,11 @@ import last from 'lodash/last'
 
 import {
   DeviceReset,
+  Devices,
   LanguageSetting,
   NetworkSettings,
   Privacy,
+  RobotEncryptionKey,
   RobotName,
   RobotSettingsJoinOtherNetwork,
   RobotSettingsSelectAuthenticationType,
@@ -213,6 +215,14 @@ export function RobotSettingsDashboard(): JSX.Element {
           robotName={robotName}
         />
       )
+
+    case 'Devices':
+      return (
+        <Devices robotName={robotName} setCurrentOption={setCurrentOption} />
+      )
+
+    case 'RobotEncryptionKey':
+      return <RobotEncryptionKey setCurrentOption={setCurrentOption} />
 
     // fallthrough option: render the robot settings list of buttons
     default:

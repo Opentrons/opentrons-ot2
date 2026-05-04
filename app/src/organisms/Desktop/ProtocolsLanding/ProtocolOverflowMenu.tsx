@@ -159,16 +159,16 @@ export function ProtocolOverflowMenu(
 
       {showDeleteConfirmation
         ? createPortal(
-            <ConfirmDeleteProtocolModal
-              cancelDeleteProtocol={(e: MouseEvent) => {
-                e.preventDefault()
-                e.stopPropagation()
-                cancelDeleteProtocol()
-              }}
-              handleClickDelete={handleClickDelete}
-            />,
-            getTopPortalEl()
-          )
+          <ConfirmDeleteProtocolModal
+            cancelDeleteProtocol={(e: MouseEvent) => {
+              e.preventDefault()
+              e.stopPropagation()
+              cancelDeleteProtocol()
+            }}
+            handleClickDelete={handleClickDelete}
+          />,
+          getTopPortalEl()
+        )
         : null}
       {menuOverlay}
     </Flex>

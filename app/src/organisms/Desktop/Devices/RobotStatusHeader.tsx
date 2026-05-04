@@ -94,9 +94,8 @@ export function RobotStatusHeader(props: RobotStatusHeaderProps): JSX.Element {
           )}`}
         </LegacyStyledText>
         <Link
-          to={`/devices/${name}/protocol-runs/${currentRunId}/${
-            currentRunStatus === RUN_STATUS_IDLE ? 'setup' : 'run-preview'
-          }`}
+          to={`/devices/${name}/protocol-runs/${currentRunId}/${currentRunStatus === RUN_STATUS_IDLE ? 'setup' : 'run-preview'
+            }`}
           id={`RobotStatusHeader_${String(name)}_goToRun`}
         >
           <QuaternaryButton>{t('go_to_run')}</QuaternaryButton>
@@ -149,7 +148,7 @@ export function RobotStatusHeader(props: RobotStatusHeaderProps): JSX.Element {
       props.isGoToRun ? `150px` : undefined};
     @media screen and (max-width: 678px) {
       max-width: ${(props: RobotNameContainerProps) =>
-        props.isGoToRun ? `105px` : undefined};
+      props.isGoToRun ? `105px` : undefined};
     }
   `
 

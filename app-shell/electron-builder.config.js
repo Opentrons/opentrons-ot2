@@ -16,9 +16,9 @@ const HAS_MAC_ASSET_CATALOG = fs.existsSync(MAC_ASSET_CATALOG_PATH)
 const publishConfig =
   OT_OT2_APP_DEPLOY_BUCKET && OT_OT2_APP_DEPLOY_FOLDER
     ? {
-        provider: 'generic',
-        url: `https://${OT_OT2_APP_DEPLOY_BUCKET}/${OT_OT2_APP_DEPLOY_FOLDER}/`,
-      }
+      provider: 'generic',
+      url: `https://${OT_OT2_APP_DEPLOY_BUCKET}/${OT_OT2_APP_DEPLOY_FOLDER}/`,
+    }
     : null
 
 module.exports = async () => ({

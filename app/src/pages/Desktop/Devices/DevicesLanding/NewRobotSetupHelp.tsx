@@ -38,37 +38,37 @@ export function NewRobotSetupHelp(): JSX.Element {
       </Link>
       {showNewRobotHelpModal
         ? createPortal(
-            <Modal
-              title={t('how_to_setup_a_robot')}
-              onClose={() => {
-                setShowNewRobotHelpModal(false)
-              }}
-            >
-              <Flex flexDirection={DIRECTION_COLUMN} gap={SPACING.spacing24}>
-                <Flex flexDirection={DIRECTION_COLUMN} gap={SPACING.spacing16}>
-                  <StyledText desktopStyle="bodyDefaultRegular">
-                    {t('branded:new_robot_instructions')}
-                  </StyledText>
-                  <ExternalLink
-                    href={NEW_OT2_SETUP_SUPPORT_ARTICLE_HREF}
-                    width={FLEX_MAX_CONTENT}
-                  >
-                    {t('branded:opentrons_ot2_quickstart_guide')}
-                  </ExternalLink>
-                </Flex>
-                <PrimaryButton
-                  onClick={() => {
-                    setShowNewRobotHelpModal(false)
-                  }}
-                  alignSelf={ALIGN_FLEX_END}
-                  textTransform={TYPOGRAPHY.textTransformCapitalize}
+          <Modal
+            title={t('how_to_setup_a_robot')}
+            onClose={() => {
+              setShowNewRobotHelpModal(false)
+            }}
+          >
+            <Flex flexDirection={DIRECTION_COLUMN} gap={SPACING.spacing24}>
+              <Flex flexDirection={DIRECTION_COLUMN} gap={SPACING.spacing16}>
+                <StyledText desktopStyle="bodyDefaultRegular">
+                  {t('branded:new_robot_instructions')}
+                </StyledText>
+                <ExternalLink
+                  href={NEW_OT2_SETUP_SUPPORT_ARTICLE_HREF}
+                  width={FLEX_MAX_CONTENT}
                 >
-                  {t('shared:close')}
-                </PrimaryButton>
+                  {t('branded:opentrons_ot2_quickstart_guide')}
+                </ExternalLink>
               </Flex>
-            </Modal>,
-            getTopPortalEl()
-          )
+              <PrimaryButton
+                onClick={() => {
+                  setShowNewRobotHelpModal(false)
+                }}
+                alignSelf={ALIGN_FLEX_END}
+                textTransform={TYPOGRAPHY.textTransformCapitalize}
+              >
+                {t('shared:close')}
+              </PrimaryButton>
+            </Flex>
+          </Modal>,
+          getTopPortalEl()
+        )
         : null}
     </>
   )
