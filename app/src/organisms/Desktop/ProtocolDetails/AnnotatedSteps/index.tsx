@@ -27,7 +27,7 @@ interface AnnotatedStepsProps {
   setIsAtBottom?: Dispatch<SetStateAction<boolean>>
 }
 
-type GroupNode = Extract<GroupedCommands[number], { annotationId: string }>
+type GroupNode = Extract<GroupedCommands[number], { annotationIndex: number }>
 
 interface GroupRow {
   type: 'group'
@@ -87,9 +87,12 @@ export function AnnotatedSteps(props: AnnotatedStepsProps): JSX.Element {
       analysis != null
         ? getLabwareDefinitionsFromCommands(analysis.commands)
         : [],
-    // FIXME(2026-03-03): Supply all missing dependencies, if it's safe. If it's unsafe, explain why.
-    // eslint-disable-next-line react-hooks/exhaustive-deps
     [isValidRobotSideAnalysis]
+  )
+  const annotations = analysis?.commandAnnotations ?? []
+  const annotationNames = useMemo(
+    () => annotations.map(annotation => annotation?.machineReadableName ?? ''),
+    [annotations]
   )
   const commandIndexById = useMemo(
     () =>
@@ -99,25 +102,25 @@ export function AnnotatedSteps(props: AnnotatedStepsProps): JSX.Element {
   const groupedCommandsHighlightedInfo = useMemo(
     () =>
       groupedCommands?.map(node => {
-        if ('annotationId' in node) {
-          const updatedSubCommands = node.subCommands.map(subNode => ({
-            ...subNode,
-            isHighlighted:
-              currentCommandIndex === commandIndexById.get(subNode.command.id),
-          }))
-
+        if ('annotationIndex' in node) {
           return {
             ...node,
-            subCommands: updatedSubCommands,
-            isHighlighted: updatedSubCommands.some(
+            isHighlighted: node.subCommands.some(
               subNode => subNode.isHighlighted
             ),
+            subCommands: node.subCommands.map(subNode => ({
+              ...subNode,
+              isHighlighted:
+                currentCommandIndex ===
+                commandIndexById.get(subNode.command.id),
+            })),
           }
-        }
-        return {
-          ...node,
-          isHighlighted:
-            currentCommandIndex === commandIndexById.get(node.command.id),
+        } else {
+          return {
+            ...node,
+            isHighlighted:
+              currentCommandIndex === commandIndexById.get(node.command.id),
+          }
         }
       }),
     [groupedCommands, currentCommandIndex, commandIndexById]
@@ -172,9 +175,10 @@ export function AnnotatedSteps(props: AnnotatedStepsProps): JSX.Element {
     ) {
       groupedCommandsHighlightedInfo.forEach((group, index) => {
         const nextIndex = groupedCommandsHighlightedInfo[index + 1]
-        const nextIsGrouped = nextIndex != null && 'annotationId' in nextIndex
+        const nextIsGrouped =
+          nextIndex != null && 'annotationIndex' in nextIndex
 
-        if ('annotationId' in group) {
+        if ('annotationIndex' in group) {
           const subCommandStartNumber = commandNumber + 1
           commandNumber += group.subCommands.length
 
@@ -182,7 +186,7 @@ export function AnnotatedSteps(props: AnnotatedStepsProps): JSX.Element {
           nextRows.push({
             type: 'group',
             group,
-            annotationType: group.annotation?.userSpecifiedName ?? '',
+            annotationType: annotationNames[group.annotationIndex] ?? '',
             commandStartNumber: subCommandStartNumber,
           })
           group.subCommands.forEach(subCommand => {
@@ -234,6 +238,7 @@ export function AnnotatedSteps(props: AnnotatedStepsProps): JSX.Element {
     filteredCommands,
     currentCommandIndex,
     analysis.errors,
+    annotationNames,
   ])
 
   const [listRef, listRefCallback] = useListCallbackRef()
