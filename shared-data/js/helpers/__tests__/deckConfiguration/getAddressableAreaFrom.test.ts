@@ -59,7 +59,7 @@ describe('getAAsToFixtureIdFromDeckDefWithFakes', () => {
         'absorbanceReaderV1LidDockA4',
       ],
       flexStackerModuleV1: ['flexStackerModuleV1A4', 'A3'],
-      vacuumModuleV1: ['vacuumModuleV1A3', 'vacuumModuleV1DockA4'],
+      vacuumModuleMilliporeV1: ['vacuumModuleMilliporeV1A3', 'A4'],
     })
   })
 
