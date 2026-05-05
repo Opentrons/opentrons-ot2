@@ -2,7 +2,6 @@
 
 from __future__ import annotations
 
-import io
 import json
 import textwrap
 from pathlib import Path
@@ -104,8 +103,7 @@ class TestSimulatePythonLabware:
     def protocol_path(self, tmp_path: Path, api_version: APIVersion) -> Path:
         """Return a path to a Python protocol file that loads a custom labware."""
         path = tmp_path / "protocol.py"
-        protocol_source = textwrap.dedent(
-            f"""\
+        protocol_source = textwrap.dedent(f"""\
             requirements = {{"robotType": "Flex", "apiLevel": "{api_version}"}}
             def run(protocol):
                 protocol.load_labware(
@@ -113,8 +111,7 @@ class TestSimulatePythonLabware:
                     location=1,
                     namespace="{self.LW_NAMESPACE}",
                 )
-            """
-        )
+            """)
         path.write_text(protocol_source)
         return path
 
