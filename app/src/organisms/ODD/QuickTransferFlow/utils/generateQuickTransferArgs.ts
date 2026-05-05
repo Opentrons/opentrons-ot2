@@ -23,6 +23,7 @@ import type {
   CutoutConfig,
   DeckConfiguration,
   LabwareDefinition,
+  NozzleConfigurationStyle,
   PipetteName,
 } from '@opentrons/shared-data'
 import type {
@@ -436,7 +437,10 @@ export function generateQuickTransferArgs(
         : undefined
   }
 
-  const nozzles = ALL
+  let nozzles = null
+  if (pipetteEntity.spec.channels === 96) {
+    nozzles = ALL as NozzleConfigurationStyle
+  }
   const touchTipAfterDispenseOffsetMmFromTop =
     quickTransferState.touchTipDispense ?? DEFAULT_MM_TOUCH_TIP_OFFSET_FROM_TOP
 
@@ -444,7 +448,7 @@ export function generateQuickTransferArgs(
     quickTransferState.touchTipAspirate ?? DEFAULT_MM_TOUCH_TIP_OFFSET_FROM_TOP
 
   const primaryNozzle = getDefaultPrimaryNozzle({
-    nozzles,
+    nozzles: nozzles ?? ALL,
     channels: pipetteEntity.spec.channels,
   })
   const commonFields: SharedTransferLikeArgs = {
@@ -460,10 +464,6 @@ export function generateQuickTransferArgs(
     aspirateOffsetFromBottomMm: quickTransferState.tipPositionAspirate,
     dispenseOffsetFromBottomMm: quickTransferState.tipPositionDispense,
     blowoutLocation,
-    blowoutOffsetFromTopMm: null,
-    blowoutXPosition: null,
-    blowoutYPosition: null,
-    blowoutPositionReference: null,
     blowoutFlowRateUlSec:
       quickTransferState.path === 'multiDispense'
         ? (quickTransferState.disposalVolumeDispenseSettings?.flowRate ?? 0)

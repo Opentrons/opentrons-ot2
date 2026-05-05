@@ -127,7 +127,7 @@ describe('ProtocolCard', () => {
     })
 
     screen.getByTestId('InlineNotification_alert')
-    screen.getByText('Flex protocol detected')
+    screen.getByText('Flex protocol detected.')
     screen.getByText('Get the app')
 
     fireEvent.click(screen.getByText('Mock Protocol'))

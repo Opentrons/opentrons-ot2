@@ -170,7 +170,9 @@ export const ThermocyclerModuleSlideout = (
         </LegacyStyledText>
         <form id="ThermocyclerModuleSlideout_submitValue">
           <InputField
-            title={`${String(module.moduleModel)}_${String(isSecondaryTemp)}`}
+            data-testid={`${String(module.moduleModel)}_${String(
+              isSecondaryTemp
+            )}`}
             id={`${String(module.moduleModel)}_${String(isSecondaryTemp)}`}
             units={CELSIUS}
             value={tempValue != null ? Math.round(tempValue) : null}

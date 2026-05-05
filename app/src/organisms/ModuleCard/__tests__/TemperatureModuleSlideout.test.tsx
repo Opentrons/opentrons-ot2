@@ -81,9 +81,7 @@ describe('TemperatureModuleSlideout', () => {
     }
     render(props)
     const button = screen.getByRole('button', { name: 'Confirm' })
-    const input = screen.getByRole('spinbutton', {
-      name: 'temperatureModuleV2',
-    })
+    const input = screen.getByTestId('temperatureModuleV2')
     fireEvent.change(input, { target: { value: '20' } })
     expect(button).toBeEnabled()
     fireEvent.click(button)

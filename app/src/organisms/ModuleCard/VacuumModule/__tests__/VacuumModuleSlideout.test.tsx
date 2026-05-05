@@ -11,7 +11,7 @@ import type { VacuumModule } from '@opentrons/api-client'
 
 const mockVacuumModule: VacuumModule = {
   id: 'vacuum_id',
-  moduleModel: 'vacuumModuleV1',
+  moduleModel: 'vacuumModuleMilliporeV1',
   moduleType: 'vacuumModuleType',
   serialNumber: 'vac123',
   hardwareRevision: 'vacuum_v1.0',
@@ -60,7 +60,7 @@ describe('VacuumModuleSlideout', () => {
     render(props)
 
     expect(
-      screen.getByText('Set Vacuum for Vacuum Module GEN1')
+      screen.getByText('Set Vacuum for Millipore MultiScreen® Vacuum Manifold')
     ).toBeInTheDocument()
   })
 
