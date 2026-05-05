@@ -1,10 +1,10 @@
 """Radwag Commands."""
-from enum import StrEnum, Enum
+from enum import Enum
 
 RADWAG_COMMAND_TERMINATOR = "\r\n"
 
 
-class RadwagCommand(StrEnum):
+class RadwagCommand(str, Enum):
     """Radwag commands."""
 
     # info
