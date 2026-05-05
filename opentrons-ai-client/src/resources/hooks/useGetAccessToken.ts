@@ -7,7 +7,7 @@ import {
 } from '../constants'
 
 interface UseGetAccessTokenResult {
-  getAccessToken: (bypassCache?: boolean) => Promise<string>
+  getAccessToken: () => Promise<string>
 }
 
 export const useGetAccessToken = (): UseGetAccessTokenResult => {
@@ -27,13 +27,12 @@ export const useGetAccessToken = (): UseGetAccessTokenResult => {
     }
   }
 
-  const getAccessToken = async (bypassCache = false): Promise<string> => {
+  const getAccessToken = async (): Promise<string> => {
     try {
       const accessToken = await getAccessTokenSilently({
         authorizationParams: {
           audience: auth0Audience(),
         },
-        ...(bypassCache ? { cacheMode: 'off' } : {}),
       })
       return accessToken
     } catch (error) {

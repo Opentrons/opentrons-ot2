@@ -20,7 +20,7 @@ export const chatDataAtom = atom<ChatData[]>([])
 export const createProtocolChatAtom = atom<CreatePrompt>({
   prompt: '',
   regenerate: false,
-  scientificApplicationType: '',
+  scientific_application_type: '',
   description: '',
   robots: 'opentrons_flex',
   mounts: [],
@@ -28,7 +28,7 @@ export const createProtocolChatAtom = atom<CreatePrompt>({
   modules: [],
   labware: [],
   liquids: [],
-  runtimeParameters: '',
+  runtime_parameters: '',
   steps: [],
   fake: true,
 })
@@ -36,10 +36,10 @@ export const createProtocolChatAtom = atom<CreatePrompt>({
 /** CreateProtocolChatAtom is for the prefilled userprompt when navigating to the chat page from Update Protocol page */
 export const updateProtocolChatAtom = atom<UpdatePrompt>({
   prompt: '',
-  protocolText: '',
+  protocol_text: '',
   regenerate: false,
-  updateType: 'adapt_python_protocol',
-  updateDetails: '',
+  update_type: 'adapt_python_protocol',
+  update_details: '',
   fake: false,
 })
 
@@ -59,9 +59,7 @@ export const chatHistoryAtom = atom<Chat[]>([])
 
 export const feedbackModalAtom = atom<boolean>(false)
 
-/** Tracks whether the authenticated user has verified their email address.
- * null = not yet determined, true = verified, false = unverified. */
-export const emailVerifiedAtom = atom<boolean | null>(null)
+export const tokenAtom = atom<string | null>(null)
 
 // feature flag atoms are a bit more fancy
 // they leverage local storage to persist settings across browser refreshes

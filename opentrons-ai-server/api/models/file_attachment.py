@@ -1,11 +1,10 @@
 from typing import Optional
 
-from pydantic import BaseModel, ConfigDict, Field
-from pydantic.alias_generators import to_camel
+from pydantic import BaseModel, Field
 
 
 class FileReference(BaseModel):
-    model_config = ConfigDict(alias_generator=to_camel, populate_by_name=True)
+    """Reference to a file with content included for local processing"""
 
     id: str = Field(..., description="File ID (locally generated)")
     filename: str = Field(..., description="Original filename")

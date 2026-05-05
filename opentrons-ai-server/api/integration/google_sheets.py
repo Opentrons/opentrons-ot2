@@ -9,7 +9,7 @@ from google.oauth2.service_account import Credentials
 from gspread import SpreadsheetNotFound  # type: ignore
 from gspread.client import Client as GspreadClient
 
-from api.settings import Settings, get_settings
+from api.settings import Settings
 
 
 class GoogleSheetsClient:
@@ -72,7 +72,8 @@ class GoogleSheetsClient:
 # Example usage
 def main() -> None:
     """Run an example appending feedback to Google Sheets."""
-    google_sheets_client = GoogleSheetsClient(get_settings())
+    settings = Settings()
+    google_sheets_client = GoogleSheetsClient(settings)
     user_id = str(random.randint(100000, 999999))
     feedback = f"This is a test feedback for user {user_id}."
     google_sheets_client.append_feedback_to_sheet(user_id, feedback)

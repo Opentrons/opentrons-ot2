@@ -463,7 +463,7 @@ ${t(
   setCreateProtocolChatAtom({
     prompt,
     regenerate: false,
-    scientificApplicationType:
+    scientific_application_type:
       values.application.scientificApplication === OTHER
         ? values.application.otherApplication
         : values.application.scientificApplication,
@@ -484,12 +484,12 @@ ${t(
       labware => `${labware.labwareURI}, quantity: ${labware.count}`
     ),
     liquids: values.liquids,
-    runtimeParameters: values.runtime_parameters,
+    runtime_parameters: values.runtime_parameters,
     steps: Array.isArray(values.steps) ? values.steps : [values.steps],
     fake:
       !isPdProtocolGenerationEnabled &&
       values.protocol_format === 'Protocol Designer',
-    fakeKey:
+    fake_key:
       !isPdProtocolGenerationEnabled &&
       values.protocol_format === 'Protocol Designer'
         ? 'pd serial diliution'

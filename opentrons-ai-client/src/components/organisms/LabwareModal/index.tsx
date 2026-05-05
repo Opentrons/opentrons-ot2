@@ -5,10 +5,8 @@ import { useTranslation } from 'react-i18next'
 import reduce from 'lodash/reduce'
 
 import {
-  COLORS,
   DIRECTION_COLUMN,
   Flex,
-  Icon,
   InputField,
   JUSTIFY_FLEX_END,
   ListButton,
@@ -63,36 +61,31 @@ export function LabwareModal({
 
   const defs = getOnlyLatestDefs()
 
-  const labwareByCategory: Record<string, LabwareDefinition[]> = useMemo(
-    () => {
-      const groupedLabware = reduce<
-        LabwareDefByDefURI,
-        Record<string, LabwareDefinition[]>
-      >(
-        defs,
-        (acc, def) => {
-          const category = def.metadata.displayCategory
-          return {
-            ...acc,
-            [category]: [...(acc[category] ?? []), def],
-          }
-        },
-        {}
+  const labwareByCategory: Record<string, LabwareDefinition[]> = useMemo(() => {
+    const groupedLabware = reduce<
+      LabwareDefByDefURI,
+      Record<string, LabwareDefinition[]>
+    >(
+      defs,
+      (acc, def) => {
+        const category = def.metadata.displayCategory
+        return {
+          ...acc,
+          [category]: [...(acc[category] ?? []), def],
+        }
+      },
+      {}
+    )
+
+    // Sort each category's labware by display name in place
+    for (const category in groupedLabware) {
+      groupedLabware[category].sort((a, b) =>
+        a.metadata.displayName.localeCompare(b.metadata.displayName)
       )
+    }
 
-      // Sort each category's labware by display name in place
-      for (const category in groupedLabware) {
-        groupedLabware[category].sort((a, b) =>
-          a.metadata.displayName.localeCompare(b.metadata.displayName)
-        )
-      }
-
-      return groupedLabware
-    },
-    // FIXME(2026-03-03): Supply all missing dependencies, if it's safe. If it's unsafe, explain why.
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    []
-  )
+    return groupedLabware
+  }, [])
 
   const populatedCategories: Record<string, boolean> = useMemo(
     () =>
@@ -107,21 +100,14 @@ export function LabwareModal({
             }
           : acc
       }, {}),
-    // FIXME(2026-03-03): Supply all missing dependencies, if it's safe. If it's unsafe, explain why.
-    // eslint-disable-next-line react-hooks/exhaustive-deps
     [labwareByCategory, searchTerm]
   )
 
-  useEffect(
-    () => {
-      if (displayLabwareModal) {
-        setSelectedLabwares(labwares.map(lw => lw.labwareURI))
-      }
-    },
-    // FIXME(2026-03-03): Supply all missing dependencies, if it's safe. If it's unsafe, explain why.
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [displayLabwareModal]
-  )
+  useEffect(() => {
+    if (displayLabwareModal) {
+      setSelectedLabwares(labwares.map(lw => lw.labwareURI))
+    }
+  }, [displayLabwareModal])
 
   const handleCategoryClick = (category: string): void => {
     setSelectedCategory(selectedCategory === category ? null : category)
@@ -148,22 +134,11 @@ export function LabwareModal({
                     }}
                     placeholder={t('search_for_labware_placeholder')}
                     size="medium"
-                    leftElement={
-                      <Icon
-                        name="search"
-                        size="1.25rem"
-                        color={COLORS.grey60}
-                      />
-                    }
-                    rightElement={
-                      <Icon
-                        name="close"
-                        size="1.75rem"
-                        onClick={() => {
-                          setSearchTerm('')
-                        }}
-                      />
-                    }
+                    leftIcon="search"
+                    showDeleteIcon
+                    onDelete={() => {
+                      setSearchTerm('')
+                    }}
                   />
                 </Flex>
                 <Flex

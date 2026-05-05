@@ -129,7 +129,7 @@ export function UpdateProtocol(): JSX.Element {
     setCreateProtocolChatAtom({
       prompt: '',
       regenerate: false,
-      scientificApplicationType: '',
+      scientific_application_type: '',
       description: '',
       robots: 'opentrons_flex',
       mounts: [],
@@ -142,10 +142,10 @@ export function UpdateProtocol(): JSX.Element {
     })
     setUpdateProtocolChatAtom({
       prompt: '',
-      protocolText: '',
+      protocol_text: '',
       regenerate: false,
-      updateType: 'adapt_python_protocol',
-      updateDetails: '',
+      update_type: 'adapt_python_protocol',
+      update_details: '',
       fake: false,
     })
     setChatHistoryAtom([])
@@ -259,10 +259,10 @@ export function UpdateProtocol(): JSX.Element {
 
     setUpdateProtocolChatAtom({
       prompt: chatPrompt,
-      protocolText: pythonText,
+      protocol_text: pythonText,
       regenerate: false,
-      updateType: (updateType?.value ?? 'other') as UpdateOptions,
-      updateDetails: detailsValue,
+      update_type: (updateType?.value ?? 'other') as UpdateOptions,
+      update_details: detailsValue,
       fake: false,
     })
 

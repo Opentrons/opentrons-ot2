@@ -51,7 +51,13 @@ export function ChatDisplay({ chat, chatId }: ChatDisplayProps): JSX.Element {
   const [scrollToBottom, setScrollToBottom] = useAtom(scrollToBottomAtom)
 
   const [showProtocolContent, setShowProtocolContent] = useState(false)
-  const { role, reply, requestId, protocolContent, attachments } = chat
+  const {
+    role,
+    reply,
+    requestId,
+    protocol_content: protocolContent,
+    attachments,
+  } = chat
   const isUser = role === 'user'
 
   const setInputFieldToCorrespondingRequest = (): void => {
@@ -149,15 +155,14 @@ export function ChatDisplay({ chat, chatId }: ChatDisplayProps): JSX.Element {
   }
 
   useEffect(() => {
-    if (isCopied) {
+    if (isCopied)
       delay(() => {
         setIsCopied(false)
       }, 2000)
-    }
   }, [isCopied])
 
   const protocolName =
-    chatdata.findLast(chat => chat.protocolContent != null)?.protocolContent
+    chatdata.findLast(chat => chat.protocol_content != null)?.protocol_content
       ?.metadata.protocolName ?? 'protocol.json'
 
   // ToDo this nested component definition should be resolved

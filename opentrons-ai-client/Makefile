@@ -4,10 +4,12 @@
 SHELL := bash
 
 # add node_modules/.bin to PATH
-PATH := $(shell cd .. && pnpm exec bin):$(PATH)
+PATH := $(shell cd .. && yarn bin):$(PATH)
 
 # dev server port
 PORT ?= 5173
+
+benchmark_output := $(shell node -e 'console.log(new Date());')
 
 # These variables can be overriden when make is invoked to customize the
 # behavior of jest
@@ -26,11 +28,11 @@ all: clean build-$(target)
 
 .PHONY: setup
 setup:
-	pnpm install
+	yarn
 
 .PHONY: clean
 clean:
-	pnpm exec shx rm -rf dist
+	shx rm -rf dist
 
 # artifacts
 #####################################################################
@@ -38,18 +40,14 @@ clean:
 .PHONY: build-production
 build-production: export NODE_ENV := production
 build-production:
-	pnpm exec vite build
+	vite build
 	git rev-parse HEAD > dist/.commit
 
 .PHONY: build-staging
 build-staging: export NODE_ENV := staging
 build-staging:
-	pnpm exec vite build
+	vite build
 	git rev-parse HEAD > dist/.commit
-
-.PHONY: build
-build:
-	pnpm exec vite build
 
 # development
 #####################################################################
@@ -58,12 +56,12 @@ build:
 dev: export NODE_ENV := development
 dev: export PORT := $(PORT)
 dev:
-	pnpm exec vite serve
+	vite serve
 
 # production assets server
 .PHONY: serve
 serve: all
-	pnpm exec vite preview
+	vite preview
 
 .PHONY: test
 test:
@@ -83,4 +81,4 @@ prod-deploy:
 
 .PHONY: format-md-json
 format-md-json:
-	pnpm exec prettier --ignore-path .eslintignore --write **/*.md **/*.json
+	yarn prettier --ignore-path .eslintignore --write **/*.md **/*.json

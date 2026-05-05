@@ -23,9 +23,9 @@ from api.domain.prompts import (
     tools,
 )
 from api.domain.utils import refine_characters
-from api.settings import Settings, get_settings
+from api.settings import Settings
 
-settings: Settings = get_settings()
+settings: Settings = Settings()
 logger = structlog.stdlib.get_logger(settings.logger_name)
 ROOT_PATH: Path = Path(Path(__file__)).parent.parent.parent
 
@@ -198,7 +198,8 @@ def main() -> None:
     from rich import print
     from rich.prompt import Prompt
 
-    openai = OpenAIPredict(get_settings())
+    settings = Settings()
+    openai = OpenAIPredict(settings)
     prompt = Prompt.ask("Type a prompt to send to the OpenAI API:")
     completion = openai.predict(prompt)
     print(completion)

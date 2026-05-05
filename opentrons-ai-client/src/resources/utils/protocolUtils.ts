@@ -34,8 +34,9 @@ export const getUpdateOrCreatePrompt = (
   createProtocol.regenerate = isRegenerateRequest
   updateProtocol.regenerate = isRegenerateRequest
 
+  // If it's a new protocol, set the protocol_format property
   if (isNewProtocol && protocolFormat) {
-    createProtocol.protocolFormat = protocolFormat
+    createProtocol.protocol_format = protocolFormat
   }
 
   return isNewProtocol ? createProtocol : updateProtocol
