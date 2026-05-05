@@ -95,14 +95,14 @@ describe('create-release script', () => {
   })
 })
 
-describe('calendar robot tags (vYY.MM / vYY.MM@alpha.N)', () => {
+describe('calendar robot tags (vYY.M / vYY.M@alpha.N)', () => {
   it('orders per semver on comparable strings (prerelease < release)', () => {
-    expect(compareVersions('26.04@alpha.0', '26.04')).toBeLessThan(0)
-    expect(compareVersions('26.04@alpha.0', '26.04@alpha.1')).toBeLessThan(0)
+    expect(compareVersions('26.4@alpha.0', '26.4')).toBeLessThan(0)
+    expect(compareVersions('26.4@alpha.0', '26.4@alpha.1')).toBeLessThan(0)
   })
   it('versionPrevious for calendar alpha uses prior stable', () => {
-    const prev = ['26.04@alpha.0', '26.04', '26.03@alpha.2', '26.03']
-    expect(versionPrevious('26.04@alpha.0', prev)).toBe('26.04')
+    const prev = ['26.4@alpha.0', '26.4', '26.3@alpha.2', '26.3']
+    expect(versionPrevious('26.4@alpha.0', prev)).toBe('26.4')
   })
 })
 

@@ -41,20 +41,20 @@ import python_build_utils as python_build_utils  # noqa: E402
 class TestChoreReleaseIncrementTag(unittest.TestCase):
     def test_calendar_alpha_bump(self):
         self.assertEqual(
-            chore_release.increment_tag("v26.04@alpha.6", "alpha"),
-            "v26.04@alpha.7",
+            chore_release.increment_tag("v26.4@alpha.6", "alpha"),
+            "v26.4@alpha.7",
         )
 
     def test_calendar_stable_to_next_alpha(self):
         self.assertEqual(
-            chore_release.increment_tag("v26.04", "alpha"),
-            "v26.05@alpha.0",
+            chore_release.increment_tag("v26.4", "alpha"),
+            "v26.5@alpha.0",
         )
 
     def test_calendar_year_rollover(self):
         self.assertEqual(
             chore_release.increment_tag("v26.12", "alpha"),
-            "v27.01@alpha.0",
+            "v27.1@alpha.0",
         )
 
     def test_parse_chore_release_branch_semver(self):
@@ -65,7 +65,7 @@ class TestChoreReleaseIncrementTag(unittest.TestCase):
 
     def test_parse_chore_release_branch_calendar(self):
         self.assertEqual(
-            chore_release.parse_chore_release_branch("chore_release-26.04"),
+            chore_release.parse_chore_release_branch("chore_release-26.4"),
             (26, 4, 0),
         )
 
@@ -133,9 +133,9 @@ class TestPythonBuildUtilsOt3(unittest.TestCase):
     def test_pep440_robot_stack_calendar_alpha(self):
         self.assertEqual(
             python_build_utils._pep440_from_git_version(
-                "robot-stack", "26.04@alpha.3"
+                "robot-stack", "26.4@alpha.3"
             ),
-            "26.04a3",
+            "26.4a3",
         )
 
 
