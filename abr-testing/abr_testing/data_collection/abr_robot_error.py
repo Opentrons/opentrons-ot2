@@ -7,7 +7,6 @@ from abr_testing.automation import jira_tool, google_sheets_tool, google_drive_t
 import shutil
 import os
 import subprocess
-import platform
 from datetime import datetime, timedelta
 import sys
 import json
@@ -16,17 +15,6 @@ from pathlib import Path
 import pandas as pd
 from statistics import mean, StatisticsError
 from abr_testing.tools import plate_reader
-
-
-def open_folder(path: str) -> None:
-    """Open file folder on mac or windows."""
-    system = platform.system()
-    if system == "Windows":
-        subprocess.Popen(["explorer", path])
-    elif system == "Darwin":
-        subprocess.Popen(["open", path])
-    else:
-        raise OSError("Unsupported operating system")
 
 
 def retrieve_version_file(
@@ -573,30 +561,6 @@ Please confirm with the ABR-LPC sheet and re-LPC."
     )
 
 
-def write_errored_run_to_google_sheet() -> None:
-    """Add row to google sheet with run details and link to ticket."""
-    file_values = plate_reader.read_hellma_plate_files(storage_directory, 101934)
-    (
-        runs_and_robots,
-        headers,
-        runs_and_lpc,
-        headers_lpc,
-    ) = abr_google_drive.create_data_dictionary(
-        run_id,
-        Path(error_folder_path),
-        issue_url,
-        file_values,
-    )
-    start_row = google_sheet.get_index_row() + 1
-    try:
-        google_sheet.batch_update_cells(runs_and_robots, "A", start_row, "0")
-    except requests.exceptions.RequestException as e:
-        print(
-            f"⚠️Warning: Did not record this run on ABR-run-data google sheet. Error: {e}"
-        )
-    print("Wrote run to ABR-run-data")
-
-
 if __name__ == "__main__":
     """Create ticket for specified robot."""
     parser = argparse.ArgumentParser(description="Pulls run logs from ABR robots.")
@@ -621,6 +585,14 @@ if __name__ == "__main__":
         nargs=1,
         help="Email connected to JIRA account.",
     )
+    # TODO: write function to get reporter_id from email.
+    parser.add_argument(
+        "reporter_id",
+        metavar="REPORTER_ID",
+        type=str,
+        nargs=1,
+        help="JIRA Reporter ID.",
+    )
     # TODO: improve help comment on jira board id.
     parser.add_argument(
         "board_id",
@@ -642,10 +614,10 @@ if __name__ == "__main__":
     api_token = args.jira_api_token[0]
     email = args.email[0]
     board_id = args.board_id[0]
+    reporter_id = args.reporter_id[0]
     log_zip_path = read_robot_logs.get_logs(storage_directory, ip)
     ticket = jira_tool.JiraTicket(url, api_token, email)
-    project_key = "RABR"
-    users_file_path = ticket.get_jira_users(storage_directory, project_key)
+    users_file_path = ticket.get_jira_users(storage_directory)
     assignee_id = get_user_id(users_file_path, assignee)
     run_log_file_path = ""
     protocol_found = False
@@ -705,12 +677,16 @@ if __name__ == "__main__":
     image_files = retrieve_protocol_images(one_run, ip, storage_directory)
 
     print(f"Making ticket for {summary}.")
+    # TODO: make argument or see if I can get rid of with using board_id.
+    project_key = "RABR"
+    # TODO: read board to see if ticket for run id already exists.
     all_issues = ticket.issues_on_board(project_key)
     # CREATE TICKET
     issue_key, raw_issue_url = ticket.create_ticket(
         summary,
         whole_description_str,
         project_key,
+        reporter_id,
         assignee_id,
         "Bug",
         "Medium",
@@ -771,8 +747,31 @@ if __name__ == "__main__":
         except FileNotFoundError:
             print("Run file not uploaded.")
         run_id = os.path.basename(error_run_log).split("_")[1].split(".")[0]
-        write_errored_run_to_google_sheet()
+        # Get hellma readings
+        file_values = plate_reader.read_hellma_plate_files(storage_directory, 101934)
+
+        (
+            runs_and_robots,
+            headers,
+            runs_and_lpc,
+            headers_lpc,
+        ) = abr_google_drive.create_data_dictionary(
+            run_id,
+            Path(error_folder_path),
+            issue_url,
+            file_values,
+        )
+
+        start_row = google_sheet.get_index_row() + 1
+        google_sheet.batch_update_cells(runs_and_robots, "A", start_row, "0")
+        print("Wrote run to ABR-run-data")
+        # Add LPC to google sheet
+        google_sheet_lpc = google_sheets_tool.google_sheet(
+            credentials_path, "ABR-LPC", 0
+        )
+        start_row_lpc = google_sheet_lpc.get_index_row() + 1
+        google_sheet_lpc.batch_update_cells(runs_and_lpc, "A", start_row_lpc, "0")
     else:
         print("Ticket created.")
     # Open folder directory incase uploads to ticket were incomplete
-    open_folder(error_folder_path)
+    subprocess.Popen(["explorer", error_folder_path])

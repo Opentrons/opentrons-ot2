@@ -130,8 +130,7 @@ def unload_tipracks_from_stacker(
 
 def run(ctx: ProtocolContext) -> None:
     """Run the protocol."""
-    if not ctx.is_simulating():
-        background_helpers.launch_background_tasks()
+    background_helpers.launch_background_tasks()
 
     ctx.capture_image(filename="start_of_run")
     length = ctx.params.error_capture_duration  # type: ignore[attr-defined]

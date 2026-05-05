@@ -85,8 +85,7 @@ def add_parameters(p: ParameterContext) -> None:
 
 def run(protocol: ProtocolContext) -> None:
     """Main function to run the protocol."""
-    if not protocol.is_simulating():
-        background_helpers.launch_background_tasks()
+    background_helpers.launch_background_tasks()
 
     global open_location
     protocol.capture_image(filename="start_of_run")
@@ -523,7 +522,7 @@ def run(protocol: ProtocolContext) -> None:
         liquid_heights = {}
         pip.pick_up_tip()
         for ifp_plate_well in ifp_plate.wells():
-            if ifp_plate_well.current_liquid_height() > 1:
+            if ifp_plate_well.current_liquid_height() is not None:
                 pip.measure_liquid_height(ifp_plate[ifp_plate_well.well_name])
             height = ifp_plate[ifp_plate_well.well_name].current_liquid_height()
             liquid_heights[ifp_plate_well.well_name] = height
