@@ -132,12 +132,8 @@ export async function latestLabwareVersions(appVersion) {
   const labwareFiles = (
     await monorepoGit()
       .raw([...lstreeCmd, releaseTag, labwareDir])
-      .catch(() =>
-        monorepoGit().raw([...lstreeCmd, choreBranch, labwareDir])
-      )
-      .catch(() =>
-        monorepoGit().raw([...lstreeCmd, 'origin/edge', labwareDir])
-      )
+      .catch(() => monorepoGit().raw([...lstreeCmd, choreBranch, labwareDir]))
+      .catch(() => monorepoGit().raw([...lstreeCmd, 'origin/edge', labwareDir]))
   )
     .split('\0')
     .slice(0, -1) // git puts an extra '\0' at the end, remove it
@@ -148,10 +144,7 @@ export async function latestLabwareVersions(appVersion) {
   return labwareFiles.reduce((acc, filename) => {
     const [loadName, jsonFilename] = filename.split('/')
     const labwareVersion = Number(jsonFilename.replace('.json', ''))
-    if (
-      acc[loadName] == null ||
-      labwareVersion > acc[loadName]
-    ) {
+    if (acc[loadName] == null || labwareVersion > acc[loadName]) {
       acc[loadName] = labwareVersion
     }
     return acc
