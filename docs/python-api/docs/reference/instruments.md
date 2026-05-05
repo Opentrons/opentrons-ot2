@@ -1,6 +1,5 @@
 ---
 title: "Python API Reference: Instruments"
-description: "Instrument and pipette API reference for the Python Protocol API."
 ---
 
 ::: opentrons.protocol_api.InstrumentContext
@@ -8,4 +7,3 @@ description: "Instrument and pipette API reference for the Python Protocol API."
       filters:
         - "!^__"
         - "!delay"
-        - "!^resin"

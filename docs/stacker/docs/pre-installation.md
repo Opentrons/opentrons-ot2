@@ -1,6 +1,5 @@
 ---
 title: "Flex Stacker: Pre-installation Information"
-description: "Deck placement, column 4 slots, power/data hub, and setup overview."
 ---
 
 Review this section for important information about Stacker placement, deck adapters, the power/data hub, and other components.

@@ -1,6 +1,5 @@
 ---
 title: "Opentrons Flex: Controlling Modules"
-description: "View module status and control temperature, shaking, and other settings."
 ---
 
 ## Module status and controls

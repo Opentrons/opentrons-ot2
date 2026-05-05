@@ -1,6 +1,5 @@
 ---
 title: "Opentrons Flex Stacker Instruction Manual"
-description: "High-capacity labware storage and shuttle for Flex; up to four Stackers per robot."
 hide: toc
 ---
 
@@ -11,7 +10,7 @@ hide: toc
 ![Stacker hero image](images/stacker-hero.png)
 
 **Opentrons Labworks Inc.**<br>
-November 2025
+August 2025
 
 </div>
 
