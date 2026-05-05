@@ -107,18 +107,16 @@ describe('calendar robot tags (vYY.MM / vYY.MM@alpha.N)', () => {
 })
 
 describe('internal calendar version strings (tag suffix after internal@)', () => {
-  it('sorts YY.MM.DD and same-day .N bumps (mapped alpha < bare day)', () => {
-    expect(compareVersions('26.04.23.1', '26.04.23')).toBeLessThan(0)
-    expect(compareVersions('26.04.22', '26.04.23')).toBeLessThan(0)
+  it('sorts YY.M.D and same-day .N bumps (mapped alpha < bare day)', () => {
+    expect(compareVersions('26.4.23.1', '26.4.23')).toBeLessThan(0)
+    expect(compareVersions('26.4.22', '26.4.23')).toBeLessThan(0)
   })
-  it('treats calendar internal and legacy channel as alpha for changelog window', () => {
-    expect(releaseKind('26.04.23')).toBe('alpha')
-    expect(releaseKind('26.04.23.2')).toBe('alpha')
-    expect(releaseKind('26.04.23-dev')).toBe('alpha')
-    expect(releaseKind('26.04.23-prod.1')).toBe('alpha')
+  it('treats calendar internal builds as alpha for changelog window', () => {
+    expect(releaseKind('26.4.23')).toBe('alpha')
+    expect(releaseKind('26.4.23.2')).toBe('alpha')
   })
   it('versionPrevious for internal alpha picks newest older than current', () => {
-    const prev = ['26.04.24.1', '26.04.24', '26.04.23.2', '26.04.22']
-    expect(versionPrevious('26.04.24.1', prev)).toBe('26.04.24')
+    const prev = ['26.4.24.1', '26.4.24', '26.4.23.2', '26.4.22']
+    expect(versionPrevious('26.4.24.1', prev)).toBe('26.4.24')
   })
 })

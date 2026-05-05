@@ -74,10 +74,9 @@ class TestInternalReleaseHelpers(unittest.TestCase):
     def test_opentrons_calendar_tag_regex_accepts(self):
         cal = internal_release.OPENTRONS_CALENDAR_TAG_RE
         for t in (
-            "internal@26.04.23",
-            "internal@26.04.23.1",
-            "internal@26.04.23-dev",
-            "internal@26.04.23-prod.2",
+            "internal@26.4.23",
+            "internal@26.4.23.1",
+            "internal@26.11.9",
         ):
             with self.subTest(tag=t):
                 self.assertIsNotNone(cal.match(t), t)
@@ -85,6 +84,9 @@ class TestInternalReleaseHelpers(unittest.TestCase):
     def test_opentrons_calendar_tag_regex_rejects(self):
         cal = internal_release.OPENTRONS_CALENDAR_TAG_RE
         for t in (
+            "internal@26.04.23",
+            "internal@26.4.03",
+            "internal@26.4.23-dev",
             "internal@v23",
             "internal@2.8.0-alpha.5",
             "v26.04",
@@ -112,20 +114,20 @@ class TestInternalReleaseHelpers(unittest.TestCase):
 class TestPythonBuildUtilsOt3(unittest.TestCase):
     def test_pep440_from_git_calendar(self):
         self.assertEqual(
-            python_build_utils._pep440_from_git_version("ot3", "26.04.23"),
+            python_build_utils._pep440_from_git_version("ot3", "26.4.23"),
             "26.4.23",
         )
 
     def test_pep440_from_git_same_day_bump(self):
         self.assertEqual(
-            python_build_utils._pep440_from_git_version("ot3", "26.04.23.2"),
+            python_build_utils._pep440_from_git_version("ot3", "26.4.23.2"),
             "26.4.23.dev2",
         )
 
-    def test_pep440_from_git_legacy_channel(self):
+    def test_pep440_from_git_legacy_channel_rejected(self):
         self.assertEqual(
-            python_build_utils._pep440_from_git_version("ot3", "26.04.23-dev.1"),
-            "26.4.23.dev1",
+            python_build_utils._pep440_from_git_version("ot3", "26.4.23-dev.1"),
+            "26.4.23-dev.1",
         )
 
     def test_pep440_robot_stack_calendar_alpha(self):

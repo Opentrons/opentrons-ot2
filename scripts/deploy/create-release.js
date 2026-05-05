@@ -37,9 +37,9 @@ const REPO_DETAILS = {
   repo: 'opentrons-ot2',
 }
 
-// internal@YY.MM.DD[.N] and legacy internal@YY.MM.DD-(dev|prod|stage)[.N]
+// internal@YY.M.D[.N]
 const OT3_CALENDAR_TAG_RE =
-  /^internal@\d{2}\.\d{2}\.\d{2}(?:(\.(\d+))|(-(dev|prod|stage)(?:\.(\d+))?))?$/
+  /^internal@\d{2}\.[1-9]\d?\.[1-9]\d?(?:\.(\d+))?$/
 
 // The release kind is normally just the semver preproduction stage, but we need to account
 // for PD using candidate-a, candidate-b etc - semver preproduction stage is separated from
@@ -51,11 +51,8 @@ const releaseKind = version => {
   }
   if (
     typeof version === 'string' &&
-    /^\d{2}\.\d{2}\.\d{2}(\.\d+)?$/.test(version)
+    /^\d{2}\.[1-9]\d?\.[1-9]\d?(\.\d+)?$/.test(version)
   ) {
-    return 'alpha'
-  }
-  if (typeof version === 'string' && /-(dev|prod|stage)/.test(version)) {
     return 'alpha'
   }
   return (semver.prerelease(version)?.at(0) ?? 'production').split('-')[0]
@@ -73,7 +70,7 @@ function toComparableSemver(version) {
   if (cal) {
     return `${parseInt(cal[1], 10)}.${parseInt(cal[2], 10)}.0`
   }
-  const calYyMmDd = /^(\d{2})\.(\d{2})\.(\d{2})(?:\.(\d+))?$/.exec(version)
+  const calYyMmDd = /^(\d{2})\.([1-9]\d?)\.([1-9]\d?)(?:\.(\d+))?$/.exec(version)
   if (calYyMmDd) {
     return `${parseInt(calYyMmDd[1], 10)}.${parseInt(
       calYyMmDd[2],
@@ -81,15 +78,6 @@ function toComparableSemver(version) {
     )}.${parseInt(calYyMmDd[3], 10)}${
       calYyMmDd[4] !== undefined ? `-alpha.${calYyMmDd[4]}` : ''
     }`
-  }
-  const internalLegacy =
-    /^(\d{2})\.(\d{2})\.(\d{2})-(dev|prod|stage)(?:\.(\d+))?$/.exec(version)
-  if (internalLegacy) {
-    const n = internalLegacy[5] != null ? `.${internalLegacy[5]}` : ''
-    return `${parseInt(internalLegacy[1], 10)}.${parseInt(
-      internalLegacy[2],
-      10
-    )}.${parseInt(internalLegacy[3], 10)}-${internalLegacy[4]}${n}`
   }
   return version
 }
@@ -251,8 +239,7 @@ async function createRelease(token, tag, project, version, changelog, deploy) {
   const isPre =
     !!semver.prerelease(semverKey(version)) ||
     /@alpha\./.test(version) ||
-    /-(dev|prod|stage)/.test(version) ||
-    /^\d{2}\.\d{2}\.\d{2}(\.\d+)?$/.test(version)
+    /^\d{2}\.[1-9]\d?\.[1-9]\d?(\.\d+)?$/.test(version)
   if (deploy) {
     const octokit = new Octokit({
       auth: token,

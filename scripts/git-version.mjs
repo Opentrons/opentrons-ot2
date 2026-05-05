@@ -19,6 +19,7 @@ import { fileURLToPath } from 'url'
 import git from 'simple-git'
 
 const REPO_BASE = dirname(dirname(fileURLToPath(import.meta.url)))
+const OT3_CALENDAR_TAG_RE = /^internal@\d{2}\.[1-9]\d?\.[1-9]\d?(?:\.(\d+))?$/
 
 export function monorepoGit() {
   return git({ baseDir: REPO_BASE })
@@ -62,22 +63,28 @@ export function matchGlobForProject(project) {
     return 'v*'
   }
   if (project === 'ot3') {
-    // YY.MM.DD calendar tags only (not internal@v*, internal@*.*.*-alpha*, etc.)
-    return 'internal@??.??.??*'
+    return 'internal@*'
   }
   return `${project}@*`
 }
 
 export async function latestTagForProject(project) {
   if (project === 'ot3') {
-    return (
-      await monorepoGit().raw([
-        'describe',
-        '--tags',
-        '--abbrev=0',
-        '--match=internal@??.??.??*',
-      ])
-    ).trim()
+    const tags = await monorepoGit().raw([
+      'tag',
+      '-l',
+      'internal@*',
+      '--merged',
+      'HEAD',
+      '--sort=-creatordate',
+    ])
+    const latestCalendarTag = tags
+      .split('\n')
+      .find(tag => OT3_CALENDAR_TAG_RE.test(tag))
+    if (latestCalendarTag == null) {
+      throw new Error('No OT3 calendar tag found')
+    }
+    return latestCalendarTag
   }
   return (
     await monorepoGit().raw([
