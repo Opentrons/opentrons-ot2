@@ -32,6 +32,7 @@ These are the property names in `protocols.py` and `protocols_with_overrides.py`
 
 - `make snapshot-test PROTOCOL_NAMES=Flex_S_v2_19_Illumina_DNA_PCR_Free OVERRIDE_PROTOCOL_NAMES=none`
 - `make snapshot-test PROTOCOL_NAMES=none OVERRIDE_PROTOCOL_NAMES=Flex_X_v2_18_NO_PIPETTES_Overrides_BadTypesInRTP`
+- `make snapshot-test PROTOCOL_NAMES="Flex_S_v2_19_Illumina_DNA_PCR_Free,OT2_S_v2_18_P300M_P20S_HS_TC_TM_SmokeTestV3" OVERRIDE_PROTOCOL_NAMES=none`
 
 ## Updating the snapshots
 
@@ -43,6 +44,7 @@ These are the property names in `protocols.py` and `protocols_with_overrides.py`
 
 - `make snapshot-test-update PROTOCOL_NAMES=Flex_S_v2_19_Illumina_DNA_PCR_Free OVERRIDE_PROTOCOL_NAMES=none`
 - `make snapshot-test-update PROTOCOL_NAMES=none OVERRIDE_PROTOCOL_NAMES=Flex_X_v2_18_NO_PIPETTES_Overrides_BadTypesInRTP`
+- `make snapshot-test-update PROTOCOL_NAMES="Flex_S_v2_19_Illumina_DNA_PCR_Free,OT2_S_v2_18_P300M_P20S_HS_TC_TM_SmokeTestV3" OVERRIDE_PROTOCOL_NAMES=none`
 
 ### Add some protocols to the analyses battery
 
@@ -74,7 +76,7 @@ These are the property names in `protocols.py` and `protocols_with_overrides.py`
 
 ### Naming Convention in order
 
-- Robot (Flex)
+- Robot (OT2 or Flex)
 - Success (S) or Failure (X)
 - PD or API version
 - _PL_ = Protocol Library - (if applicable)
