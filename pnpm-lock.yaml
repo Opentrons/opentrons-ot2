@@ -83,9 +83,6 @@ importers:
       '@types/react':
         specifier: 18.2.51
         version: 18.2.51
-      '@types/react-color':
-        specifier: ^3.0.6
-        version: 3.0.13(@types/react@18.2.51)
       '@types/react-dom':
         specifier: 18.2.0
         version: 18.2.0
@@ -1090,11 +1087,8 @@ importers:
         specifier: 2.8.0
         version: 2.8.0(@types/react@18.2.51)(react@18.2.0)
       lodash:
-        specifier: 4.18.1
-        version: 4.18.1
-      mixpanel-browser:
-        specifier: 2.22.1
-        version: 2.22.1
+        specifier: 4.17.21
+        version: 4.17.21
       react:
         specifier: 18.2.0
         version: 18.2.0
@@ -1110,46 +1104,16 @@ importers:
       react-markdown:
         specifier: 9.0.1
         version: 9.0.1(@types/react@18.2.51)(react@18.2.0)
-      react-router-dom:
-        specifier: 6.24.1
-        version: 6.24.1(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
-      react-transition-group:
-        specifier: 4.4.5
-        version: 4.4.5(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       styled-components:
         specifier: 5.3.6
         version: 5.3.6(react-dom@18.2.0(react@18.2.0))(react-is@18.3.1)(react@18.2.0)
-      uuid:
-        specifier: 14.0.0
-        version: 14.0.0
     devDependencies:
-      '@types/lodash':
-        specifier: 4.17.24
-        version: 4.17.24
-      '@types/mixpanel-browser':
-        specifier: 2.35.6
-        version: 2.35.6
       '@types/styled-components':
         specifier: ^5.1.26
         version: 5.1.36
       axios-mock-adapter:
         specifier: 1.22.0
         version: 1.22.0(axios@0.21.4)
-      lost:
-        specifier: 8.3.1
-        version: 8.3.1
-      postcss-apply:
-        specifier: 0.12.0
-        version: 0.12.0
-      postcss-color-mod-function:
-        specifier: 3.0.3
-        version: 3.0.3
-      postcss-import:
-        specifier: 16.0.0
-        version: 16.0.0(postcss@8.5.6)
-      postcss-preset-env:
-        specifier: 9.3.0
-        version: 9.3.0(postcss@8.5.6)
 
   protocol-designer:
     dependencies:
@@ -4459,11 +4423,6 @@ packages:
   '@types/query-string@6.2.0':
     resolution: {integrity: sha512-dnYqKg7eZ+t7ZhCuBtwLxjqON8yXr27hiu3zXfPqxfJSbWUZNwwISE0BJUxghlcKsk4lZSp7bdFSJBJVNWBfmA==}
 
-  '@types/react-color@3.0.13':
-    resolution: {integrity: sha512-2c/9FZ4ixC5T3JzN0LP5Cke2Mf0MKOP2Eh0NPDPWmuVH3NjPyhEjqNMQpN1Phr5m74egAy+p2lYNAFrX1z9Yrg==}
-    peerDependencies:
-      '@types/react': '*'
-
   '@types/react-dom@18.2.0':
     resolution: {integrity: sha512-8yQrvS6sMpSwIovhPOwfyNf2Wz6v/B62LFSVYQ85+Rq3tLsBIG7rP5geMxaijTUxSkrO6RzN/IRuIAADYQsleA==}
 
@@ -4480,11 +4439,6 @@ packages:
 
   '@types/react@18.2.51':
     resolution: {integrity: sha512-XeoMaU4CzyjdRr3c4IQQtiH7Rpo18V07rYZUucEZQwOUEtGgTXv7e6igQiQ+xnV6MbMe1qjEmKdgMNnfppnXfg==}
-
-  '@types/reactcss@1.2.13':
-    resolution: {integrity: sha512-gi3S+aUi6kpkF5vdhUsnkwbiSEIU/BEJyD7kBy2SudWBUuKmJk8AQKE0OVcQQeEy40Azh0lV6uynxlikYIJuwg==}
-    peerDependencies:
-      '@types/react': '*'
 
   '@types/redux-actions@2.6.1':
     resolution: {integrity: sha512-zKgK+ATp3sswXs6sOYo1tk8xdXTy4CTaeeYrVQlClCjeOpag5vzPo0ASWiiBJ7vsiQRAdb3VkuFLnDoBimF67g==}
@@ -16074,11 +16028,6 @@ snapshots:
 
   '@types/query-string@6.2.0': {}
 
-  '@types/react-color@3.0.13(@types/react@18.2.51)':
-    dependencies:
-      '@types/react': 18.2.51
-      '@types/reactcss': 1.2.13(@types/react@18.2.51)
-
   '@types/react-dom@18.2.0':
     dependencies:
       '@types/react': 18.2.51
@@ -16104,10 +16053,6 @@ snapshots:
       '@types/prop-types': 15.7.15
       '@types/scheduler': 0.26.0
       csstype: 3.2.3
-
-  '@types/reactcss@1.2.13(@types/react@18.2.51)':
-    dependencies:
-      '@types/react': 18.2.51
 
   '@types/redux-actions@2.6.1': {}
 
