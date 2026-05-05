@@ -1,5 +1,12 @@
 'use strict'
 
+/* eslint-disable @typescript-eslint/explicit-function-return-type --
+ * Plain JS module; explicit return types are enforced for TS sources only.
+ */
+/* eslint-disable @typescript-eslint/strict-boolean-expressions --
+ * Untyped `tag` parameters in plain JS trip this rule for `string.startsWith`.
+ */
+
 // Determines versions for projects from git tags.
 //
 // A "project" is a coherent built application or applications that serve a purpose, that are versioned together.
@@ -97,14 +104,16 @@ export async function latestTagForProject(project) {
 }
 
 export async function versionForProject(project) {
-  return latestTagForProject(project)
-    .then(tag => detailsFromTag(tag)[1])
-    .catch(error => {
-      console.error(
-        `Could not find a version for project ${project} (${error}) - no tags yet or no tags fetched? Using 0.0.0-dev`
-      )
-      return '0.0.0-dev'
-    })
+  try {
+    const tag = await latestTagForProject(project)
+    return detailsFromTag(tag)[1]
+  } catch (error) {
+    const errDetail = error instanceof Error ? error.message : String(error)
+    console.error(
+      `Could not find a version for project ${project} (${errDetail}) - no tags yet or no tags fetched? Using 0.0.0-dev`
+    )
+    return '0.0.0-dev'
+  }
 }
 
 export async function latestLabwareVersions(appVersion) {
@@ -123,10 +132,10 @@ export async function latestLabwareVersions(appVersion) {
   const labwareFiles = (
     await monorepoGit()
       .raw([...lstreeCmd, releaseTag, labwareDir])
-      .catch(error =>
+      .catch(() =>
         monorepoGit().raw([...lstreeCmd, choreBranch, labwareDir])
       )
-      .catch(error =>
+      .catch(() =>
         monorepoGit().raw([...lstreeCmd, 'origin/edge', labwareDir])
       )
   )
@@ -139,7 +148,10 @@ export async function latestLabwareVersions(appVersion) {
   return labwareFiles.reduce((acc, filename) => {
     const [loadName, jsonFilename] = filename.split('/')
     const labwareVersion = Number(jsonFilename.replace('.json', ''))
-    if (!acc[loadName] || labwareVersion > acc[loadName]) {
+    if (
+      acc[loadName] == null ||
+      labwareVersion > acc[loadName]
+    ) {
       acc[loadName] = labwareVersion
     }
     return acc
