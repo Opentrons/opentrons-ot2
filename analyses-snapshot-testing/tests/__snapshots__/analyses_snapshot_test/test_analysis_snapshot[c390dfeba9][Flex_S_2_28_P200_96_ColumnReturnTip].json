@@ -1,3 +1,3 @@
 {
-  "error": "Exception: This protocol is not designed for an OT-2 robot. If this is an OT-2 protocol, check that the protocol's robotType is set to \"OT-2\". Otherwise, to utilize this protocol, please download the most recent version of the Opentrons app from https://github.com/Opentrons/opentrons/releases"
+  "error": "Exception: [Errno 2] No such file or directory: '/home/runner/work/opentrons-ot2/opentrons-ot2/analyses-snapshot-testing/files/protocols/Flex_S_2_28_P200_96_ColumnReturnTip.py'"
 }
