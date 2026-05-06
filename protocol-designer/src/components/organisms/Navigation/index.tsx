@@ -14,6 +14,7 @@ import {
 import { actions as loadFileActions } from '/protocol-designer/load-file'
 import { getHasUnsavedChanges } from '/protocol-designer/load-file/selectors'
 import { toggleNewProtocolModal } from '/protocol-designer/navigation/actions'
+import { getFlexDesignerCreateUrl } from '/protocol-designer/utils/getFlexDesignerCreateUrl'
 
 import { FlexProtocolModal } from '../FlexProtocolModal'
 import { SettingsIcon } from '../SettingsIcon'
@@ -94,9 +95,7 @@ export function Navigation(): JSX.Element | null {
       <nav>
         <div className={styles.nav_container}>
           <div className={styles.nav_title_container}>
-            <StyledText desktopStyle="bodyLargeSemiBold">
-              {t('ot-2')}
-            </StyledText>
+            <StyledText desktopStyle="bodyLargeSemiBold">{t('ot2')}</StyledText>
             <StyledText
               desktopStyle="bodyLargeSemiBold"
               color={COLORS.purple50}
