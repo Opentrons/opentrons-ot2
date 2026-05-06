@@ -675,13 +675,13 @@ export function getFixtureDisplayName(
         : t(`${translationFileName}:module_with_mag_block`, {
             moduleName: getModuleDisplayName(FLEX_STACKER_MODULE_V1),
           })
-    case VACUUM_MODULE_MILLIPORE_V1:
-      return usbPortNumber != null
-        ? t(`${translationFileName}:module_in_port`, {
-            moduleName: getModuleDisplayName(VACUUM_MODULE_MILLIPORE_V1),
-            usbPortNumber,
-          })
-        : getModuleDisplayName(VACUUM_MODULE_MILLIPORE_V1)
+    // case VACUUM_MODULE_MILLIPORE_V1:
+    //   return usbPortNumber != null
+    //     ? t(`${translationFileName}:module_in_port`, {
+    //         moduleName: getModuleDisplayName(VACUUM_MODULE_MILLIPORE_V1),
+    //         usbPortNumber,
+    //       })
+    //     : getModuleDisplayName(VACUUM_MODULE_MILLIPORE_V1)
     case SINGLE_CENTER_SLOT_FIXTURE:
       return t(`${translationFileName}:center_slot`)
     case SINGLE_RIGHT_SLOT_FIXTURE:
