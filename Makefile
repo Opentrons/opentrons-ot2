@@ -10,7 +10,6 @@ API_CLIENT_DIR := api-client
 API_DIR := api
 APP_DIR := app
 APP_SHELL_DIR := app-shell
-APP_SHELL_ODD_DIR := app-shell-odd
 COMPONENTS_DIR := components
 DISCOVERY_CLIENT_DIR := discovery-client
 DOCS_DIR := docs
