@@ -51,6 +51,8 @@ env:
 
 permissions:
   contents: read
+  # So upload-artifact can expose artifact-url for job summaries
+  actions: read
 
 jobs:
   js-unit-test-shards:
@@ -280,10 +282,30 @@ jobs:
           make -C app-shell dist-${{ matrix.os }} USE_HARD_LINKS=false
 
       - name: 'upload github artifact'
+        id: upload-app-artifact
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
         with:
           name: 'opentrons-${{matrix.variant}}-${{ matrix.os }}'
           path: app-shell/dist/publish
+      - name: 'Job summary: GitHub Actions artifact URL'
+        if: success()
+        run: |
+          {
+            echo "## Desktop build (${{ matrix.variant }} / ${{ matrix.os }})"
+            echo ""
+            url="${{ steps.upload-app-artifact.outputs.artifact-url }}"
+            if [[ -n "$url" ]]; then
+              echo "[Download this job artifact]($url)"
+              echo ""
+              echo "Copy-friendly:"
+              echo ""
+              echo '```text'
+              echo "$url"
+              echo '```'
+            else
+              echo "(Artifact URL not available for this run.)"
+            fi
+          } >> "$GITHUB_STEP_SUMMARY"
 
   deploy-release-app:
     name: 'Deploy built app artifacts to S3'
@@ -382,6 +404,49 @@ jobs:
               echo "mac-${variant}=$_mac_build">>$GITHUB_OUTPUT
               echo "linux-${variant}=$_linux_build">>$GITHUB_OUTPUT
           done
+      - name: 'Job summary: public HTTPS URLs (S3 deploy)'
+        if: success()
+        shell: bash
+        run: |
+          set -euo pipefail
+          rs_base="https://${{ env._APP_DEPLOY_BUCKET_ROBOTSTACK }}/${{ env._APP_DEPLOY_FOLDER_ROBOTSTACK }}"
+          ot3_base="https://${{ env._APP_DEPLOY_BUCKET_OT3 }}/${{ env._APP_DEPLOY_FOLDER_OT3 }}"
+          wr="${{ steps.names.outputs.windows-release }}"
+          mr="${{ steps.names.outputs.mac-release }}"
+          lr="${{ steps.names.outputs.linux-release }}"
+          wir="${{ steps.names.outputs.windows-internal-release }}"
+          mir="${{ steps.names.outputs.mac-internal-release }}"
+          lir="${{ steps.names.outputs.linux-internal-release }}"
+          {
+            echo "## Deployed app installers (public URLs)"
+            echo ""
+            echo "Workflow run: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+            echo ""
+            if [[ -n "$wr" || -n "$mr" || -n "$lr" ]]; then
+              echo "### Robot stack release (\`$rs_base/\`)"
+              [[ -n "$wr" ]] && echo "- Windows: \`$rs_base/$wr\`"
+              [[ -n "$mr" ]] && echo "- macOS: \`$rs_base/$mr\`"
+              [[ -n "$lr" ]] && echo "- Linux: \`$rs_base/$lr\`"
+              echo ""
+            fi
+            if [[ -n "$wir" || -n "$mir" || -n "$lir" ]]; then
+              echo "### Internal release / OT3 dev bucket (\`$ot3_base/\`)"
+              [[ -n "$wir" ]] && echo "- Windows: \`$ot3_base/$wir\`"
+              [[ -n "$mir" ]] && echo "- macOS: \`$ot3_base/$mir\`"
+              [[ -n "$lir" ]] && echo "- Linux: \`$ot3_base/$lir\`"
+              echo ""
+            fi
+            echo "### Copy-friendly"
+            echo ""
+            echo '```text'
+            [[ -n "$wr" ]] && echo "$rs_base/$wr"
+            [[ -n "$mr" ]] && echo "$rs_base/$mr"
+            [[ -n "$lr" ]] && echo "$rs_base/$lr"
+            [[ -n "$wir" ]] && echo "$ot3_base/$wir"
+            [[ -n "$mir" ]] && echo "$ot3_base/$mir"
+            [[ -n "$lir" ]] && echo "$ot3_base/$lir"
+            echo '```'
+          } >> "$GITHUB_STEP_SUMMARY"
       - name: 'slack notify internal-release'
         uses: slackapi/slack-github-action@d09f6a279ff492756a31df59952ee6dce8c9b772 # v1.14.0
         if: contains(fromJSON(needs.determine-build-type.outputs.variants), 'internal-release')
