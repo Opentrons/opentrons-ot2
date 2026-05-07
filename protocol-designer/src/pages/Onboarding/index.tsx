@@ -370,7 +370,6 @@ function CreateFileForm(props: CreateFileFormProps): JSX.Element {
     resolver: yupResolver(validationSchema),
   })
   const dispatch = useDispatch()
-  const robotType = formProps.watch('fields').robotType
 
   // for resetting the onboarding page back to empty and page 1 when you hit "create new"
   //  from the nav bar
