@@ -27,7 +27,6 @@ package_entries = {
     "robot-server": PackageEntry("robot_server"),
     "shared-data": PackageEntry("shared_data"),
     "hardware": PackageEntry("opentrons_hardware"),
-    "hardware-testing": PackageEntry("hardware_testing"),
     "usb-bridge": PackageEntry("usb_bridge"),
     "system-server": PackageEntry("system_server"),
     "server-utils": PackageEntry("server_utils"),
