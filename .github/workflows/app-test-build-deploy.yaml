@@ -393,6 +393,19 @@ jobs:
         id: names
         shell: bash
         run: |
+          set -euo pipefail
+          rs_base="https://${{ env._APP_DEPLOY_BUCKET_ROBOTSTACK }}/${{ env._APP_DEPLOY_FOLDER_ROBOTSTACK }}"
+          ot3_base="https://${{ env._APP_DEPLOY_BUCKET_OT3 }}/${{ env._APP_DEPLOY_FOLDER_OT3 }}"
+
+          {
+            echo "## Deployed app installers (public URLs)"
+            echo ""
+            echo "Workflow run: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+            echo ""
+          } >> "$GITHUB_STEP_SUMMARY"
+
+          copy_lines=""
+
           for variant in release internal-release ; do
               dir=./to_upload_${variant}
               echo "Checking for ${variant} builds in ${dir}"
@@ -403,48 +416,35 @@ jobs:
               echo "windows-${variant}=$_windows_build">>$GITHUB_OUTPUT
               echo "mac-${variant}=$_mac_build">>$GITHUB_OUTPUT
               echo "linux-${variant}=$_linux_build">>$GITHUB_OUTPUT
+
+              if [ "$variant" = "release" ]; then
+                base="$rs_base"
+                title="Robot stack release"
+              else
+                base="$ot3_base"
+                title="Internal release / OT3 dev bucket"
+              fi
+
+              {
+                echo "### ${title} (\`${base}/\`)"
+                echo "- Windows: \`${base}/${_windows_build}\`"
+                echo "- macOS: \`${base}/${_mac_build}\`"
+                echo "- Linux: \`${base}/${_linux_build}\`"
+                echo ""
+              } >> "$GITHUB_STEP_SUMMARY"
+
+              copy_lines+="${base}/${_windows_build}"$'\n'
+              copy_lines+="${base}/${_mac_build}"$'\n'
+              copy_lines+="${base}/${_linux_build}"$'\n'
           done
-      - name: 'Job summary: public HTTPS URLs (S3 deploy)'
-        if: success()
-        shell: bash
-        run: |
-          set -euo pipefail
-          rs_base="https://${{ env._APP_DEPLOY_BUCKET_ROBOTSTACK }}/${{ env._APP_DEPLOY_FOLDER_ROBOTSTACK }}"
-          ot3_base="https://${{ env._APP_DEPLOY_BUCKET_OT3 }}/${{ env._APP_DEPLOY_FOLDER_OT3 }}"
-          wr="${{ steps.names.outputs.windows-release }}"
-          mr="${{ steps.names.outputs.mac-release }}"
-          lr="${{ steps.names.outputs.linux-release }}"
-          wir="${{ steps.names.outputs.windows-internal-release }}"
-          mir="${{ steps.names.outputs.mac-internal-release }}"
-          lir="${{ steps.names.outputs.linux-internal-release }}"
+
           {
-            echo "## Deployed app installers (public URLs)"
-            echo ""
-            echo "Workflow run: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
-            echo ""
-            if [[ -n "$wr" || -n "$mr" || -n "$lr" ]]; then
-              echo "### Robot stack release (\`$rs_base/\`)"
-              [[ -n "$wr" ]] && echo "- Windows: \`$rs_base/$wr\`"
-              [[ -n "$mr" ]] && echo "- macOS: \`$rs_base/$mr\`"
-              [[ -n "$lr" ]] && echo "- Linux: \`$rs_base/$lr\`"
-              echo ""
-            fi
-            if [[ -n "$wir" || -n "$mir" || -n "$lir" ]]; then
-              echo "### Internal release / OT3 dev bucket (\`$ot3_base/\`)"
-              [[ -n "$wir" ]] && echo "- Windows: \`$ot3_base/$wir\`"
-              [[ -n "$mir" ]] && echo "- macOS: \`$ot3_base/$mir\`"
-              [[ -n "$lir" ]] && echo "- Linux: \`$ot3_base/$lir\`"
-              echo ""
-            fi
             echo "### Copy-friendly"
             echo ""
             echo '```text'
-            [[ -n "$wr" ]] && echo "$rs_base/$wr"
-            [[ -n "$mr" ]] && echo "$rs_base/$mr"
-            [[ -n "$lr" ]] && echo "$rs_base/$lr"
-            [[ -n "$wir" ]] && echo "$ot3_base/$wir"
-            [[ -n "$mir" ]] && echo "$ot3_base/$mir"
-            [[ -n "$lir" ]] && echo "$ot3_base/$lir"
+            if [[ -n "$copy_lines" ]]; then
+              printf '%s' "$copy_lines"
+            fi
             echo '```'
           } >> "$GITHUB_STEP_SUMMARY"
       - name: 'slack notify internal-release'
