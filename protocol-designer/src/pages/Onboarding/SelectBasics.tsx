@@ -14,7 +14,6 @@ import {
   SPACING,
   StyledText,
 } from '@opentrons/components'
-import { OT2_ROBOT_TYPE } from '@opentrons/shared-data'
 
 import { HandleEnter, LINK_BUTTON_STYLE } from '../../components/atoms'
 import { PipetteInfoItem, SelectPipetteModal } from '../../components/organisms'
