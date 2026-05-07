@@ -22,7 +22,10 @@ import { getFlexDesignerCreateUrl } from '/protocol-designer/utils/getFlexDesign
 
 import { getHasOptedIn } from '../../analytics/selectors'
 import { EndUserAgreementFooter } from '../../components/molecules'
-import { AnnouncementModal, FlexProtocolModal } from '../../components/organisms'
+import {
+  AnnouncementModal,
+  FlexProtocolModal,
+} from '../../components/organisms'
 import { useAnnouncements } from '../../components/organisms/AnnouncementModal/announcements'
 import { useKitchen } from '../../components/organisms/Kitchen/useKitchen'
 import { ACCEPTED_PROTOCOL_FILE_TYPES } from '../../constants'
