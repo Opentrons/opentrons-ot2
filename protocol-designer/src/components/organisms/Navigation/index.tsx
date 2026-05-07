@@ -74,7 +74,7 @@ export function Navigation(): JSX.Element | null {
 
   const openFlexDesignerInNewTab = (): void => {
     const redirectTarget = getFlexDesignerCreateUrl()
-    window.open(redirectTarget, '_blank', 'noopener,noreferrer')
+    window.open(redirectTarget, '_blank', 'noopener')
   }
 
   const handleOpenFlexDesigner = (): void => {

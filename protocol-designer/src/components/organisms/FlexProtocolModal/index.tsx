@@ -37,7 +37,7 @@ export function FlexProtocolModal({
           </SecondaryButton>
           <PrimaryButton onClick={onOpenFlexDesigner}>
             <StyledText desktopStyle="bodyDefaultSemiBold">
-              {t('redirect_to_flex_pd.open_ot2_pd')}
+              {t('redirect_to_flex_pd.open_flex_pd')}
             </StyledText>
           </PrimaryButton>
         </div>

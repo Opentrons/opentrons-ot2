@@ -291,7 +291,7 @@
   "redirect_to_flex_pd": {
     "body": "This protocol is for Opentrons Flex. Import and edit it in Protocol Designer.",
     "cancel": "Cancel",
-    "open_ot2_pd": "Open Protocol Designer",
+    "open_flex_pd": "Open Protocol Designer",
     "title": "Flex protocol detected"
   },
   "release_notes": "Release notes",
