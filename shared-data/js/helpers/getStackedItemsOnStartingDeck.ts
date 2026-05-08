@@ -8,7 +8,7 @@ import {
 } from '../constants'
 import { getCutoutDisplayName } from '../fixtures'
 import { getModuleType } from '../modules'
-import { getSlotDisplayNameFromAAWithFakes } from './deckConfiguration/getVisualSlotFrom'
+import { getSlotFromAddressableAreaName } from './parseAddressableArea'
 import { getLabwareDefinitionsByURIForProtocol } from './getLabwareDefinitionsByURIForProtocol'
 import { getLabwareDefURI } from './getLabwareDefURI'
 import { getLiquidsByIdForLabware } from './getLiquidsByIdForLabware'
@@ -161,7 +161,7 @@ export function getStackedItemsOnStartingDeck(
         if (cutoutId == null && addressableArea == null) return acc
         location =
           addressableArea != null
-            ? getSlotDisplayNameFromAAWithFakes(addressableArea)
+            ? getSlotFromAddressableAreaName(addressableArea)
             : getCutoutDisplayName(cutoutId as CutoutId)
 
         if (Object.keys(acc).includes(location)) return acc
@@ -261,7 +261,7 @@ export function getStackedItemsOnStartingDeck(
         if (cutoutId == null && addressableArea == null) return acc
         location =
           addressableArea != null
-            ? getSlotDisplayNameFromAAWithFakes(addressableArea)
+            ? getSlotFromAddressableAreaName(addressableArea)
             : getCutoutDisplayName(cutoutId as CutoutId)
         if (cutoutId == null || Object.keys(acc).includes(location)) {
           return acc
