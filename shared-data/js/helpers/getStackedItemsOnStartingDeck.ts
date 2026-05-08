@@ -8,10 +8,10 @@ import {
 } from '../constants'
 import { getCutoutDisplayName } from '../fixtures'
 import { getModuleType } from '../modules'
-import { getSlotFromAddressableAreaName } from './parseAddressableArea'
 import { getLabwareDefinitionsByURIForProtocol } from './getLabwareDefinitionsByURIForProtocol'
 import { getLabwareDefURI } from './getLabwareDefURI'
 import { getLiquidsByIdForLabware } from './getLiquidsByIdForLabware'
+import { getSlotFromAddressableAreaName } from './parseAddressableArea'
 import { locationIsOnLabware } from './symbolicPositionHelpers'
 
 import type { CutoutId } from '../../deck'
