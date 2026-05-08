@@ -161,7 +161,8 @@ export function getStackedItemsOnStartingDeck(
         if (cutoutId == null && addressableArea == null) return acc
         location =
           addressableArea != null
-            ? getSlotFromAddressableAreaName(addressableArea)
+            ? (getSlotFromAddressableAreaName(addressableArea) ??
+              addressableArea)
             : getCutoutDisplayName(cutoutId as CutoutId)
 
         if (Object.keys(acc).includes(location)) return acc
@@ -261,7 +262,8 @@ export function getStackedItemsOnStartingDeck(
         if (cutoutId == null && addressableArea == null) return acc
         location =
           addressableArea != null
-            ? getSlotFromAddressableAreaName(addressableArea)
+            ? (getSlotFromAddressableAreaName(addressableArea) ??
+              addressableArea)
             : getCutoutDisplayName(cutoutId as CutoutId)
         if (cutoutId == null || Object.keys(acc).includes(location)) {
           return acc
