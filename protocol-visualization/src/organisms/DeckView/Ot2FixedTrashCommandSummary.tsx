@@ -21,7 +21,6 @@ import type { CutoutId, RunTimeCommand } from '@opentrons/shared-data'
 
 const Y_OFFSET = 28 // allow for the deck label set to be even with the slot
 const X_OFFSET = 30 // center the fixedTrash overlay
-
 interface Ot2TrashCommandSummaryProps {
   commandType: RunTimeCommand['commandType']
   cutoutId: CutoutId

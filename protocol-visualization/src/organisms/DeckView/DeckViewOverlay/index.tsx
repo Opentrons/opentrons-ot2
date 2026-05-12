@@ -204,7 +204,6 @@ export function DeckViewOverlay(props: SlotOverlayProps): JSX.Element | null {
       slotPosition,
       true
     )
-
     return (
       <RobotCoordsForeignObject
         key="ot2_hover"
