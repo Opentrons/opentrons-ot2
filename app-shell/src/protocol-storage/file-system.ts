@@ -69,7 +69,7 @@ export function isOT2Protocol(protocolDirPath: string): Promise<boolean> {
       const analysis = fs.readJsonSync(analysisPath)
       // Protocols created before robotType was introduced don't have this field,
       // but they are implicitly OT-2 protocols since other robots didn't exist.
-      const robotType = analysis.robotType
+      const { robotType } = analysis
 
       return robotType === OT2_ROBOT_TYPE || robotType == null
     })
