@@ -53,7 +53,9 @@ function artifactNameToObj(artifactName, urlBase) {
   const k = installerManifestKeys(artifactName)
   if (artifactName.search(/Opentrons(?:-Internal)?-OT2.*\.exe$/i) !== -1) {
     return { [k.exe]: urlBase + artifactName }
-  } else if (artifactName.search(/Opentrons(?:-Internal)?-OT2.*\.dmg$/i) !== -1) {
+  } else if (
+    artifactName.search(/Opentrons(?:-Internal)?-OT2.*\.dmg$/i) !== -1
+  ) {
     return { [k.dmg]: urlBase + artifactName }
   } else if (
     artifactName.search(/Opentrons(?:-Internal)?-OT2.*\.AppImage$/i) !== -1
