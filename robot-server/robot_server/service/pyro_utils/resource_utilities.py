@@ -32,6 +32,14 @@ def _get_accessor() -> AppStateAccessor[RobotServerPyroResource]:
     return robot_server_pyro_resource_accessor
 
 
+def _get_resource_if_available(
+    app_state: AppState,
+) -> RobotServerPyroResource | None:
+    """Get the pyro resource from app state, or None if not initialized."""
+    accessor = _get_accessor()
+    return accessor.get_from(app_state)
+
+
 # Pyro Resource Retreival for local processes (recieve proxies, etc)
 # todo(chb, 04-09-2026): for now this is using the same methodology as the DirectedRunProcess work, consolidate
 def get_pyro_resource() -> RobotServerPyroResource:
@@ -74,14 +82,9 @@ def register_run_orchestrator_store_to_pyro_resource(
     run_orchestrator_store: RunOrchestratorStore,
 ) -> None:
     """Set a provided RunOrchestratorStore as the active store to be used by the Robot Server's Pyro Resource."""
-    accessor = _get_accessor()
-    robot_server_pyro_resource = accessor.get_from(app_state)
+    robot_server_pyro_resource = _get_resource_if_available(app_state)
     if robot_server_pyro_resource is not None:
         robot_server_pyro_resource.set_run_orchestrator_store(run_orchestrator_store)
-    else:
-        raise RuntimeError(
-            "Cannot set RunOrchestratorStore, RobotServerPyroResource is not initialized."
-        )
 
 
 def register_maintenance_run_orchestrator_store_to_pyro_resource(
@@ -89,15 +92,10 @@ def register_maintenance_run_orchestrator_store_to_pyro_resource(
     maintenance_run_orchestrator_store: MaintenanceRunOrchestratorStore,
 ) -> None:
     """Set a provided MaintenanceRunOrchestratorStore as the active store to be used by the Robot Server's Pyro Resource."""
-    accessor = _get_accessor()
-    robot_server_pyro_resource = accessor.get_from(app_state)
+    robot_server_pyro_resource = _get_resource_if_available(app_state)
     if robot_server_pyro_resource is not None:
         robot_server_pyro_resource.set_maintenance_run_orchestorator_store(
             maintenance_run_orchestrator_store
-        )
-    else:
-        raise RuntimeError(
-            "Cannot set MaintenanceRunOrchestratorStore, RobotServerPyroResource is not initialized."
         )
 
 
@@ -106,15 +104,10 @@ def register_deck_configuration_store_to_pyro_resource(
     deck_configuration_store: DeckConfigurationStore,
 ) -> None:
     """Set a provided DeckConfigurationStore as the active store to be used by the Robot Server's Pyro Resource."""
-    accessor = _get_accessor()
-    robot_server_pyro_resource = accessor.get_from(app_state)
+    robot_server_pyro_resource = _get_resource_if_available(app_state)
     if robot_server_pyro_resource is not None:
         robot_server_pyro_resource.set_deck_configuration_store(
             deck_configuration_store
-        )
-    else:
-        raise RuntimeError(
-            "Cannot set DeckConfigurationStore, RobotServerPyroResource is not initialized."
         )
 
 
@@ -123,14 +116,9 @@ def register_camera_provider_to_pyro_resource(
     camera_provider: CameraProvider,
 ) -> None:
     """Set a provided CameraProvider as the active instance to be used by the Robot Server's Pyro Resource."""
-    accessor = _get_accessor()
-    robot_server_pyro_resource = accessor.get_from(app_state)
+    robot_server_pyro_resource = _get_resource_if_available(app_state)
     if robot_server_pyro_resource is not None:
         robot_server_pyro_resource.set_camera_provider(camera_provider)
-    else:
-        raise RuntimeError(
-            "Cannot set CameraProvider, RobotServerPyroResource is not initialized."
-        )
 
 
 def register_file_provider_to_pyro_resource(
@@ -138,14 +126,9 @@ def register_file_provider_to_pyro_resource(
     file_provider: FileProvider,
 ) -> None:
     """Set a provided FileProvider as the active instance to be used by the Robot Server's Pyro Resource."""
-    accessor = _get_accessor()
-    robot_server_pyro_resource = accessor.get_from(app_state)
+    robot_server_pyro_resource = _get_resource_if_available(app_state)
     if robot_server_pyro_resource is not None:
         robot_server_pyro_resource.set_file_provider(file_provider)
-    else:
-        raise RuntimeError(
-            "Cannot set FileProvider, RobotServerPyroResource is not initialized."
-        )
 
 
 def register_notify_publishers_to_pyro_resource(
@@ -153,11 +136,6 @@ def register_notify_publishers_to_pyro_resource(
     notify_publishers: Callable[[], None],
 ) -> None:
     """Set the provided Notification Publishers as the callback to be used by the Robot Server's Pyro Resource."""
-    accessor = _get_accessor()
-    robot_server_pyro_resource = accessor.get_from(app_state)
+    robot_server_pyro_resource = _get_resource_if_available(app_state)
     if robot_server_pyro_resource is not None:
         robot_server_pyro_resource.set_notify_publishers(notify_publishers)
-    else:
-        raise RuntimeError(
-            "Cannot set Notification Publishers, RobotServerPyroResource is not initialized."
-        )
