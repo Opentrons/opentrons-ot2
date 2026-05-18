@@ -40,14 +40,14 @@ class DaemonUtility:
 
     def add_PSO(self, new_pso: Any) -> None:
         """Add a new PyroSynchronousObject to the list of objects managed by this Daemon Utility."""
-        uri = self._daemon.register(new_pso)  # type: ignore
+        uri = self._daemon.register(new_pso)
         self._PyroSynchronousObjects[uri] = new_pso
 
     def remove_PSO(self, pso: Any) -> None:
         """Remove specified PyroSynchronousObject from the list of objects managed by this Daemon Utility."""
-        uri = self._daemon.uriFor(pso)  # type: ignore
+        uri = self._daemon.uriFor(pso)
         if uri in self._PyroSynchronousObjects:
-            self._daemon.unregister(self._PyroSynchronousObjects[uri])  # type: ignore
+            self._daemon.unregister(self._PyroSynchronousObjects[uri])
             del self._PyroSynchronousObjects[uri]
 
     def find_PSO(self, core_obj: Any) -> _PSO | None:
@@ -61,7 +61,7 @@ class DaemonUtility:
         """Return a Pyro5 Proxy for an already-registered PyroSynchronousObject."""
         # todo(chb, 2026-03-11): Add proper error handling here - what kind of raise case do we want this to result in?
         # This could trigger inside a wrapper pyro_behavior function on a PSO call for example.
-        return self._daemon.proxyFor(pso)  # type: ignore
+        return self._daemon.proxyFor(pso)
 
 
 class PyroFunctionWrapper:

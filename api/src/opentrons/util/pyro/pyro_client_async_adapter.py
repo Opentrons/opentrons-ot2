@@ -71,7 +71,7 @@ def _build_classdict(
     pso: Any,
 ) -> Iterator[tuple[str, Any]]:
     # ensures metadata is available
-    pso._pyroBind()  # type: ignore
+    pso._pyroBind()
     async_methods: dict[str, dict[str, Any]] = _get_async_methods(pso)
     async_method_names = [method["__name__"] for method in async_methods.values()]
     # Attach PSO exposed methods to the AsyncClientPyroObject
@@ -113,7 +113,7 @@ def _get_thread_proxy(proxy: Any) -> Any:
         if existing._pyroConnection is not None:
             return existing
         else:  # Connection was lost, proxy needs reconnect
-            existing._pyroReconnect()  # type: ignore[no-untyped-call]
+            existing._pyroReconnect()
             return existing
 
     new_proxy = Pyro5.api.Proxy(proxy._pyroUri)  # type: ignore[no-untyped-call]
@@ -126,8 +126,6 @@ def wrap_as_async(method_metadata: dict[str, Any]) -> Any:
     """Wrapper to make a callable element on a PyroSynchronousObject into an awaitable element on a AsyncClientPyroObject."""
 
     async def wrapper(self: Any, *args: P.args, **kwargs: P.kwargs) -> Any:  # type: ignore
-        import Pyro5.api
-
         def _thread_call(
             proxy: Pyro5.api.Proxy,
             func_name: str,
