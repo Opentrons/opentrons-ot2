@@ -2,7 +2,7 @@
 
 import asyncio
 import logging
-from typing import Callable, Dict, List, Mapping, Optional, Sequence, Union
+from typing import TYPE_CHECKING, Callable, Dict, List, Mapping, Optional, Sequence, Union
 
 from opentrons.config import feature_flags
 from opentrons.hardware_control import HardwareControlAPI
@@ -61,10 +61,12 @@ from opentrons_shared_data.labware.labware_definition import LabwareDefinition
 from opentrons_shared_data.labware.types import LabwareUri
 from opentrons_shared_data.robot.types import RobotType, RobotTypeEnum
 
-from .run_process import DirectedRunProcess
 from .run_process_pyro_provider import RunProcessPyroProvider
 from robot_server.protocols.protocol_store import ProtocolResource
 from robot_server.service.legacy.models.settings import CameraCaptureImageSettings
+
+if TYPE_CHECKING:
+    from .run_process import DirectedRunProcess
 
 _log = logging.getLogger(__name__)
 
@@ -185,7 +187,7 @@ class RunOrchestratorStore:
         self._robot_type = robot_type
         self._deck_type = deck_type
         # TODO come up with a better name for this.
-        self._run_orchestrator: Optional[Union[RunOrchestrator, DirectedRunProcess]] = (
+        self._run_orchestrator: Optional[Union[RunOrchestrator, "DirectedRunProcess"]] = (
             None
         )
         self._default_run_orchestrator: Optional[RunOrchestrator] = None
@@ -194,7 +196,7 @@ class RunOrchestratorStore:
             hardware_api.register_callback(_get_hardware_listener(self))
 
     @property
-    def run_orchestrator(self) -> Union[RunOrchestrator, DirectedRunProcess]:
+    def run_orchestrator(self) -> Union[RunOrchestrator, "DirectedRunProcess"]:
         """Get the "current" RunOrchestrator."""
         if self._run_orchestrator is None:
             raise NoRunOrchestrator()

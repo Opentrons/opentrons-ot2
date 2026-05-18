@@ -2,7 +2,7 @@
 
 import asyncio
 import logging
-from typing import List, Optional, Union
+from typing import TYPE_CHECKING, List, Optional, Union
 
 import opentrons.protocol_runner.create_simulating_orchestrator as simulating_runner
 import opentrons.util.helpers as datetime_helper
@@ -23,8 +23,10 @@ from opentrons_shared_data.robot.types import RobotType
 import robot_server.errors.error_mappers as em
 from robot_server.protocols.analysis_store import AnalysisStore
 from robot_server.protocols.protocol_store import ProtocolResource
-from robot_server.runs.run_process import DirectedRunProcess
 from robot_server.runs.run_process_pyro_provider import RunProcessPyroProvider
+
+if TYPE_CHECKING:
+    from robot_server.runs.run_process import DirectedRunProcess
 
 log = logging.getLogger(__name__)
 
@@ -41,7 +43,7 @@ class ProtocolAnalyzer:
         """Initialize the analyzer and its dependencies."""
         self._analysis_store = analysis_store
         self._protocol_resource = protocol_resource
-        self._coordinator: Optional[Union[RunOrchestrator, DirectedRunProcess]] = None
+        self._coordinator: Optional[Union[RunOrchestrator, "DirectedRunProcess"]] = None
         self._run_process_pyro_provider = run_process_pyro_provider
 
     @property
