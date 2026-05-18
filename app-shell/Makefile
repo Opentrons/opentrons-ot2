@@ -23,6 +23,7 @@ noop := cd .
 
 # build and publish options
 dist_files = $(if $(filter $(1),robot-stack),"dist/**/Opentrons-OT2-*","dist/**/Opentrons-Internal-OT2-*")
+update_files := "dist/@(alpha|beta|latest)*.@(yml|json)"
 publish_dir := dist/publish
 
 # These variables can be overriden when make is invoked to customize the
@@ -177,21 +178,12 @@ dist-windows-2019: dist-win
 dist-windows-2022: dist-win
 
 # copy distributable artifacts to the publish directory
+# update files will not exist for all OSs, so noop if cp errors
 .PHONY: _dist-collect-artifacts
 _dist-collect-artifacts:
 	shx mkdir -p dist/publish
 	shx cp $(call dist_files,$(OPENTRONS_PROJECT)) $(publish_dir)
-	$(MAKE) _dist-collect-update-ymls
-
-# electron-updater channel manifests (latest/alpha/beta × platform). Copy whenever
-# electron-builder wrote them to dist/ (requires publish config from deploy bucket env).
-.PHONY: _dist-collect-update-ymls
-_dist-collect-update-ymls:
-	@for pattern in dist/latest*.yml dist/alpha*.yml dist/beta*.yml; do \
-	  for f in $$pattern; do \
-	    test -e "$$f" && cp "$$f" $(publish_dir)/; \
-	  done; \
-	done; true
+	$(and $(publish_update),shx cp $(update_files) $(publish_dir) || $(noop))
 
 # development
 #####################################################################
