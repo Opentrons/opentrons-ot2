@@ -151,9 +151,9 @@ async def get_run_process_pyro_provider(
     run_process_pyro_provider = _run_process_pyro_provider_accessor.get_from(
         app_state=app_state
     )
-    assert (
-        run_process_pyro_provider is not None
-    ), "Forgot to initialize run process pyro provider as part of server startup?"
+    assert run_process_pyro_provider is not None, (
+        "Forgot to initialize run process pyro provider as part of server startup?"
+    )
     return run_process_pyro_provider
 
 

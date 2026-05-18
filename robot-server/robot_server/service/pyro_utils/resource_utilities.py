@@ -1,5 +1,7 @@
 """Support utilities for accessing the RobotServerPyroResource."""
 
+from __future__ import annotations
+
 import time
 from typing import TYPE_CHECKING, Callable, cast
 
@@ -21,7 +23,7 @@ if TYPE_CHECKING:
     from robot_server.service.pyro_utils.pyro_resource import RobotServerPyroResource
 
 
-def _get_accessor() -> "AppStateAccessor[RobotServerPyroResource]":
+def _get_accessor() -> AppStateAccessor[RobotServerPyroResource]:
     """Lazy import of pyro_resource accessor to avoid Pyro5 import chain."""
     from robot_server.service.pyro_utils.pyro_resource import (
         robot_server_pyro_resource_accessor,
@@ -32,7 +34,7 @@ def _get_accessor() -> "AppStateAccessor[RobotServerPyroResource]":
 
 # Pyro Resource Retreival for local processes (recieve proxies, etc)
 # todo(chb, 04-09-2026): for now this is using the same methodology as the DirectedRunProcess work, consolidate
-def get_pyro_resource() -> "RobotServerPyroResource":
+def get_pyro_resource() -> RobotServerPyroResource:
     """Get a Proxy of the hosted Robot Server Pyro Resource."""
     import Pyro5.api as pyro
     import Pyro5.errors as pyro_errors
@@ -69,7 +71,7 @@ def get_pyro_resource() -> "RobotServerPyroResource":
 
 def register_run_orchestrator_store_to_pyro_resource(
     app_state: AppState,
-    run_orchestrator_store: "RunOrchestratorStore",
+    run_orchestrator_store: RunOrchestratorStore,
 ) -> None:
     """Set a provided RunOrchestratorStore as the active store to be used by the Robot Server's Pyro Resource."""
     accessor = _get_accessor()
@@ -84,7 +86,7 @@ def register_run_orchestrator_store_to_pyro_resource(
 
 def register_maintenance_run_orchestrator_store_to_pyro_resource(
     app_state: AppState,
-    maintenance_run_orchestrator_store: "MaintenanceRunOrchestratorStore",
+    maintenance_run_orchestrator_store: MaintenanceRunOrchestratorStore,
 ) -> None:
     """Set a provided MaintenanceRunOrchestratorStore as the active store to be used by the Robot Server's Pyro Resource."""
     accessor = _get_accessor()
@@ -101,7 +103,7 @@ def register_maintenance_run_orchestrator_store_to_pyro_resource(
 
 def register_deck_configuration_store_to_pyro_resource(
     app_state: AppState,
-    deck_configuration_store: "DeckConfigurationStore",
+    deck_configuration_store: DeckConfigurationStore,
 ) -> None:
     """Set a provided DeckConfigurationStore as the active store to be used by the Robot Server's Pyro Resource."""
     accessor = _get_accessor()

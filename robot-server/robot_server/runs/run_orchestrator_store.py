@@ -1,8 +1,19 @@
 """In-memory storage of ProtocolEngine instances."""
 
+from __future__ import annotations
+
 import asyncio
 import logging
-from typing import TYPE_CHECKING, Callable, Dict, List, Mapping, Optional, Sequence, Union
+from typing import (
+    TYPE_CHECKING,
+    Callable,
+    Dict,
+    List,
+    Mapping,
+    Optional,
+    Sequence,
+    Union,
+)
 
 from opentrons.config import feature_flags
 from opentrons.hardware_control import HardwareControlAPI
@@ -187,7 +198,7 @@ class RunOrchestratorStore:
         self._robot_type = robot_type
         self._deck_type = deck_type
         # TODO come up with a better name for this.
-        self._run_orchestrator: Optional[Union[RunOrchestrator, "DirectedRunProcess"]] = (
+        self._run_orchestrator: Optional[Union[RunOrchestrator, DirectedRunProcess]] = (
             None
         )
         self._default_run_orchestrator: Optional[RunOrchestrator] = None
@@ -196,7 +207,7 @@ class RunOrchestratorStore:
             hardware_api.register_callback(_get_hardware_listener(self))
 
     @property
-    def run_orchestrator(self) -> Union[RunOrchestrator, "DirectedRunProcess"]:
+    def run_orchestrator(self) -> Union[RunOrchestrator, DirectedRunProcess]:
         """Get the "current" RunOrchestrator."""
         if self._run_orchestrator is None:
             raise NoRunOrchestrator()

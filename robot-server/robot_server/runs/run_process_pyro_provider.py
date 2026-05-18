@@ -1,5 +1,7 @@
 """Manages protocol run subprocesses and provides Pyro proxies to communicate with them."""
 
+from __future__ import annotations
+
 import asyncio
 import logging
 import os
@@ -79,7 +81,7 @@ class RunProcessPyroProvider:
         self._start_simulating_process()
 
     @staticmethod
-    async def _wait_for_proxy(proxy_name: str) -> "Optional[DirectedRunProcess]":
+    async def _wait_for_proxy(proxy_name: str) -> Optional[DirectedRunProcess]:
         import Pyro5.api
 
         from opentrons.util.pyro.pyro_client_async_adapter import AsyncClientPyroObject
@@ -95,7 +97,7 @@ class RunProcessPyroProvider:
                 await asyncio.sleep(0.01)
         return None
 
-    async def wait_for_run_proxy(self) -> "DirectedRunProcess":
+    async def wait_for_run_proxy(self) -> DirectedRunProcess:
         """Returns a proxy for the run process.
 
         Depending on how recently it started, this may take up to around 25 seconds to resolve.
@@ -110,7 +112,7 @@ class RunProcessPyroProvider:
             raise RuntimeError(f"Can't resolve pyro proxy '{_RUN_PROXY_NAME}'")
         return run_proxy
 
-    async def wait_for_simulating_run_proxy(self) -> "DirectedRunProcess":
+    async def wait_for_simulating_run_proxy(self) -> DirectedRunProcess:
         """Returns a proxy for the simulating run process for use in on-robot analysis.
 
         Depending on how recently it started, this may take up to around 25 seconds to resolve.

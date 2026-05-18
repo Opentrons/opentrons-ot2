@@ -1,5 +1,7 @@
 """Protocol analysis module."""
 
+from __future__ import annotations
+
 import asyncio
 import logging
 from typing import TYPE_CHECKING, List, Optional, Union
@@ -43,7 +45,7 @@ class ProtocolAnalyzer:
         """Initialize the analyzer and its dependencies."""
         self._analysis_store = analysis_store
         self._protocol_resource = protocol_resource
-        self._coordinator: Optional[Union[RunOrchestrator, "DirectedRunProcess"]] = None
+        self._coordinator: Optional[Union[RunOrchestrator, DirectedRunProcess]] = None
         self._run_process_pyro_provider = run_process_pyro_provider
 
     @property
