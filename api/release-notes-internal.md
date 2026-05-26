@@ -2,7 +2,7 @@ For more details about this release, please see the full [technical change log][
 
 [technical change log]: https://github.com/Opentrons/opentrons/releases
 
-## Internal Release 26.?.???
+## Internal Release 26.?.???*
 
 This internal release, pulled from the `edge` branch, contains features being developed for v26.?.?. It's for internal testing only.
 
