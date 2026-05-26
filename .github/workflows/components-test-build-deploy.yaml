@@ -65,4 +65,3 @@ jobs:
         with:
           name: 'components-artifact'
           path: storybook-static
-          
