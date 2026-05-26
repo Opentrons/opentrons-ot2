@@ -4,7 +4,7 @@ For more details about this release, please see the full [technical change log][
 
 ## Internal Release 26.?.???*
 
-This internal release, pulled from the `edge` branch, contains features being developed for v26.?.?. It's for internal testing only.
+This internal release, pulled from the `edge` branch, contains features being developed for v26.?.???*. It's for internal testing only.
 
 ## Internal Release 2.8.0-alpha.*
 
