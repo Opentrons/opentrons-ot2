@@ -6,9 +6,9 @@ log][]. For a list of currently known issues, please see the [Opentrons issue tr
 
 By installing and using Opentrons software, you agree to the Opentrons End-User License Agreement (EULA). You can view the EULA at [opentrons.com/eula](https://opentrons.com/eula).
 
-## Opentrons Robot Software Changes in 9.1.0
+## Opentrons OT-2 Robot Software Changes in 26.6.0
 
-Welcome to the v9.1.0 release of the Opentrons robot software!
+Welcome to the v26.6.0 release of the Opentrons OT-2 robot software!
 
 ### New Features
 

@@ -6,9 +6,9 @@ log][]. For a list of currently known issues, please see the [Opentrons issue tr
 
 By installing and using Opentrons software, you agree to the Opentrons End-User License Agreement (EULA). You can view the EULA at [opentrons.com/eula](https://opentrons.com/eula).
 
-## Opentrons App Changes in 26.?.?
+## Opentrons App Changes in 26.6.0
 
-Welcome to the v26.?.? release of the Opentrons App!
+Welcome to the v26.6.0 release of the Opentrons App!
 
 ### New Features
 
