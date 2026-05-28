@@ -172,7 +172,10 @@ describe('firstCalendarExternalTagFromList', () => {
   })
 
   it('returns null when no calendar external tags exist', () => {
-    assert.equal(firstCalendarExternalTagFromList(['v8.9.9', 'v8.9.9-alpha.13']), null)
+    assert.equal(
+      firstCalendarExternalTagFromList(['v8.9.9', 'v8.9.9-alpha.13']),
+      null
+    )
   })
 })
 

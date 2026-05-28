@@ -36,11 +36,17 @@ const OT2_INTERNAL_VERSION_TAIL = `(\\d{2}\\.${OT2_MONTH}\\.(\\d+)(?:-(?:alpha|b
 const OT2_EXTERNAL_VERSION_TAIL = `(\\d{2}\\.${OT2_MONTH}\\.[0-9](?:-(?:alpha|beta)\\.\\d+)?)`
 
 // Internal: internal@YY.M.DNN[-alpha|-beta]
-export const OT2_INTERNAL_VERSION_RE = new RegExp(`^${OT2_INTERNAL_VERSION_TAIL}$`)
-export const OT2_INTERNAL_TAG_RE = new RegExp(`^internal@${OT2_INTERNAL_VERSION_TAIL}$`)
+export const OT2_INTERNAL_VERSION_RE = new RegExp(
+  `^${OT2_INTERNAL_VERSION_TAIL}$`
+)
+export const OT2_INTERNAL_TAG_RE = new RegExp(
+  `^internal@${OT2_INTERNAL_VERSION_TAIL}$`
+)
 
 // External: vYY.M.N[-alpha.N|-beta.N] where monthly N is 0-9
-export const OT2_EXTERNAL_VERSION_RE = new RegExp(`^${OT2_EXTERNAL_VERSION_TAIL}$`)
+export const OT2_EXTERNAL_VERSION_RE = new RegExp(
+  `^${OT2_EXTERNAL_VERSION_TAIL}$`
+)
 export const OT2_EXTERNAL_TAG_RE = new RegExp(`^v${OT2_EXTERNAL_VERSION_TAIL}$`)
 
 /** First calendar internal tag in git tag-list order (e.g. creatordate descending). */
