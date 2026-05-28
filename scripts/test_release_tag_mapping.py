@@ -55,7 +55,7 @@ class TestOt2CalendarTagRegex(unittest.TestCase):
             "v26.6.0-alpha.0",
             "v26.6.0-alpha.13",
             "v26.6.0-beta.1",
-            "v28.12.0-beta.999",  # up to 3 digits
+            "v28.12.0-beta.999",
             "v26.6.9",
         ):
             with self.subTest(tag=tag):
@@ -66,7 +66,6 @@ class TestOt2CalendarTagRegex(unittest.TestCase):
             "v26.6.10",  # cannot go past 9
             "v26.6.0-alpha",  # no alpha suffix without number
             "v26.13.0",  # no 13 month
-            "v26.6.0-alpha.1234",  # prerelease number limited to 3 digits
             "v8.9.9-alpha.13",  # not calendar YY format (single-digit year)
         ):
             with self.subTest(tag=tag):

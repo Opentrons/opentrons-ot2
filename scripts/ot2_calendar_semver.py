@@ -1,7 +1,7 @@
 """OT-2 calendar semver tag parsing for build and CI.
 
 Internal (internal@): YY.M.DNN with optional -alpha or -beta (day in patch).
-External (v): YY.M.N with N in 0-9, optional -alpha.N or -beta.N prereleases (N up to 3 digits).
+External (v): YY.M.N with N in 0-9, optional -alpha.N or -beta.N prereleases.
 
 Calendar components use US Eastern (America/New_York).
 
@@ -23,10 +23,9 @@ OT2_INTERNAL_TAG_RE = re.compile(
     rf"^internal@((\d{{2}})\.{OT2_MONTH_CAP}\.(\d+)(?:-(alpha|beta))?)$"
 )
 
-# External: patch N is 0-9, prerelease is -alpha.N or -beta.N (N is 1-3 digits)
-OT2_EXTERNAL_PRERELEASE_NUM = r"\d{1,3}"
+# External: patch N is 0-9, prerelease is -alpha.N or -beta.N
 OT2_EXTERNAL_TAG_RE = re.compile(
-    rf"^v((\d{{2}})\.{OT2_MONTH_CAP}\.([0-9])(?:-(alpha|beta)\.({OT2_EXTERNAL_PRERELEASE_NUM}))?)$"
+    rf"^v((\d{{2}})\.{OT2_MONTH_CAP}\.([0-9])(?:-(alpha|beta)\.(\d+))?)$"
 )
 
 

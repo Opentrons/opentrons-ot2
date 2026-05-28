@@ -41,9 +41,9 @@ const REPO_DETAILS = {
 const OT2_INTERNAL_TAG_RE =
   /^internal@(\d{2}\.(?:[1-9]|1[0-2])\.(\d+)(?:-(?:alpha|beta))?)$/
 
-// vYY.M.N[-alpha.N|-beta.N] — external OT-2 calendar semver (prerelease N is 1-3 digits)
+// vYY.M.N[-alpha.N|-beta.N] — external OT-2 calendar semver
 const OT2_EXTERNAL_TAG_RE =
-  /^v(\d{2}\.(?:[1-9]|1[0-2])\.[0-9](?:-(?:alpha|beta)\.\d{1,3})?)$/
+  /^v(\d{2}\.(?:[1-9]|1[0-2])\.[0-9](?:-(?:alpha|beta)\.\d+)?)$/
 
 // The release kind is normally just the semver preproduction stage, but we need to account
 // for PD using candidate-a, candidate-b etc - semver preproduction stage is separated from
@@ -69,7 +69,7 @@ function toComparableSemver(version) {
     return `${parseInt(cal[1], 10)}.${parseInt(cal[2], 10)}.0`
   }
   if (
-    /^\d{2}\.(?:[1-9]|1[0-2])\.[0-9](?:-(?:alpha|beta)\.\d{1,3})?$/.test(version)
+    /^\d{2}\.(?:[1-9]|1[0-2])\.[0-9](?:-(?:alpha|beta)\.\d+)?$/.test(version)
   ) {
     return version
   }

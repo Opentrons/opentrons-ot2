@@ -33,13 +33,13 @@ const OT2_MONTH = '(?:[1-9]|1[0-2])'
 
 // Tail patterns without anchors (used to build tag regexes without a duplicate `^`).
 const OT2_INTERNAL_VERSION_TAIL = `(\\d{2}\\.${OT2_MONTH}\\.(\\d+)(?:-(?:alpha|beta))?)`
-const OT2_EXTERNAL_VERSION_TAIL = `(\\d{2}\\.${OT2_MONTH}\\.[0-9](?:-(?:alpha|beta)\\.\\d{1,3})?)`
+const OT2_EXTERNAL_VERSION_TAIL = `(\\d{2}\\.${OT2_MONTH}\\.[0-9](?:-(?:alpha|beta)\\.\\d+)?)`
 
 // Internal: internal@YY.M.DNN[-alpha|-beta]
 export const OT2_INTERNAL_VERSION_RE = new RegExp(`^${OT2_INTERNAL_VERSION_TAIL}$`)
 export const OT2_INTERNAL_TAG_RE = new RegExp(`^internal@${OT2_INTERNAL_VERSION_TAIL}$`)
 
-// External: vYY.M.N[-alpha.N|-beta.N] where monthly N is 0-9 and prerelease N is 1-3 digits
+// External: vYY.M.N[-alpha.N|-beta.N] where monthly N is 0-9
 export const OT2_EXTERNAL_VERSION_RE = new RegExp(`^${OT2_EXTERNAL_VERSION_TAIL}$`)
 export const OT2_EXTERNAL_TAG_RE = new RegExp(`^v${OT2_EXTERNAL_VERSION_TAIL}$`)
 

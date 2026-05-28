@@ -107,7 +107,6 @@ describe('OT2_EXTERNAL_TAG_RE', () => {
       'v26.6.0-alpha',
       'v26.6.0-alpha.0-extra',
       'v26.13.0',
-      'v26.6.0-alpha.1234',
       'v8.9.9-alpha.13',
       'internal@26.6.0',
     ])
