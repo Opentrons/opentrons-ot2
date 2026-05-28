@@ -36,7 +36,13 @@ jobs:
     runs-on: 'ubuntu-24.04'
     timeout-minutes: 15
     steps:
+      # git-version.mjs reads merged release tags via `git tag --merged HEAD`.
+      # Shallow checkout (default depth 1) omits tag targets and fails versionForProject
+      # integration tests; fetch-depth 0 + fetch-tags matches local/release CI usage.
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        with:
+          fetch-depth: 0
+          fetch-tags: true
       - uses: ./.github/actions/js/setup
       - name: 'Run scripts/test_release_tag_mapping.py'
         run: |

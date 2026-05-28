@@ -278,6 +278,8 @@ describe('prefixForProject', () => {
   })
 })
 
+// Integration test: versionForProject shells out to git (`tag -l --merged HEAD`).
+// Requires a full clone with tags (see scripts-release-tag-tests.yaml fetch-depth: 0).
 describe('versionForProject', () => {
   it('uses the latest merged calendar internal tag when present', async () => {
     const version = await versionForProject('robot-stack-internal')
