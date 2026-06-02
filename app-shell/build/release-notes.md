@@ -19,7 +19,6 @@ Welcome to the v26.6.0 release of the Opentrons OT-2 App! This release is design
   - Check new Python protocol steps and errors in a visual, playable format.
   - Assess the results of an OpentronsAI protocol before running on the OT-2.
 
-
 ---
 
 For information on previous releases of the Opentrons App (for OT-2 and Opentrons Flex), see the [Opentrons App Release Notes](https://github.com/Opentrons/opentrons/blob/edge/app-shell/build/release-notes.md).
