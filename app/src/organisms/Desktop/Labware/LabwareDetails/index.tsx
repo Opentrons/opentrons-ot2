@@ -15,7 +15,6 @@ import {
   LegacyStyledText,
   Link,
   OVERFLOW_WRAP_ANYWHERE,
-  SIZE_1,
   SPACING,
   Tooltip,
   TOOLTIP_TOP_START,
@@ -171,7 +170,7 @@ export function LabwareDetails(props: LabwareDetailsProps): JSX.Element {
               {apiName}
               <span {...targetProps}>
                 <Icon
-                  size={SIZE_1}
+                  size="1rem"
                   name="copy-text"
                   className={styles.copy_icon}
                 />
