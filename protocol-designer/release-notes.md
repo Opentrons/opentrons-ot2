@@ -22,6 +22,7 @@ This release is designed specifically for use with Opentrons OT-2 robots, and in
 ### Bug Fixes
 
 - OT-2 Protocol Designer allows manual tip tracking with a partial column pickup (for 5 or more pipette tips).
+- Fixed an error caused by returning tips in certain transfers above a pipette's maximum volume.
 
 ---
 
