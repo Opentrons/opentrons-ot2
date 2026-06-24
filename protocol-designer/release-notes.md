@@ -25,7 +25,6 @@ This release is designed specifically for use with Opentrons OT-2 robots, and in
 - Protocols that include partial column (2-7 pipette tips) liquid handling steps aspirate from and dispense into the correct source and destination wells.
 - Protocol Designer lets you select all accessible wells for partial column tip pickups in compatible labware.
 
-
 ---
 
 For information on previous releases of Protocol Designer (for OT-2 and Opentrons Flex), see the [Protocol Designer Release Notes](https://github.com/Opentrons/opentrons/blob/edge/protocol-designer/release-notes.md).
