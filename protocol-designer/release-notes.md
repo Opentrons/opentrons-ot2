@@ -23,6 +23,8 @@ This release is designed specifically for use with Opentrons OT-2 robots, and in
 
 - OT-2 Protocol Designer allows manual tip tracking with a partial column pickup (for 5 or more pipette tips).
 - Protocols that include partial column (2-7 pipette tips) liquid handling steps aspirate from and dispense into the correct source and destination wells.
+- Protocol Designer lets you select all accessible wells for partial column tip pickups in compatible labware.
+
 
 ---
 
