@@ -403,7 +403,6 @@ function _getNextRobotStateAndWarningsSingleCommand(
       )
       break
     case 'heaterShaker/setAndWaitForShakeSpeed':
-    case 'heaterShaker/setShakeSpeed':
       forHeaterShakerSetTargetShakeSpeed(
         command.params,
         invariantContext,
