@@ -7,6 +7,10 @@ By using Opentrons OT-2 Protocol Designer, you agree to the Opentrons End-User L
 
 ---
 
+## Opentrons OT-2 Protocol Designer 26.8.0
+
+This minor release includes analytics improvements. There are no changes to protocol editing or execution.
+
 ## Opentrons OT-2 Protocol Designer 26.6.0
 
 This release is designed specifically for use with Opentrons OT-2 robots, and includes several bug fixes and improvements.
