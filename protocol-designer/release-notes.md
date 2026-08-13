@@ -9,7 +9,10 @@ By using Opentrons OT-2 Protocol Designer, you agree to the Opentrons End-User L
 
 ## Opentrons OT-2 Protocol Designer 26.8.0
 
-This minor release includes analytics improvements. There are no changes to protocol editing or execution.
+This is a minor release with bug fixes and improvements:
+  - Supports the concurrent shake command for the Heater-Shaker Module.
+  - Fixes a possible crash when selecting multiple wells.
+  - Improves Protocol Designer analytics.
 
 ## Opentrons OT-2 Protocol Designer 26.6.0
 
