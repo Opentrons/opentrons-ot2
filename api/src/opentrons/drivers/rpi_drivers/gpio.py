@@ -19,16 +19,6 @@ MODULE_LOG = logging.getLogger(__name__)
 DTOVERLAY_PATH = "/proc/device-tree/soc/gpio@7e200000/gpio_rev_bit_pins"
 
 
-def _event_callback(
-    update_door_state: Callable[[DoorState], None],
-    get_door_state: Callable[..., DoorState],
-) -> None:
-    try:
-        update_door_state(get_door_state())
-    except Exception:
-        MODULE_LOG.exception("Errored during event callback")
-
-
 class GPIOCharDev:
     def __init__(self, chip_name: str):
         self._board_rev = BoardRevision.UNKNOWN
@@ -260,11 +250,15 @@ class GPIOCharDev:
         else:
             update_door_state(DoorState.CLOSED)
 
+        def event_callback() -> None:
+            try:
+                update_door_state(self.get_door_state())
+            except Exception:
+                MODULE_LOG.exception("Errored during event callback")
+
         try:
             door_fd = self.lines["window_door_sw"].event_get_fd()
-            loop.add_reader(
-                door_fd, _event_callback, update_door_state, self.get_door_state
-            )
+            loop.add_reader(door_fd, event_callback)
         except Exception:
             MODULE_LOG.exception(
                 "Failed to add fd reader, cannot not monitor window door "
