@@ -120,8 +120,16 @@ class SimulatingGPIOCharDev:
         else:
             update_door_state(DoorState.CLOSED)
 
+    def start_button_watcher(
+        self, loop: asyncio.AbstractEventLoop, on_press: Callable[[], None]
+    ) -> None:
+        pass
+
     def release_line(self, pin: GPIOPin) -> None:
         self.lines.pop(pin.name)
+
+    def stop_button_watcher(self, loop: asyncio.AbstractEventLoop) -> None:
+        pass
 
     def stop_door_switch_watcher(self, loop: asyncio.AbstractEventLoop) -> None:
         pass
