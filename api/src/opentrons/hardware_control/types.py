@@ -375,6 +375,7 @@ class EstopPhysicalStatus(enum.Enum):
 
 class HardwareEventType(enum.Enum):
     DOOR_SWITCH_CHANGE = enum.auto()
+    FRONT_BUTTON_PRESS = enum.auto()
     ERROR_MESSAGE = enum.auto()
     ESTOP_CHANGE = enum.auto()
     ASYNCHRONOUS_MODULE_ERROR = enum.auto()
@@ -408,6 +409,15 @@ class DoorStateNotification:
     )
     new_state: DoorState = DoorState.CLOSED
     module_serial: str | None = None
+
+
+@dataclass(frozen=True)
+class FrontButtonPressNotification:
+    """Notification that the OT-2 front button was pressed."""
+
+    event: Literal[HardwareEventType.FRONT_BUTTON_PRESS] = (
+        HardwareEventType.FRONT_BUTTON_PRESS
+    )
 
 
 @dataclass(frozen=True)
@@ -448,6 +458,7 @@ class ModuleDisconnectedNotification:
 # when we add more event types we add them here
 HardwareEvent = Union[
     DoorStateNotification,
+    FrontButtonPressNotification,
     ErrorMessageNotification,
     EstopStateNotification,
     AsynchronousModuleErrorNotification,
@@ -709,6 +720,7 @@ class HardwareFeatureFlags:
     require_estop: bool = True
     stall_detection_enabled: bool = True
     overpressure_detection_enabled: bool = True
+    ot2_front_button_enabled: bool = True
 
     @classmethod
     def build_from_ff(cls) -> "HardwareFeatureFlags":
@@ -724,6 +736,7 @@ class HardwareFeatureFlags:
             require_estop=feature_flags.require_estop(),
             stall_detection_enabled=feature_flags.stall_detection_enabled(),
             overpressure_detection_enabled=feature_flags.overpressure_detection_enabled(),
+            ot2_front_button_enabled=feature_flags.ot2_front_button_enabled(),
         )
 
 
