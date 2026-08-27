@@ -59,6 +59,7 @@ from .types import (
     DoorStateNotification,
     ErrorMessageNotification,
     EstopState,
+    FrontButtonPressNotification,
     HardwareAction,
     HardwareEvent,
     HardwareEventHandler,
@@ -170,6 +171,15 @@ class API(  # type: ignore[misc]
             except Exception:
                 mod_log.exception("Errored during door state event callback")
 
+    def _handle_front_button_press(self) -> None:
+        """Notify subscribers that the OT-2 front button was pressed."""
+        event = FrontButtonPressNotification()
+        for callback in self._callbacks:
+            try:
+                callback(event)
+            except Exception:
+                mod_log.exception("Errored during front button event callback")
+
     def _send_module_notification(self, event: HardwareEvent) -> None:
         if not isinstance(event, AsynchronousModuleErrorNotification):
             return
@@ -271,6 +281,10 @@ class API(  # type: ignore[misc]
             backend.start_gpio_door_watcher(
                 loop=checked_loop, update_door_state=api_instance._update_door_state
             )
+            if api_instance.hardware_feature_flags.ot2_front_button_enabled:
+                backend.start_gpio_button_watcher(
+                    loop=checked_loop, on_press=api_instance._handle_front_button_press
+                )
             return api_instance
         finally:
             blink_task.cancel()
