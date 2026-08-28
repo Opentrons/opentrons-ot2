@@ -18,8 +18,10 @@ from server_utils.fastapi_utils.app_state import (
     get_app_state,
 )
 
+from .front_button import CurrentRun, FrontButtonController
 from .light_control_task import LightController, run_light_task
 from .run_auto_deleter import RunAutoDeleter
+from .run_controller import RunController
 from .run_data_manager import RunDataManager
 from .run_orchestrator_store import NoRunOrchestrator, RunOrchestratorStore
 from .run_process_pyro_provider import RunProcessPyroProvider
@@ -47,7 +49,12 @@ from robot_server.hardware import (
 from robot_server.persistence.fastapi_dependencies import get_sql_engine
 from robot_server.service.notifications import (
     RunsPublisher,
+    get_maintenance_runs_publisher,
+    get_notification_client,
     get_runs_publisher,
+)
+from robot_server.service.notifications.publisher_notifier import (
+    get_pe_publisher_notifier,
 )
 from robot_server.service.task_runner import TaskRunner, get_task_runner
 from robot_server.settings import get_settings
@@ -105,6 +112,65 @@ async def start_light_control_task(
         _light_control_accessor.set_on(app_state, light_controller)
 
     return None
+
+
+async def start_front_button_listener(
+    app_state: AppState,
+    hardware_api: HardwareControlAPI,
+    ot2_front_button_enabled: bool,
+) -> None:
+    """Start listening for OT-2 front-button presses and controlling runs based on them."""
+    if hardware_api.get_robot_type() is OT2RobotType and ot2_front_button_enabled:
+        controller = FrontButtonController(
+            resolve_current_run=lambda: _resolve_current_run_for_front_button_listener(
+                app_state
+            )
+        )
+        hardware_api.register_callback(controller.handle_hardware_event)
+
+
+async def _resolve_current_run_for_front_button_listener(
+    app_state: AppState,
+) -> CurrentRun | None:
+    """Return an interface for the FrontButtonController to control the current run, if there is one.
+
+    Currently, all of our code to get the current run is implemented as FastAPI dependencies,
+    designed for use by FastAPI endpoints. So, here, we need to tediously call all of those
+    dependencies, basically emulating what FastAPI normally does for us.
+    """
+    run_orchestrator_store = _run_orchestrator_store_accessor.get_from(app_state)
+    run_store = _run_store_accessor.get_from(app_state)
+    if run_orchestrator_store is None or run_store is None:
+        return None
+
+    notification_client = get_notification_client(app_state)
+    publisher_notifier = get_pe_publisher_notifier(app_state)
+    runs_publisher = await get_runs_publisher(
+        app_state,
+        notification_client,
+        publisher_notifier,
+    )
+    maintenance_runs_publisher = await get_maintenance_runs_publisher(
+        app_state,
+        notification_client,
+        publisher_notifier,
+    )
+
+    run_id = run_orchestrator_store.current_run_id
+    if run_id is None or not run_store.has(run_id):
+        return None
+
+    return CurrentRun(
+        status=run_orchestrator_store.get_status(),
+        controller=RunController(
+            run_id=run_id,
+            task_runner=get_task_runner(app_state),
+            run_orchestrator_store=run_orchestrator_store,
+            run_store=run_store,
+            runs_publisher=runs_publisher,
+            maintenance_runs_publisher=maintenance_runs_publisher,
+        ),
+    )
 
 
 async def mark_light_control_startup_finished(
