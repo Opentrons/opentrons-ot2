@@ -64,6 +64,7 @@ from robot_server.persistence.fastapi_dependencies import (
 from robot_server.persistence.images_directory import ImagesResetter
 from robot_server.runs.dependencies import (
     mark_light_control_startup_finished,
+    start_front_button_listener,
     start_light_control_task,
 )
 from robot_server.service.legacy import reset_odd
@@ -120,6 +121,13 @@ async def _hardware_subprocess_transition(enable: bool, app_state: AppState) -> 
             (
                 partial(
                     start_light_control_task,
+                    ot2_front_button_enabled=ff.ot2_front_button_enabled(),
+                ),
+                True,
+            ),
+            (
+                partial(
+                    start_front_button_listener,
                     ot2_front_button_enabled=ff.ot2_front_button_enabled(),
                 ),
                 True,
