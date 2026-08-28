@@ -31,7 +31,7 @@ ResolveCurrentRun = Callable[[], Awaitable[CurrentRun | None]]
 """Get the current run, if one exists."""
 
 
-class FrontButtonController:
+class FrontButtonListener:
     """Pause and resume the current run in response to front-button presses."""
 
     def __init__(
