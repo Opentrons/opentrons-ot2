@@ -108,7 +108,9 @@ class LightController:
         self._initialization_done = False
         self._ot2_front_button_enabled = ot2_front_button_enabled
         self._monotonic = monotonic
-        self._ot2_button_light_on = True  # The light should have been left on after the boot process.
+        self._ot2_button_light_on = (
+            True  # The light should have been left on after the boot process.
+        )
 
     def mark_initialization_done(self) -> None:
         """Called once the robot server hardware initialization finishes."""
