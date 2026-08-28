@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import time
 from typing import List, Optional
 
 import pytest
@@ -36,7 +37,9 @@ def subject(
     """Test subject - LightController."""
     decoy.when(hardware_api.attached_subsystems).then_return({})
     return LightController(
-        api=hardware_api, run_orchestrator_store=run_orchestrator_store
+        api=hardware_api,
+        run_orchestrator_store=run_orchestrator_store,
+        ot2_front_button_enabled=False,
     )
 
 
@@ -200,7 +203,11 @@ async def test_provide_run_orchestrator_store(
 ) -> None:
     """Test providing an engine store after initialization."""
     decoy.when(hardware_api.attached_subsystems).then_return({})
-    subject = LightController(api=hardware_api, run_orchestrator_store=None)
+    subject = LightController(
+        api=hardware_api,
+        run_orchestrator_store=None,
+        ot2_front_button_enabled=False,
+    )
     decoy.when(hardware_api.get_estop_state()).then_return(EstopState.DISENGAGED)
     assert subject.get_current_status() == Status(
         active_updates=[],
@@ -264,6 +271,65 @@ async def test_estop_precedence(
         await hardware_api.set_status_bar_state(state=StatusBarState.SOFTWARE_ERROR),
         await hardware_api.set_status_bar_state(state=StatusBarState.UPDATING),
     )
+
+
+def _ot2_status(engine_status: Optional[EngineStatus]) -> Status:
+    return Status([], EstopState.DISENGAGED, engine_status)
+
+
+async def test_ot2_button_blinks_while_paused_and_restores_when_running(
+    decoy: Decoy,
+    hardware_api: HardwareControlAPI,
+    run_orchestrator_store: RunOrchestratorStore,
+) -> None:
+    """The OT-2 front button should double-blink while paused, then go solid on resume."""
+    decoy.when(hardware_api.attached_subsystems).then_return({})
+    mock_monotonic = decoy.mock(func=time.monotonic)
+    subject = LightController(
+        api=hardware_api,
+        run_orchestrator_store=run_orchestrator_store,
+        ot2_front_button_enabled=True,
+        monotonic=mock_monotonic,
+    )
+
+    # The on/off/on/off/off/off pattern repeats every 2 seconds, so each step of the
+    # pattern lasts 1/3 of a second.
+    for now in [0.0, 0.2, 0.4, 0.8, 1.1, 1.5, 1.9, 2.1]:
+        decoy.when(mock_monotonic()).then_return(now)
+        await subject.update(
+            prev_status=_ot2_status(EngineStatus.PAUSED),
+            new_status=_ot2_status(EngineStatus.PAUSED),
+        )
+
+    await subject.update(
+        prev_status=_ot2_status(EngineStatus.PAUSED),
+        new_status=_ot2_status(EngineStatus.RUNNING),
+    )
+
+    decoy.verify(
+        await hardware_api.set_lights(button=False),
+        await hardware_api.set_lights(button=True),
+        await hardware_api.set_lights(button=False),
+        await hardware_api.set_lights(button=True),
+    )
+
+
+async def test_ot2_button_not_driven_when_feature_disabled(
+    decoy: Decoy,
+    hardware_api: HardwareControlAPI,
+    run_orchestrator_store: RunOrchestratorStore,
+) -> None:
+    """The OT-2 front button light should be left alone when the feature is off."""
+    decoy.when(hardware_api.attached_subsystems).then_return({})
+    subject = LightController(
+        api=hardware_api,
+        run_orchestrator_store=run_orchestrator_store,
+        ot2_front_button_enabled=False,
+    )
+
+    await subject.update(prev_status=None, new_status=_ot2_status(EngineStatus.PAUSED))
+
+    decoy.verify(await hardware_api.set_lights(button=False), times=0)
 
 
 @pytest.mark.parametrize(
