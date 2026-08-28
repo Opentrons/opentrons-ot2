@@ -18,7 +18,7 @@ from server_utils.fastapi_utils.app_state import (
     get_app_state,
 )
 
-from .front_button import CurrentRun, FrontButtonController
+from .front_button import CurrentRun, FrontButtonListener
 from .light_control_task import LightController, run_light_task
 from .run_auto_deleter import RunAutoDeleter
 from .run_controller import RunController
@@ -121,18 +121,18 @@ async def start_front_button_listener(
 ) -> None:
     """Start listening for OT-2 front-button presses and controlling runs based on them."""
     if hardware_api.get_robot_type() is OT2RobotType and ot2_front_button_enabled:
-        controller = FrontButtonController(
+        listener = FrontButtonListener(
             resolve_current_run=lambda: _resolve_current_run_for_front_button_listener(
                 app_state
             )
         )
-        hardware_api.register_callback(controller.handle_hardware_event)
+        hardware_api.register_callback(listener.handle_hardware_event)
 
 
 async def _resolve_current_run_for_front_button_listener(
     app_state: AppState,
 ) -> CurrentRun | None:
-    """Return an interface for the FrontButtonController to control the current run, if there is one.
+    """Return an interface for the FrontButtonListener to control the current run, if there is one.
 
     Currently, all of our code to get the current run is implemented as FastAPI dependencies,
     designed for use by FastAPI endpoints. So, here, we need to tediously call all of those
