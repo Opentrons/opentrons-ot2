@@ -14,7 +14,7 @@ from opentrons.protocol_engine.types import EngineStatus
 from opentrons.util.helpers import utc_now
 
 from .action_models import RunActionType
-from .run_controller import RunActionNotAllowedError, RunController
+from .run_controller import RunController
 
 log = logging.getLogger(__name__)
 
@@ -72,16 +72,10 @@ class FrontButtonListener:
             else:
                 return
 
-            log.info("Issuing %s from the OT-2 front button.", action_type)
-            try:
-                current_run.controller.create_action(
-                    action_id=str(uuid4()),
-                    action_type=action_type,
-                    created_at=utc_now(),
-                    action_payload=None,
-                )
-            except RunActionNotAllowedError:
-                log.exception(
-                    "Front button action %s was not allowed.",
-                    action_type,
-                )
+            log.info(f"Issuing {action_type} from the OT-2 front button.")
+            current_run.controller.create_action(
+                action_id=str(uuid4()),
+                action_type=action_type,
+                created_at=utc_now(),
+                action_payload=None,
+            )
