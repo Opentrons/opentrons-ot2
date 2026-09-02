@@ -29,6 +29,7 @@ from .router import router
 from .runs.dependencies import (
     mark_light_control_startup_finished,
     set_up_run_process_pyro_provider,
+    start_front_button_listener,
     start_light_control_task,
 )
 from .service.logging import initialize_logging
@@ -65,7 +66,7 @@ async def _lifespan(app: FastAPI) -> AsyncGenerator[None, None]:
         start_initializing_hardware(
             app_state=app.state,
             callbacks=[
-                # Flex light control:
+                # Flex status bar and OT-2 front button light:
                 (
                     partial(
                         start_light_control_task,
@@ -73,8 +74,16 @@ async def _lifespan(app: FastAPI) -> AsyncGenerator[None, None]:
                     ),
                     True,
                 ),
+                # OT-2 front button:
+                (
+                    partial(
+                        start_front_button_listener,
+                        ot2_front_button_enabled=ff.ot2_front_button_enabled(),
+                    ),
+                    True,
+                ),
                 (mark_light_control_startup_finished, False),
-                # OT-2 light control:
+                # OT-2 boot light control:
                 (lambda _app_state, hw_api: blinker.start_blinking(hw_api), True),
                 (
                     lambda _app_state, _hw_api: blinker.mark_hardware_init_complete(),
