@@ -42,6 +42,12 @@ stages:
             description: !re_search 'Automatically pause protocols when robot door opens'
             restart_required: false
             value: !anything
+          - id: disableOT2FrontButton
+            old_id: Null
+            title: Disable OT-2 front button run controls
+            description: !re_search 'Do not use the OT-2 front button'
+            restart_required: true
+            value: !anything
         links: !anydict
 
 ---
@@ -58,6 +64,7 @@ marks:
         - disableHomeOnBoot
         - useOldAspirationFunctions
         - enableDoorSafetySwitch
+        - disableOT2FrontButton
   - parametrize:
       key: value
       vals:
@@ -93,6 +100,7 @@ marks:
         - disableHomeOnBoot
         - useOldAspirationFunctions
         - enableDoorSafetySwitch
+        - disableOT2FrontButton
 stages:
   - name: Set each setting to acceptable values
     request:
