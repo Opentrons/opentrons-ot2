@@ -1,25 +1,19 @@
 import { useTranslation } from 'react-i18next'
 import { useDispatch } from 'react-redux'
 
-import {
-  ALIGN_CENTER,
-  Box,
-  Flex,
-  JUSTIFY_SPACE_BETWEEN,
-  LegacyStyledText,
-  SPACING,
-  TYPOGRAPHY,
-} from '@opentrons/components'
+import { LegacyStyledText, SPACING, TYPOGRAPHY } from '@opentrons/components'
 
 import { ToggleButton } from '/app/atoms/buttons'
 import { updateSetting } from '/app/redux/robot-settings'
+
+import styles from './frontbuttonruncontrols.module.css'
 
 import type { MouseEventHandler } from 'react'
 import type { RobotSettingsField } from '/app/redux/robot-settings/types'
 import type { Dispatch } from '/app/redux/types'
 
 interface FrontButtonRunControlsProps {
-  settings: RobotSettingsField | undefined
+  settings?: RobotSettingsField
   robotName: string
   isRobotBusy: boolean
 }
@@ -31,8 +25,8 @@ export function FrontButtonRunControls({
 }: FrontButtonRunControlsProps): JSX.Element {
   const { t } = useTranslation('device_settings')
   const dispatch = useDispatch<Dispatch>()
-  const value = settings?.value ? settings.value : false
-  const id = settings?.id ? settings.id : 'disableOT2FrontButton'
+  const value = settings?.value ?? false
+  const id = settings?.id ?? 'disableOT2FrontButton'
 
   const handleClick: MouseEventHandler<Element> = () => {
     if (!isRobotBusy) {
@@ -41,8 +35,8 @@ export function FrontButtonRunControls({
   }
 
   return (
-    <Flex alignItems={ALIGN_CENTER} justifyContent={JUSTIFY_SPACE_BETWEEN}>
-      <Box width="70%">
+    <div className={styles.container}>
+      <div className={styles.text_container}>
         <LegacyStyledText
           forwardedAs="p"
           fontWeight={TYPOGRAPHY.fontWeightSemiBold}
@@ -54,7 +48,7 @@ export function FrontButtonRunControls({
         <LegacyStyledText forwardedAs="p">
           {t('front_button_run_controls_description')}
         </LegacyStyledText>
-      </Box>
+      </div>
       <ToggleButton
         label="front_button_run_controls"
         toggledOn={!value}
@@ -62,6 +56,6 @@ export function FrontButtonRunControls({
         id="RobotSettings_frontButtonRunControlsToggleButton"
         disabled={isRobotBusy}
       />
-    </Flex>
+    </div>
   )
 }
