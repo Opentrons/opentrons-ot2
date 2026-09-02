@@ -1,5 +1,6 @@
 import logging
 from dataclasses import asdict
+from functools import partial
 from typing import Annotated, Any, Dict, List, Optional, Union, cast
 
 import aiohttp
@@ -116,7 +117,13 @@ async def _hardware_subprocess_transition(enable: bool, app_state: AppState) -> 
     start_initializing_hardware(
         app_state=app_state,
         callbacks=[
-            (start_light_control_task, True),
+            (
+                partial(
+                    start_light_control_task,
+                    ot2_front_button_enabled=ff.ot2_front_button_enabled(),
+                ),
+                True,
+            ),
             (mark_light_control_startup_finished, False),
         ],
     )

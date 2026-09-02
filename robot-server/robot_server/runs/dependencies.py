@@ -8,6 +8,7 @@ from sqlalchemy.engine import Engine as SQLEngine
 
 from opentrons.config import feature_flags
 from opentrons.hardware_control import HardwareControlAPI
+from opentrons.hardware_control.protocols.types import OT2RobotType
 from opentrons.protocol_engine import DeckType
 from opentrons.protocol_engine.resources.file_provider import FileProvider
 from opentrons_shared_data.robot.types import RobotType
@@ -79,6 +80,7 @@ async def get_run_store(
 async def start_light_control_task(
     app_state: AppState,
     hardware_api: HardwareControlAPI,
+    ot2_front_button_enabled: bool,
 ) -> None:
     """Should be called once to start the light control task during server initialization.
 
@@ -90,7 +92,12 @@ async def start_light_control_task(
 
     if light_controller is None:
         light_controller = LightController(
-            api=hardware_api, run_orchestrator_store=None
+            api=hardware_api,
+            run_orchestrator_store=None,
+            ot2_front_button_enabled=(
+                hardware_api.get_robot_type() is OT2RobotType
+                and ot2_front_button_enabled
+            ),
         )
         get_task_runner(app_state=app_state).run(
             run_light_task, driver=light_controller
