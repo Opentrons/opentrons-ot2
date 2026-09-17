@@ -1,9 +1,10 @@
 """Background task to drive the Flex's status bar."""
 
 import asyncio
+import time
 from dataclasses import dataclass
 from logging import getLogger
-from typing import List, Optional
+from typing import Callable, List, Optional
 
 from opentrons.hardware_control import HardwareControlAPI
 from opentrons.hardware_control.types import (
@@ -17,6 +18,11 @@ from opentrons.protocol_engine.types import EngineStatus
 from .run_orchestrator_store import RunOrchestratorStore
 
 log = getLogger(__name__)
+
+# A double-blink followed by a longer pause, to distinguish a paused run from the
+# even on/off blinking that FrontButtonLightBlinker does during boot.
+_OT2_BUTTON_BLINK_PATTERN = (True, False, True, False, False, False)
+_OT2_BUTTON_BLINK_PERIOD_S = 2.0
 
 
 @dataclass
@@ -87,17 +93,24 @@ def _active_updates_to_status_bar(
 
 
 class LightController:
-    """LightController sets the Flex's status bar to match the protocol status."""
+    """LightController sets the Flex's status bar or OT-2's front button light to match protocol status."""
 
     def __init__(
         self,
         api: HardwareControlAPI,
         run_orchestrator_store: Optional[RunOrchestratorStore],
+        ot2_front_button_enabled: bool,
+        monotonic: Callable[[], float] = time.monotonic,
     ) -> None:
         """Create a new LightController."""
         self._api = api
         self._run_orchestrator_store = run_orchestrator_store
         self._initialization_done = False
+        self._ot2_front_button_enabled = ot2_front_button_enabled
+        self._monotonic = monotonic
+        self._ot2_button_light_on = (
+            True  # The light should have been left on after the boot process.
+        )
 
     def mark_initialization_done(self) -> None:
         """Called once the robot server hardware initialization finishes."""
@@ -110,7 +123,36 @@ class LightController:
         self._run_orchestrator_store = run_orchestrator_store
 
     async def update(self, prev_status: Optional[Status], new_status: Status) -> None:
-        """Update the status bar if the current run status has changed."""
+        """Update robot lights if the current run status has changed."""
+        if self._ot2_front_button_enabled:
+            await self._update_for_ot2(new_status)
+
+        await self._update_for_flex(prev_status, new_status)
+
+    async def _update_for_ot2(self, new_status: Status) -> None:
+        """Blink the OT-2 front button while a run is paused; otherwise leave it."""
+        should_blink = new_status.engine_status in {
+            EngineStatus.PAUSED,
+            EngineStatus.BLOCKED_BY_OPEN_DOOR,
+        }
+        if should_blink:
+            step = int(
+                self._monotonic()
+                / (_OT2_BUTTON_BLINK_PERIOD_S / len(_OT2_BUTTON_BLINK_PATTERN))
+            )
+            button_light_should_be_on = _OT2_BUTTON_BLINK_PATTERN[
+                step % len(_OT2_BUTTON_BLINK_PATTERN)
+            ]
+        else:
+            button_light_should_be_on = True
+        if button_light_should_be_on != self._ot2_button_light_on:
+            self._ot2_button_light_on = button_light_should_be_on
+            await self._api.set_lights(button=button_light_should_be_on)
+
+    async def _update_for_flex(
+        self, prev_status: Optional[Status], new_status: Status
+    ) -> None:
+        """Set the Flex status bar to match run, estop, and firmware-update status."""
         if prev_status == new_status:
             # No change, don't try to set anything.
             return

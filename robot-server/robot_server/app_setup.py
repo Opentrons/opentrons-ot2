@@ -1,6 +1,7 @@
 """Main FastAPI application."""
 
 import contextlib
+from functools import partial
 from pathlib import Path
 from typing import AsyncGenerator, Optional
 
@@ -65,7 +66,13 @@ async def _lifespan(app: FastAPI) -> AsyncGenerator[None, None]:
             app_state=app.state,
             callbacks=[
                 # Flex light control:
-                (start_light_control_task, True),
+                (
+                    partial(
+                        start_light_control_task,
+                        ot2_front_button_enabled=ff.ot2_front_button_enabled(),
+                    ),
+                    True,
+                ),
                 (mark_light_control_startup_finished, False),
                 # OT-2 light control:
                 (lambda _app_state, hw_api: blinker.start_blinking(hw_api), True),
