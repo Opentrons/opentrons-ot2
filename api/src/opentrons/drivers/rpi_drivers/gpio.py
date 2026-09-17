@@ -7,6 +7,7 @@ from typing import Callable, Dict, Tuple
 import gpiod  # type: ignore[import-not-found]
 
 from . import RevisionPinsError
+from ._debouncer import Debouncer
 from .types import GPIOPin, PinDir, gpio_group
 from opentrons.hardware_control.types import BoardRevision, DoorState
 
@@ -18,15 +19,7 @@ MODULE_LOG = logging.getLogger(__name__)
 
 DTOVERLAY_PATH = "/proc/device-tree/soc/gpio@7e200000/gpio_rev_bit_pins"
 
-
-def _event_callback(
-    update_door_state: Callable[[DoorState], None],
-    get_door_state: Callable[..., DoorState],
-) -> None:
-    try:
-        update_door_state(get_door_state())
-    except Exception:
-        MODULE_LOG.exception("Errored during event callback")
+BUTTON_INPUT_DEBOUNCE_SECONDS = 0.25
 
 
 class GPIOCharDev:
@@ -34,6 +27,7 @@ class GPIOCharDev:
         self._board_rev = BoardRevision.UNKNOWN
         self._chip = gpiod.Chip(chip_name)
         self._lines = self._initialize()
+        self._button_input_debouncer = Debouncer(BUTTON_INPUT_DEBOUNCE_SECONDS)
 
     @property
     def chip(self) -> gpiod.Chip:
@@ -260,15 +254,45 @@ class GPIOCharDev:
         else:
             update_door_state(DoorState.CLOSED)
 
+        def event_callback() -> None:
+            try:
+                update_door_state(self.get_door_state())
+            except Exception:
+                MODULE_LOG.exception("Errored during event callback")
+
         try:
             door_fd = self.lines["window_door_sw"].event_get_fd()
-            loop.add_reader(
-                door_fd, _event_callback, update_door_state, self.get_door_state
-            )
+            loop.add_reader(door_fd, event_callback)
         except Exception:
             MODULE_LOG.exception(
                 "Failed to add fd reader, cannot not monitor window door "
                 "switch properly"
+            )
+
+    def start_button_watcher(
+        self, loop: asyncio.AbstractEventLoop, on_press: Callable[[], None]
+    ) -> None:
+        """Start watching for presses of the OT-2 front button."""
+
+        def event_callback() -> None:
+            try:
+                event = self.lines["button_input"].event_read()
+                # Pressing in is a falling edge.
+                if event.type != gpiod.LineEvent.FALLING_EDGE:
+                    return
+                should_emit = self._button_input_debouncer.trigger()
+                if not should_emit:
+                    return
+                on_press()
+            except Exception:
+                MODULE_LOG.exception("Errored during front button event callback")
+
+        try:
+            button_fd = self.lines["button_input"].event_get_fd()
+            loop.add_reader(button_fd, event_callback)
+        except Exception:
+            MODULE_LOG.exception(
+                "Failed to add fd reader, cannot monitor the front button"
             )
 
     def release_line(self, pin: GPIOPin) -> None:
@@ -281,3 +305,11 @@ class GPIOCharDev:
             loop.remove_reader(door_fd)
         except Exception:
             MODULE_LOG.exception("Failed to remove window door switch fd reader")
+
+    def stop_button_watcher(self, loop: asyncio.AbstractEventLoop) -> None:
+        """Stop watching for presses of the OT-2 front button."""
+        try:
+            button_fd = self.lines["button_input"].event_get_fd()
+            loop.remove_reader(button_fd)
+        except Exception:
+            MODULE_LOG.exception("Failed to remove front button fd reader")

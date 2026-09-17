@@ -158,6 +158,11 @@ class Controller:
             loop=loop, update_door_state=update_door_state
         )
 
+    def start_gpio_button_watcher(
+        self, loop: asyncio.AbstractEventLoop, on_press: Callable[[], None]
+    ) -> None:
+        self.gpio_chardev.start_button_watcher(loop=loop, on_press=on_press)
+
     async def update_position(self) -> Dict[str, float]:
         await self._smoothie_driver.update_position()
         return self._smoothie_driver.position
