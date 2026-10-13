@@ -244,7 +244,7 @@ function _getSelectedWellsForSubstep(
     if ('pipette' in stepArgs) {
       if (substeps.multichannel) {
         if ('nozzles' in stepArgs && stepArgs.nozzles !== SINGLE) {
-          const { activeTips } = substeps.multiRows[substepIndex][0]
+          const activeTips = substeps.multiRows[substepIndex]?.[0]?.activeTips
           const pipChannels =
             invariantContext.pipetteEntities[stepArgs.pipette].spec.channels
           let channels = pipChannels
@@ -268,7 +268,7 @@ function _getSelectedWellsForSubstep(
           }
         } else {
           // single-nozzle pick up
-          const { activeTips } = substeps.multiRows[substepIndex][0]
+          const activeTips = substeps.multiRows[substepIndex]?.[0]?.activeTips
           if (
             activeTips &&
             activeTips.labwareId === labwareId &&
@@ -279,7 +279,7 @@ function _getSelectedWellsForSubstep(
         }
       } else {
         // single-channel
-        const { activeTips } = substeps.rows[substepIndex]
+        const activeTips = substeps.rows[substepIndex]?.activeTips
         if (
           activeTips &&
           activeTips.labwareId === labwareId &&
