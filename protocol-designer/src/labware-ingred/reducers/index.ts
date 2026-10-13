@@ -81,6 +81,12 @@ const selectedContainerId: Reducer<SelectedContainerId, any> = handleActions(
       state,
       action: CloseIngredientSelectorAction
     ): SelectedContainerId => null,
+    DELETE_CONTAINER: (
+      state,
+      action: DeleteContainerAction
+    ): SelectedContainerId =>
+      action.payload.labwareId === state ? null : state,
+    LOAD_FILE: (): SelectedContainerId => null,
   },
   null
 )
