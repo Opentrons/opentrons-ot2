@@ -61,7 +61,7 @@ jobs:
           fetch-depth: 0
       - uses: actions/setup-node@53b83947a5a98c8d113130e565377fae1a50d02f # v6.3.0
         with:
-          node-version: '22.22.0'
+          node-version: '24.22.1'
       - uses: './.github/actions/python/setup-uv'
         with:
           project: 'robot-server'
@@ -83,7 +83,7 @@ jobs:
           fetch-depth: 0
       - uses: actions/setup-node@53b83947a5a98c8d113130e565377fae1a50d02f # v6.3.0
         with:
-          node-version: '22.22.0'
+          node-version: '24.22.1'
       - uses: './.github/actions/python/setup-uv'
         with:
           project: 'robot-server'
@@ -115,7 +115,7 @@ jobs:
           fetch-depth: 0
       - uses: actions/setup-node@53b83947a5a98c8d113130e565377fae1a50d02f # v6.3.0
         with:
-          node-version: '22.22.0'
+          node-version: '24.22.1'
       - uses: './.github/actions/python/setup-uv'
         with:
           project: 'robot-server'

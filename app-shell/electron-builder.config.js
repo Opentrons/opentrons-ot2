@@ -29,7 +29,7 @@ module.exports = async () => ({
     project === 'robot-stack'
       ? 'com.opentrons.appot2'
       : 'com.opentrons.appinternalot2',
-  electronVersion: '39.1.2',
+  electronVersion: '45.0.0',
   npmRebuild: false,
   protocols: [
     {
