@@ -78,6 +78,8 @@ const STANDARD_Y_DIMENSION = 85.48
 const PLATE_READER_LOADNAME =
   'opentrons_flex_lid_absorbance_plate_reader_module'
 const UNIVERSAL_LID_LOADNAME = 'opentrons_tough_universal_lid'
+// Flex-only accessory, meaningless on OT-2
+const DECK_RISER_LOADNAME = 'opentrons_flex_deck_riser'
 const STACK_LIMIT = 1
 
 interface SelectLabwareModalProps {
@@ -203,6 +205,8 @@ export function SelectLabwareModal(
         (isAdapter &&
           isIrregularSize &&
           moduleType !== HEATERSHAKER_MODULE_TYPE) ||
+        (robotType === OT2_ROBOT_TYPE &&
+          parameters.loadName === DECK_RISER_LOADNAME) ||
         (isAdapter96Channel && !has96Channel) ||
         // NOTE (2026-03-30, RC): this is a temporary filter to prevent loading lids off deck until this is allowed in PAPI
         (slot === 'offDeck' && (isAdapter || isLid)) ||
@@ -213,7 +217,14 @@ export function SelectLabwareModal(
     },
     // FIXME(2026-03-03): Supply all missing dependencies, if it's safe. If it's unsafe, explain why.
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [filterRecommended, filterHeight, getIsLabwareCompatible, moduleType, slot]
+    [
+      filterRecommended,
+      filterHeight,
+      getIsLabwareCompatible,
+      moduleType,
+      slot,
+      robotType,
+    ]
   )
 
   const labwareByCategory = useMemo(
