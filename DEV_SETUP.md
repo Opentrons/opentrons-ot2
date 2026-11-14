@@ -270,7 +270,7 @@ python --version
 Once you've confirmed you're running the correct versions of Node.js and Python, you must install [pnpm][] to manage JavaScript dependencies.
 
 ```shell
-npm install --global pnpm@10
+npm install --global pnpm@11
 ```
 
 Finally, you need to download and install all of our various development dependencies. **This step will take several minutes** the first time you run it!

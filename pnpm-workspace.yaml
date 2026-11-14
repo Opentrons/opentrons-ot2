@@ -12,13 +12,28 @@ packages:
   - 'react-api-client'
   - 'usb-bridge/node-client'
 
-onlyBuiltDependencies:
-  - electron
-  - electron-winstaller
-  - esbuild
-  - '@serialport/bindings-cpp'
-  - usb
-  - '@sentry/cli'
-  - sharp
+allowBuilds:
+  electron: true
+  electron-winstaller: true
+  esbuild: true
+  '@serialport/bindings-cpp': true
+  usb: true
+  '@sentry/cli': true
+  sharp: true
+
+overrides:
+  '@storybook/react-docgen-typescript-plugin': 1.0.6--canary.9.cd77847.0
+  # @electron/rebuild@3.7.1 pins a git tarball of @electron/node-gyp, which
+  # trips pnpm 11's default blockExoticSubdeps. Registry node-gyp is API-
+  # compatible for the rebuild import (same swap rebuild 4.x made upstream).
+  '@electron/node-gyp': 'npm:node-gyp@^10'
+
+# Match prior onlyBuiltDependencies behavior: allowlisted packages may build;
+# others are skipped without failing the install.
+strictDepBuilds: false
 
 minimumReleaseAge: 10080 # 1 week
+# Allow the pinned packageManager version before it ages past minimumReleaseAge.
+minimumReleaseAgeExclude:
+  - pnpm
+  - '@pnpm/*'
