@@ -28,7 +28,7 @@ Pnpm workspaces monorepo with 15 TypeScript packages. No Lerna/Nx/Turbo — uses
 | `opentrons-ai-client`               | `opentrons-ai-client/`    | React app                         |
 | `protocol-designer`                 | `protocol-designer/`      | React app                         |
 | `@opentrons/protocol-visualization` | `protocol-visualization/` | React library (protocol viz, WIP) |
-| `@opentrons/usb-bridge-client`      | `usb-bridge/node-client/` | Pure TS (Node)                    |
+| `@opentrons/node-usb-bridge-client` | `usb-bridge/node-client/` | Pure TS (Node)                    |
 
 ### Dependency Graph
 
