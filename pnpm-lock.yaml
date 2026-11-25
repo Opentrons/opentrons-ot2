@@ -1030,10 +1030,6 @@ importers:
       yup:
         specifier: 1.3.3
         version: 1.3.3
-    devDependencies:
-      '@types/mixpanel-browser':
-        specifier: ^2.35.6
-        version: 2.35.6
 
   react-api-client:
     dependencies:
