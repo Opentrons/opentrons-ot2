@@ -941,8 +941,8 @@ importers:
         specifier: 8.3.1
         version: 8.3.1
       mixpanel-browser:
-        specifier: 2.60.0
-        version: 2.60.0
+        specifier: 2.66.0
+        version: 2.66.0
       plotly.js-cartesian-dist:
         specifier: 3.1.0
         version: 3.1.0
@@ -2907,6 +2907,9 @@ packages:
 
   '@rrweb/types@2.2.2':
     resolution: {integrity: sha512-b9BNYEBcQF9dGQ5JJOoqBEFM7HlLmOdKgCfS2qkQj3gevF1wyuJIGPDGpaAYpl0H24fFOHGw6IdbYH6qrZNk1w==}
+
+  '@rrweb/utils@2.2.2':
+    resolution: {integrity: sha512-C078kPGG4iJ6uuSPELy/RkXZ6Ge3rUsSrX0KYzbtSjoCwMErrqF0RMbWjxpUROI0Hx7ewKeiDTp+Og9AYzYzjg==}
 
   '@rtsao/scc@1.1.0':
     resolution: {integrity: sha512-zt6OdqaDoOnJ1ZYsCYGt9YmWzDXl4vQdKTyJev62gFhRGKdx7mcT54V9KIjg+d2wi9EXsPvAPKe7i7WjfVWB8g==}
@@ -6257,9 +6260,6 @@ packages:
   fernet@0.3.3:
     resolution: {integrity: sha512-DvvqouVhv3VCor83wkQbSycekYUKDRQ1IKqcInaF5n5BSKgWBVfYLbSf7RRxojwQO0DZySiz5MlM2vO4MG3SUg==}
 
-  fflate@0.4.9:
-    resolution: {integrity: sha512-zdxgIEddhfsyCaWpJ2SdXEP8ZMrKJ6+5jl4OupODcywU0IhRk6gdXuVGcPICyfx2H97hVK7xmJtRLPjkxAX8Vw==}
-
   figures@1.7.0:
     resolution: {integrity: sha512-UxKlfCRuCBxSXU4C6t9scbDyWZ4VlaFFdojKtzJuSkuOBQ5CNFum+zZXFwHjo+CxBC1t6zlYPgHIgFjL8ggoEQ==}
     engines: {node: '>=0.10.0'}
@@ -8047,8 +8047,8 @@ packages:
   mixpanel-browser@2.29.1:
     resolution: {integrity: sha512-RSBqVBznOkKBz3MkCXRrkTEEXqoNNYAbASpjaCxvhpT5pykWhjh7JY54fAmOvtG9XNL3GHYA6XiB7Yos4ngNYQ==}
 
-  mixpanel-browser@2.60.0:
-    resolution: {integrity: sha512-oys+/EnmFEyJqQkmNqb6wI7qTyVQUfxibvzct5HxI8QvQw/hMXqt2UENem1MqCBDTakAaJvgXNeajG4UulIPqA==}
+  mixpanel-browser@2.66.0:
+    resolution: {integrity: sha512-n02abeEhQCNHnpQlYTYx8EzcZGpNXvmw8ozgbFiTbthMRY65aPXuRat5hCiZXllZ+UY31awszFx/LpryPwie0A==}
 
   mkdirp@0.5.6:
     resolution: {integrity: sha512-FP+p8RB8OWpF3YZBCrP5gtADmtXApB5AMLn+vdyA+PyxCjrCs00mjyUozssO33cwDeT3wNGdLxJ5M//YqtHAJw==}
@@ -9555,8 +9555,8 @@ packages:
   rrweb-snapshot@2.2.2:
     resolution: {integrity: sha512-/0w4Xzd/Tw5a80dmEmv8/YkFitJYoMOnbtmt0jCAEdZ1w0nDSw5hvf59E/oDLy+z+x+vCcT0ibI+IYWeuCHegQ==}
 
-  rrweb@2.0.0-alpha.13:
-    resolution: {integrity: sha512-a8GXOCnzWHNaVZPa7hsrLZtNZ3CGjiL+YrkpLo0TfmxGLhjNZbWY2r7pE06p+FcjFNlgUVTmFrSJbK3kO7yxvw==}
+  rrweb@2.0.0-alpha.18:
+    resolution: {integrity: sha512-1mjZcB+LVoGSx1+i9E2ZdAP90fS3MghYVix2wvGlZvrgRuLCbTCCOZMztFCkKpgp7/EeCdYM4nIHJkKX5J1Nmg==}
 
   run-parallel@1.2.0:
     resolution: {integrity: sha512-5l4VyZR86LZ/lDxZTR6jqL8AFE2S0IFLMP26AbjsLVADxHdhB/c0GUsH+y39UfCi3dzz8OlQuPmnaJOMoDHQBA==}
@@ -13624,6 +13624,8 @@ snapshots:
 
   '@rrweb/types@2.2.2': {}
 
+  '@rrweb/utils@2.2.2': {}
+
   '@rtsao/scc@1.1.0': {}
 
   '@sentry-internal/browser-utils@10.29.0':
@@ -16685,7 +16687,7 @@ snapshots:
   css-tree@3.1.0:
     dependencies:
       mdn-data: 2.12.2
-      source-map-js: 1.2.1
+      source-map-js: 1.2.3
 
   css.escape@1.5.1: {}
 
@@ -18112,8 +18114,6 @@ snapshots:
     dependencies:
       crypto-js: 4.2.0
       urlsafe-base64: 1.0.0
-
-  fflate@0.4.9: {}
 
   figures@1.7.0:
     dependencies:
@@ -19737,7 +19737,7 @@ snapshots:
     dependencies:
       '@babel/parser': 7.28.5
       '@babel/types': 7.28.5
-      source-map-js: 1.2.1
+      source-map-js: 1.2.3
 
   make-dir@1.3.0:
     dependencies:
@@ -20281,9 +20281,9 @@ snapshots:
 
   mixpanel-browser@2.29.1: {}
 
-  mixpanel-browser@2.60.0:
+  mixpanel-browser@2.66.0:
     dependencies:
-      rrweb: 2.0.0-alpha.13
+      rrweb: 2.0.0-alpha.18
 
   mkdirp@0.5.6:
     dependencies:
@@ -21416,9 +21416,9 @@ snapshots:
       cssesc: 3.0.0
       util-deprecate: 1.0.2
 
-  postcss-sorting@8.0.2(postcss@8.5.6):
+  postcss-sorting@8.0.2(postcss@8.5.33):
     dependencies:
-      postcss: 8.5.6
+      postcss: 8.5.33
 
   postcss-value-parser@4.2.0: {}
 
@@ -22277,13 +22277,13 @@ snapshots:
     dependencies:
       postcss: 8.5.33
 
-  rrweb@2.0.0-alpha.13:
+  rrweb@2.0.0-alpha.18:
     dependencies:
       '@rrweb/types': 2.2.2
+      '@rrweb/utils': 2.2.2
       '@types/css-font-loading-module': 0.0.7
       '@xstate/fsm': 1.6.5
       base64-arraybuffer: 1.0.2
-      fflate: 0.4.9
       mitt: 3.0.1
       rrdom: 2.2.2
       rrweb-snapshot: 2.2.2
@@ -22901,8 +22901,8 @@ snapshots:
 
   stylelint-order@6.0.4(stylelint@16.25.0(typescript@5.3.3)):
     dependencies:
-      postcss: 8.5.6
-      postcss-sorting: 8.0.2(postcss@8.5.6)
+      postcss: 8.5.33
+      postcss-sorting: 8.0.2(postcss@8.5.33)
       stylelint: 16.25.0(typescript@5.3.3)
 
   stylelint@16.25.0(typescript@5.3.3):
